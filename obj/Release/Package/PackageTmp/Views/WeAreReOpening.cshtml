@@ -1,0 +1,769 @@
+﻿@using ContentModels = Umbraco.Web.PublishedModels;
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.TermsAndConditions>
+@using ClientDependency.Core.Mvc;
+@using Umbraco.Web.Mvc;
+@{
+    Layout = "master.cshtml";
+    var currLang = System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+
+    ViewBag.MetaTitle = Model.Value("titleTAndC");
+    ViewBag.MetaDescription = Model.SeoMetaDescription;
+    ViewBag.MetaKeyword = Model.Keywords;
+
+    // set page title segment
+    ViewBag.PageTitle = Model.Value("titleTAndC");
+
+    Html.RequiresCss("~/css/reopstyle.css");
+    if (currLang == "ar")
+    {
+        Html.RequiresCss("~/css/reopstyle-ar.css");
+    }
+}
+<!--Start Main Banner-->
+@{
+    var mainBannerImg = Model.Value<IPublishedContent>("tandcMainBanner");
+    if (mainBannerImg != null)
+    {
+        <section class="main-banner">
+            <div class="container-fluid custom-container-fluid">
+                <div class="main-slide">
+                    <div class="slide">
+                        <img src="@mainBannerImg.Url()" alt="@Model.Value("titleTAndC")" class="img-fluid" />
+                    </div>
+                </div>
+            </div>
+        </section>
+    }
+}
+<!--End Main Banner-->
+<!--Start Inner Page Wrapper-->
+<div class="inner-section">
+    <div class="container-fluid custom-container-fluid main-info"">
+        <div class="row">
+            <div class="col-md-12">
+                <!--Start Breadcrumbs-->
+                <nav aria-label="breadcrumb" class="breadcrumb-holder">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="@Umbraco.GetDictionaryValue("LogoHref")">@Umbraco.GetDictionaryValue("Home")</a></li>
+                        <li class="breadcrumb-seprator"><i class="fas fa-angle-right"></i></li>
+                        <li class="breadcrumb-item active" aria-current="page">@Model.Value("titleTAndC")</li>
+                    </ol>
+                </nav>
+                <!--End Breadcrumbs-->
+                @if (currLang == "en")
+                {
+                    <!--Start Main Title-->
+                    <div class="general-paragraph text-center">
+                        <h1 class="main-info-heading">Read about YAS Mall’s safety measures</h1>
+                    </div>
+                    <!--End Main Title-->
+                    <!--Start Akyasi Tabs-->
+                    <section class="akyasi-holder">
+                        <!--Start Tabs Holder-->
+                        <div class="row">
+                            <div class="col-md-12 general-paragraph text-center">
+                                <p>YAS Mall has put all the health and safety measures in place as per the UAE authority requirements.</p>
+                                <p>During this lockdown period, we have worked relentlessly towards preparing and refurbishing your favorite Mall, so that you and your loved ones can have a safe and comfortable shopping experience.</p>
+                            </div>
+                        </div>
+                        <div class="akyasi-tabs-holder custom-tabs">
+                            <!--Start Custom Tabs Title-->
+                            <ul class="nav nav-tabs" id="wsfyTab" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link active" id="tab-one">You and your mall</a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link" id="tab-two">Safety Measures at YAS Mall</a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link" id="tab-three">Parking and other information</a>
+                                </li>
+                            </ul>
+                            <!--End Custom Tabs Title-->
+                            <div class="tab-content" id="wsfyTabContent">
+                                <div class="tab-pane fade show active" id="div-one" role="tabpanel" aria-labelledby="tab-one">
+                                    <div class="clearfix abouttab-holder">
+                                        <div class="content-box">
+                                            As a responsible customer, we request you to please follow a few basic health and safety guidelines while shopping at Yas Mall.
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="whts-store-wrp">
+                                                <ul>
+                                                    <li><img src="/assets/images/store_pic_one.png" alt="" /></li>
+                                                    <li class="text-content">
+                                                        <div class="d-flex-li">
+                                                            <h3>Get Prepared to Visit Yas mall</h3>
+                                                            <div class="scroll-wrapper">
+                                                                <ul>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>Do slip on your gloves and mask before entering the mall. Keep them on throughout the duration of your shopping.</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>Bring your own shopping bags (we’re sure you have an enviable collection)</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>Use your card, rather than cash, to shop</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>Please use the designated entry and exit gates.</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>For your safety, all entrances are equipped with thermal cameras.</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>Do appreciate that if your temperature reading is higher than 38 degree C, you will be requested to return home.</p>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                    <li class="text-content">
+                                                        <div class="d-flex-li">
+                                                            <h3>Safety Is our Priority</h3>
+                                                            <div class="scroll-wrapper">
+                                                                <ul>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>All our Staff will be given a swab test and a thorough medical examination before we reopen our doors to you.</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>To ensure hygiene of the highest standard, you will find sanitizer dispensers at every entrance, exits, in restrooms and throughout the mall, 10-20 meters apart.</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>We urge you to use only the escalators, as lifts are restricted for those with special needs and parents with strollers</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>As an added safety feature, you will find stickers on escalator steps so that no one comes too close to you. Social distancing is still very important!</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>Another step towards escalator safety: handrails will be sterilized and sanitized.</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>Do rely on your instincts while shopping for clothes, as fitting rooms will not be available for trials. The same goes for make-up testers and shoes.</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>We will not be able to honor returns or exchanges either, during this period.</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>In order to avoid crowding in restrooms, entry will be managed and monitored by security. Please do use the floor decals and stickers to maintain a safe distance from other users.</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>One last thing. You may find your preferred nook or comfy couch missing so you may not be able to put your feet up and relax at the Mall. Do bear with us. We have removed all seating to ensure you don’t have to deal with large groups in public spaces.</p>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                    <li><img src="/assets/images/Safety_Image.jpg" alt="" /></li>
+                                                    <li><img src="/assets/images/restaurants.png" alt="" /></li>
+                                                    <li class="text-content">
+                                                        <div class="d-flex-li">
+                                                            <h3>Restaurants &amp; F&amp;B sections</h3>
+                                                            <div class="scroll-wrapper hidden-scroll">
+                                                                <ul>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>You don’t have to wait any more to enjoy the delicacies you have been dreaming of all these days. But do remember:</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>Restaurants and the food court will be operating only at 30% capacity</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>We can only seat 2 per table, with a social distance of 2.5 meters between tables</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>You can savor your dish only on disposable cutlery and utensils and take-away packaging</p>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="qr-code-wrap">
+                                                <p>Download our mall guide to help organize your visit at Yas Mall</p>
+                                                <ul>
+                                                    <li><a href="/assets/files/YASMALL_guide2020_eng.pdf"><img class="" src="/assets/images/download-btn.png" alt="" width="120" /></a></li>
+                                                    <li>or scan</li>
+                                                    <li><img src="/assets/images/qr-code.svg" alt="" width="80" /></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Start FAQs-->
+                                <div class="tab-pane fade" id="div-two" role="tabpanel" aria-labelledby="tab-two">
+                                    <div class="clearfix abouttab-holder">
+                                        <div class="content-box">
+                                            At YAS Mall your safety is our priority.
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="whts-store-wrp d-none">
+                                                <div id="sync1" class="owl-carousel owl-theme">
+                                                    <div class="item">
+                                                        <div class="video-wrapper">
+                                                            <div class="play-pause-btn-wrp"><button class="play-btn"> </button> <button class="pause-btn"> </button></div>
+                                                            Your browser does not support HTML5 video.
+                                                            <div class="video-caption">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="item">
+                                                        <div class="video-wrapper">
+                                                            <div class="play-pause-btn-wrp"><button class="play-btn"> </button> <button class="pause-btn"> </button></div>
+                                                            Your browser does not support HTML5 video.
+                                                            <div class="video-caption">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="item">
+                                                        <div class="video-wrapper">
+                                                            <div class="play-pause-btn-wrp"><button class="play-btn"> </button> <button class="pause-btn"> </button></div>
+                                                            Your browser does not support HTML5 video.
+                                                            <div class="video-caption">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div id="sync2" class="owl-carousel thumbslider owl-theme">
+                                                    <div class="item">
+                                                        <div class="thumb-img-wrap"><img src="/assets/images/safty-thumb-one.png" alt="" /></div>
+                                                    </div>
+                                                    <div class="item">
+                                                        <div class="thumb-img-wrap"><img src="/assets/images/safty-thumb-two.png" alt="" /></div>
+                                                    </div>
+                                                    <div class="item">
+                                                        <div class="thumb-img-wrap"><img src="/assets/images/safty-thumb-three.png" alt="" /></div>
+                                                    </div>
+                                                </div>
+                                                <div class="video-wrap"></div>
+                                            </div>
+                                            <!-- grid -->
+                                            <div class="whts-store-wrp">
+                                                <ul class="covid-19-grid">
+                                                    <li class="video-img gtm-track-videoplay-event" name="@Model.Value("titleTAndC")-VideoPlay">
+                                                        <img src="/assets/images/mask-img.png" alt="" />
+                                                        <video controls="">
+                                                            <source src="/assets/files/Safety-Measures-Eng.mp4" type="video/mp4" />
+                                                            <source src="/assets/files/Safety-Measures-Eng.mp4" type="video/ogg" />
+                                                            Your browser does not support HTML video.
+                                                        </video>
+                                                    </li>
+                                                    <li class="text-content">
+                                                        <div class="d-flex-li">
+                                                            <h3>When you are here with us</h3>
+                                                            <div class="scroll-wrapper">
+                                                                <ul>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>To prevent crowding and ensure adequate distancing, fewer customers will be allowed into stores. Do wait your turn and then shop peacefully in complete privacy.</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>While up and running, lifts and escalators will be sanitized every 20 minutes</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>All frequently used access or touchpoints like door handles, trolleys, tissue dispensers and sensors will be sanitized after each use</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>For your safety, all touch screens will be disabled as well</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>Entrance doors will always be open</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>Wheelchairs and Customer Information Desks will be sanitized after each use or interaction. So feel free to approach us for any sort of help.</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>All Mall staff will wear gloves and masks at all times</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>Check-out staff at stores and supermarkets will observe a strict sanitization regime through frequent sanitizing and washing of hands</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>Security staff will ensure social distancing at every entrance check in and are authorized to deny access if health and safety requirements are not fulfilled</p>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="qr-code-wrap">
+                                                <p>Download our mall guide to help organize your visit at Yas Mall</p>
+                                                <ul>
+                                                    <li><a href="/assets/files/YASMALL_guide2020_eng.pdf"><img class="" src="/assets/images/download-btn.png" alt="" width="120" /></a></li>
+                                                    <li>or scan</li>
+                                                    <li><img src="/assets/images/qr-code.svg" alt="" width="80" /></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--End FAQs-->
+                                <!--Start Terms And Conditons-->
+                                <div class="tab-pane fade" id="div-three" role="tabpanel" aria-labelledby="tab-three">
+                                    <div class="clearfix abouttab-holder">
+                                        <div class="content-box">
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="whts-store-wrp">
+                                                <ul>
+                                                    <li><img src="/assets/images/senitizer-img.png" alt="" /></li>
+                                                    <li class="text-content">
+                                                        <div class="d-flex-li">
+                                                            <h3>When you are back home</h3>
+                                                            <div class="scroll-wrapper hidden-scroll">
+                                                                <ul>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>Restrooms will be sanitized every night, as well as all frequent touch points</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>Card machines will be sanitized</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>All products handled by customers will be sanitized and then placed back on the shelves</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>All stores and restaurants will be completely sanitized DAILY as per Government requirements</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>Staff transportation and accommodation will be maintained as per the guidelines of the Health Department</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>Staff uniforms and working tools will be sanitized daily</p>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                    <li class="text-content">
+                                                        <div class="d-flex-li">
+                                                            <h3>Going one step further</h3>
+                                                            <div class="scroll-wrapper hidden-scroll">
+                                                                <p class="">We also request you, dear shopper:</p>
+                                                                <ul>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>Do keep a safe social distance between cars by ensuring there is 1 free parking lot between your car and the next</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>For your safety, no valet parking or car wash services will be available at this time</p>
+                                                                    </li>
+                                                                </ul>
+                                                                <p class="just-text">Rest assured, Yas Mall is safe and ready to receive you so you can open up and experience life again after all these weeks on lockdown mode.</p>
+                                                                <p class="just-text">See you soon. We’ve missed you!</p>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                    <li><img src="/assets/images/parking_Image.jpg" alt="" /></li>
+                                                </ul>
+                                            </div>
+                                            <div class="qr-code-wrap">
+                                                <p>Download our mall guide to help organize your visit at Yas Mall</p>
+                                                <ul>
+                                                    <li><a href="/assets/files/YASMALL_guide2020_eng.pdf"><img class="" src="/assets/images/download-btn.png" alt="" width="120" /></a></li>
+                                                    <li>or scan</li>
+                                                    <li><img src="/assets/images/qr-code.svg" alt="" width="80" /></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--End Terms And Conditons-->
+                            </div>
+                        </div>
+                        <!--End Tabs Holder-->
+                    </section>
+                    <!--End Akyasi Tabs-->
+                }
+                @if (currLang == "ar")
+                {
+                    <!--Start Main Title-->
+                    <div class="general-paragraph text-center">
+                        <h1 class="main-info-heading">مرحى! ياس مول يفتح أبوابه مجدداً.</h1>
+                    </div>
+                    <!--End Main Title-->
+                    <!--Start Akyasi Tabs-->
+                    <section class="akyasi-holder">
+                        <!--Start Tabs Holder-->
+                        <div class="row">
+                            <div class="col-md-12 general-paragraph text-center">
+                                <p>وجهتك المفضلة للتسوق أصبحت جاهزة لاستقبالك.</p>
+                                <p>خلال فترة الإقفال، عمِلنا بلا كللٍ لتجهيز المول المفضل لديك وتجديده، لتستمتِع أنت وأحباؤك بتجربة تسوقٍ آمنة ومريحة.</p>
+                            </div>
+                        </div>
+                        <div class="akyasi-tabs-holder custom-tabs">
+                            <!--Start Custom Tabs Title-->
+                            <ul class="nav nav-tabs" id="wsfyTab" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link active" id="tab-one">أنت والمول المفضل لديك</a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link" id="tab-two">إجراءات السلامة في ياس مول</a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link" id="tab-three">ركن السيارات وغيرها من المعلومات</a>
+                                </li>
+                            </ul>
+                            <!--End Custom Tabs Title-->
+                            <div class="tab-content" id="wsfyTabContent">
+                                <div class="tab-pane fade show active" id="div-one" role="tabpanel" aria-labelledby="tab-one">
+                                    <div class="clearfix abouttab-holder">
+                                        <div class="content-box">
+                                            نطلب من زبائننا المسؤولين بأن يتبعوا الإرشادات الأساسية للصحة والسلامة أثناء تسوقهم في ياس مول.
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="whts-store-wrp">
+                                                <ul>
+                                                    <li><img src="/assets/images/store_pic_one.png" alt="" /></li>
+                                                    <li class="text-content">
+                                                        <div class="d-flex-li">
+                                                            <h3>لاستعداد لزيارة ياس مول</h3>
+                                                            <div class="scroll-wrapper">
+                                                                <ul>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>ارتدِ القفازات والقناع قبل دخول المول ولا تنزعها طوال فترة التسوق.</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>أحضِر أكياس التسوق الخاصة بك (لا شكّ أنك تحتفظ بمجموعة تُحسد عليها)</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>استخدِم بطاقتك بدلاً من النقود للتسوق</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>استخدِم بوابات الدخول والخروج المعيّنة.</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>من أجل سلامتك، تم تجهيز جميع المداخل بكاميرات حرارية.</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>إذا كانت درجة حرارتك أعلى من 38 درجة مئوية، سيُطلب منك العودة إلى المنزل. نقدّر تعاونك.</p>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                    <li class="text-content">
+                                                        <div class="d-flex-li">
+                                                            <h3>السلامة أوّلاً</h3>
+                                                            <div class="scroll-wrapper">
+                                                                <ul>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>سيخضع جميع موظفينا لاختبار مسحة الحلق وفحص طبّي شامل قبل أن نعيد فتح أبوابنا لك.</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>لضمان أعلى مستوى من النظافة، ستجد موزعات المطهّر عند كلّ مدخلٍ ومخرجٍ، في الحمامات وفي جميع أنحاء المول، تبعد عن بعضها 10-20 متراً.</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>نرجو منك استخدام السلالم المتحركة فحسب، لأن استخدام المصاعد سيكون محصوراً بذوي الاحتياجات الخاصة والآباء الذين يدفعون عربات الأطفال.</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>من عناصر السلامة الإضافية، ستجد ملصقات على درجات السّلم الكهربائي بحيث لا يقترب منك أحد. لا يزال التباعد الاجتماعي بالغ الأهمية!</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>خطوة أخرى حرصاً على سلامتك عند استخدام السلم الكهربائي: سيتم تعقيم الدرابزين وتطهيره لتتمكن من التمسك بأمان بيدٍ وحمل أكياس التسوق باليد الأخرى.</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>اعتمد على غرائزك أثناء التسوق للملابس لأن غرف القياس لن تكون متاحة للتجربة. وينطبق ذلك على أدوات اختبار المكياج والأحذية.</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>نعتذر عن قبول البضاعة المرتجعة والتبديل خلال هذه الفترة.</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>لتجنب الازدحام في دورات المياه، يتولى عناصر الأمن إدارة الدخول ومراقبته. يرجى التقيّد بالملصقات والشارات الأرضية للحفاظ على مسافةٍ آمنة مع المستخدمين الآخرين.</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>أمر أخير. ربما لن تجد ركنك أو أريكتك المفضلة لرفع قدميك والاسترخاء في المول. تحلّ بالصبر. لقد أزلنا جميع المقاعد حرصاً منّا على عدم الاختلاط مع مجموعات كبيرة في الأماكن العامة.</p>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                    <li><img src="/assets/images/Safety_Image.jpg" alt="" /></li>
+                                                    <li><img src="/assets/images/restaurants.png" alt="" /></li>
+                                                    <li class="text-content">
+                                                        <div class="d-flex-li">
+                                                            <h3>أقسام المطاعم والمأكولات والمشروبات</h3>
+                                                            <div class="scroll-wrapper hidden-scroll">
+                                                                <ul>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>لا داعي للانتظار أكثر. أصبح بإمكانك اليوم أن تستمتع بالمأكولات الشهية التي كنت تحلم بها طوال تلك الأيام. لكن تذكّر التالي:</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>تعمل المطاعم وقاعة الطعام بسعة 30 % فقط</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>يمكننا استقبال 2 مقاعد على كل طاولة، مع الحفاظ على مسافة اجتماعية تبلغ 2.5 متر بين الطاولات</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>يمكنك تناول وجبتك باستخدام أدوات المائدة والأواني التي تستعمل لمرّة واحدة وتغليف الوجبات الجاهزة.</p>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="qr-code-wrap">
+                                                <p>حمل دليل المول لمساعدتك في ترتيب زيارتك إلى ياس مول.</p>
+                                                <ul>
+                                                    <li><a href="/assets/files/YASMALL_guide2020_arb.pdf"><img class="" src="/assets/images/download-btn.png" alt="" width="120" /></a></li>
+                                                    <li>or scan</li>
+                                                    <li><img src="/assets/images/qr-code.svg" alt="" width="80" /></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Start FAQs-->
+                                <div class="tab-pane fade" id="div-two" role="tabpanel" aria-labelledby="tab-two">
+                                    <div class="clearfix abouttab-holder">
+                                        <div class="content-box">
+                                            سلامتكم هي أولويتنا في ياس مول
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="whts-store-wrp d-none">
+                                                <div id="sync1" class="owl-carousel owl-theme">
+                                                    <div class="item">
+                                                        <div class="video-wrapper">
+                                                            <div class="play-pause-btn-wrp"><button class="play-btn"> </button> <button class="pause-btn"> </button></div>
+                                                            Your browser does not support HTML5 video.
+                                                            <div class="video-caption">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="item">
+                                                        <div class="video-wrapper">
+                                                            <div class="play-pause-btn-wrp"><button class="play-btn"> </button> <button class="pause-btn"> </button></div>
+                                                            Your browser does not support HTML5 video.
+                                                            <div class="video-caption">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="item">
+                                                        <div class="video-wrapper">
+                                                            <div class="play-pause-btn-wrp"><button class="play-btn"> </button> <button class="pause-btn"> </button></div>
+                                                            Your browser does not support HTML5 video.
+                                                            <div class="video-caption">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div id="sync2" class="owl-carousel thumbslider owl-theme">
+                                                    <div class="item">
+                                                        <div class="thumb-img-wrap"><img src="/assets/images/safty-thumb-one.png" alt="" /></div>
+                                                    </div>
+                                                    <div class="item">
+                                                        <div class="thumb-img-wrap"><img src="/assets/images/safty-thumb-two.png" alt="" /></div>
+                                                    </div>
+                                                    <div class="item">
+                                                        <div class="thumb-img-wrap"><img src="/assets/images/safty-thumb-three.png" alt="" /></div>
+                                                    </div>
+                                                </div>
+                                                <div class="video-wrap"></div>
+                                            </div>
+                                            <!-- grid -->
+                                            <div class="whts-store-wrp">
+                                                <ul class="covid-19-grid">
+                                                    <li class="video-img">
+                                                        <img src="/assets/images/mask-img.png" alt="" />
+                                                        <video controls="">
+                                                            <source src="/assets/files/Safety-Measures-Eng.mp4" type="video/mp4" />
+                                                            <source src="/assets/files/Safety-Measures-Eng.mp4" type="video/ogg" />
+                                                            Your browser does not support HTML video.
+                                                        </video>
+                                                    </li>
+                                                    <li class="text-content">
+                                                        <div class="d-flex-li">
+                                                            <h3>عندما تكون هنا معنا</h3>
+                                                            <div class="scroll-wrapper">
+                                                                <ul>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>منعاً للازدحام ومن أجل ضمان المسافة الآمنة، نسمح لعددٍ قليل من العملاء فقط بالدخول إلى المتاجر. انتظِر دورك ثم تسوق بسلام وخصوصية تامّة.</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>أثناء فترة التشغيل، سيتم تعقيم المصاعد والسلالم الكهربائية كلّ 20 دقيقة</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>تعقيم جميع نقاط الوصول أو نقاط الاتصال المستخدمة بشكلٍ متكرر مثل مقابض الأبواب والعربات وموزعات المناديل وأجهزة الاستشعار بعد كلّ استخدام</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>من أجل سلامتك، سيتم تعطيل جميع شاشات اللمس أيضاً</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>ستبقى أبواب الدخول مفتوحة دائماً</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>سيتم تعقيم الكراسي المتحركة ومكاتب خدمة العملاء بعد كلّ استخدام أو تفاعل. لذا لا تتردد في الاتصال بنا للحصول على أي نوع من المساعدة.</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>يرتدي جميع موظفي المول القفازات والأقنعة في جميع الأوقات</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>يحرص الموظفون العاملون في المتاجر ومحلات السوبر ماركت على تطبيق نظام التعقيم الصارم من خلال التعقيم المتكرر وغسل اليدين</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>يحرص موظفو الأمن على تطبيق التباعد الاجتماعي عند كلّ محطة دخول ويحقّ لهم منع دخول أي شخص لا يستوفي متطلبات الصّحة والسلامة.</p>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="qr-code-wrap">
+                                                <p>حمل دليل المول لمساعدتك في ترتيب زيارتك إلى ياس مول.</p>
+                                                <ul>
+                                                    <li><a href="/assets/files/YASMALL_guide2020_arb.pdf"><img class="" src="/assets/images/download-btn.png" alt="" width="120" /></a></li>
+                                                    <li>or scan</li>
+                                                    <li><img src="/assets/images/qr-code.svg" alt="" width="80" /></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--End FAQs-->
+                                <!--Start Terms And Conditons-->
+                                <div class="tab-pane fade" id="div-three" role="tabpanel" aria-labelledby="tab-three">
+                                    <div class="clearfix abouttab-holder">
+                                        <div class="content-box">
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="whts-store-wrp">
+                                                <ul>
+                                                    <li><img src="/assets/images/senitizer-img.png" alt="" /></li>
+                                                    <li class="text-content">
+                                                        <div class="d-flex-li">
+                                                            <h3>عندما تعود إلى المنزل</h3>
+                                                            <div class="scroll-wrapper hidden-scroll">
+                                                                <ul>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>سيتم تطهير الحمامات وغرف الصلاة كلّ ليلة وكذلك جميع نقاط التلامس المتكررة</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>تعقيم آلات البطاقات</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>تعقيم جميع المنتجات التي يلمسها العملاء ثم يتم وضعها على الرفوف</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>تعقيم جميع المتاجر والمطاعم بشكلٍ يومي وفقاً لمتطلبات الحكومة</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>الحفاظ على وسائل النقل والإقامة للموظفين وفقاً للمبادئ التوجيهية لإدارة الصّحة</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>تعقيم زيّ الموظفين وأدوات العمل يومياً</p>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                    <li class="text-content">
+                                                        <div class="d-flex-li">
+                                                            <h3>وأبعد من كل هذا</h3>
+                                                            <div class="scroll-wrapper hidden-scroll">
+                                                                <p class="">نطلب منك أيضاً عزيزي المتسوق:</p>
+                                                                <ul>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>الحفاظ على مسافة اجتماعية آمنة بين السيارات من خلال ترك موقفٍ واحد خالٍ بين سيارتك والسيارة التالية</p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>•</span>
+                                                                        <p>حفاظاً على سلامتك، لن تتوفر خدمة ركن السيارات أو غسيل السيارات في الوقت الحالي</p>
+                                                                    </li>
+                                                                </ul>
+                                                                <p class="just-text">اطمئِن، ياس مول آمن وجاهز لاستقبالك حتى تتمكن من الانفتاح على الحياة وعيشها من جديد بعد قضاء كلّ هذه الأسابيع في جوّ الإقفال العام</p>
+                                                                <p class="just-text">نراك قريباً. لقد افتقدناك!</p>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                    <li><img src="/assets/images/parking_Image.jpg" alt="" /></li>
+                                                </ul>
+                                            </div>
+                                            <div class="qr-code-wrap">
+                                                <p>حمل دليل المول لمساعدتك في ترتيب زيارتك إلى ياس مول.</p>
+                                                <ul>
+                                                    <li><a href="/assets/files/YASMALL_guide2020_arb.pdf"><img class="" src="/assets/images/download-btn.png" alt="" width="120" /></a></li>
+                                                    <li>or scan</li>
+                                                    <li><img src="/assets/images/qr-code.svg" alt="" width="80" /></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--End Terms And Conditons-->
+                            </div>
+                        </div>
+                        <!--End Tabs Holder-->
+                    </section>
+                    <!--End Akyasi Tabs-->
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<!--End Inner Page Wrapper-->
+@*<script type="text/javascript" src="~/scripts/video.js"></script>*@
+<script type="text/javascript" src="~/scripts/akyasi.js"></script>

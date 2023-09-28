@@ -1,0 +1,190 @@
+﻿@using ContentModels = Umbraco.Web.PublishedModels;
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.OfferShopsCatalogue>
+@using Umbraco.Web.Mvc;
+@{
+    Layout = "master.cshtml";
+    ViewBag.PageTitle = Model.ShopTitle;
+
+    var lang = System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+}
+<style type="text/css">
+    .inner-section {
+        padding-bottom: 10px;
+    }
+</style>
+<!--Start Main Banner-->
+@{
+    var offerBannerImg = Model.Value<IPublishedContent>("shopMainBanner");
+    if (offerBannerImg != null)
+    {
+        <section class="main-banner">
+            <div class="container-fluid custom-container-fluid">
+                <div class="main-slide">
+                    <div class="slide">
+                        <img src="@offerBannerImg.Url()" alt="@Model.ShopTitle" class="img-fluid" />
+                    </div>
+                </div>
+            </div>
+        </section>
+    }
+}
+<!--End Main Banner-->
+<!--Start Inner Page Wrapper-->
+@{
+    var parentType = Model.Ancestor("eventDetails");
+    if (parentType == null)
+    {
+        parentType = Model.Ancestor("offerDetails");
+    }
+}
+<div class="inner-section">
+    <div class="container-fluid custom-container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <!--Start Breadcrumbs-->
+                <nav aria-label="breadcrumb" class="breadcrumb-holder">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="@Umbraco.GetDictionaryValue("LogoHref")">@Umbraco.GetDictionaryValue("Home")</a></li>
+                        <li class="breadcrumb-seprator"><i class="fas fa-angle-right"></i></li>
+                        <li class="breadcrumb-item" aria-current="page"><a href="@parentType.Parent.Url()">@parentType.Parent.Name</a></li>
+                        <li class="breadcrumb-seprator"><i class="fas fa-angle-right"></i></li>
+                        <li class="breadcrumb-item" aria-current="page"><a href="@Model.Parent.Url()">@Model.Parent.Name</a></li>
+                        <li class="breadcrumb-seprator"><i class="fas fa-angle-right"></i></li>
+                        <li class="breadcrumb-item active" aria-current="page">@Model.ShopTitle</li>
+
+                    </ol>
+                </nav>
+                <!--End Breadcrumbs-->
+            </div>
+        </div>
+    </div>
+</div>
+<!--End Inner Page Wrapper-->
+<!--Start Search Result-->
+<section class="search-result">
+    <div class="container-fluid custom-container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="search-result-container">
+                    @{
+                        var prodCount = 0;
+                        IEnumerable<IPublishedContent> lstProductCateg = GetProductCategories();
+                        @*if (lstProductCateg.Count() == 0)
+                            {
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <!--Start Main Title-->
+                                        <div class="clearfix title-holder">
+                                            <h1 class="title innerheading">@Model.ShopTitle</h1>
+                                        </div>
+                                        <!--End Main Title-->
+                                    </div>
+                                    <p class="empty-message">
+                                        <b>No Record Found</b>
+                                    </p>
+                                </div>
+                            }*@
+                        if (lstProductCateg.Count() > 0)
+                        {
+                            foreach (IPublishedContent prodCateg in lstProductCateg)
+                            {
+                                var products = GetShopProductsByCategory(prodCateg);
+                                if (products.TotalCount > 0)
+                                {
+                                    prodCount = prodCount + 1;
+                                    string subHead = string.Empty;
+                                    string shopTitle = string.Empty;
+                                    string offerTitle = string.Empty;
+                                    string floorName = string.Empty;
+                                    if (Model.Value("subHeading") != null)
+                                    {
+                                        subHead = Model.Value("subHeading").ToString();
+                                    }
+                                    if (Model.Value("ShopTitle") != null)
+                                    {
+                                        shopTitle = Model.Value("ShopTitle").ToString();
+                                    }
+                                    if (Model.Value("floorName") != null)
+                                    {
+                                        floorName = Model.Value("floorName").ToString();
+                                    }
+                                    if (prodCateg.Value("titleVorto") != null)
+                                    {
+                                        offerTitle = prodCateg.Value("titleVorto").ToString();
+                                    }
+
+                                    subHead = subHead.Replace("[#ShopTitle#]", shopTitle.ToString());
+                                    subHead = subHead.Replace("[#OfferTitle#]", offerTitle.ToString());
+                                    subHead = subHead.Replace("[#FloorName#]", floorName.ToString());
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <!--Start Main Title-->
+                                            <div class="clearfix title-holder">
+                                                @*<h1 class="title innerheading">@prodCateg.GetVortoValue("titleVorto") <span> By </span> @Model.Content.GetVortoValue("ShopTitle")</h1>*@
+                                                <h1 class="title innerheading">@Html.Raw(subHead)</h1>
+                                            </div>
+                                            <!--End Main Title-->
+                                        </div>
+                                        @{
+                                            foreach (IPublishedContent product in products.Products)
+                                            {
+                                                var productImg = product.Value<IPublishedContent>("productImage");
+                                                <div class="col-md-4">
+                                                    <div class="os-prodbox">
+                                                        <div class="brand-box">
+                                                            <div class="brand-logo">
+                                                                <img src="@productImg.Url()" alt="@product.Value("productName")" />
+                                                                <div class="prod-name">
+                                                                    <div class="shop-name"><strong>@Model.ShopTitle</strong></div>
+                                                                    <div class="product-name">@Html.Raw(product.Value("productName"))</div>
+                                                                    <div class="prod-price">@Html.Raw(product.Value("productPrice"))</div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            }
+                                        }
+                                    </div>
+                                }
+                            }
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!--End  Search Result-->
+
+@functions {
+
+    private IEnumerable<IPublishedContent> GetProductCategories()
+    {
+        IEnumerable<IPublishedContent> lstProductCateg = Umbraco.Content(Guid.Parse("3489beb6-8524-40bd-9d8a-3ac2dacd545b"))
+            .Children().Where(x => x.IsVisible()).OrderBy(x => x.Name);
+
+        return lstProductCateg;
+    }
+
+    private dynamic GetShopProductsByCategory(IPublishedContent prodCateg)
+    {
+        IEnumerable<IPublishedContent> productsList = Model.Children().Where(x => x.IsVisible() && x.HasValue("productCategory")
+            && x.Value<IEnumerable<dynamic>>("productCategory").Any(sc => sc.Id == prodCateg.Id)).OrderBy(x => x.Name);
+
+        int totalCount = productsList.Count();
+
+        return new
+        {
+            Products = productsList == null ? new List<IPublishedContent>() : productsList,
+            TotalCount = totalCount
+        };
+    }
+
+}
+<script type="text/javascript">
+    $(function () {
+        $(".search-result-container .brand-box").slice(0, 24).show();
+    });
+</script>

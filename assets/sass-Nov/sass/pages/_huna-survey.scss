@@ -1,0 +1,378 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+.hunaSurvey-header {
+  background-color: #000;
+  padding: 10px 15px;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 999;
+  .d-flex {
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+.page-content .buttons {
+  text-align: center;
+}
+.hunaSurveyHeadOne {
+  margin-top: 100px;
+  .buttons {
+    [name="submitbtn"] {
+      display: flex;
+      background-color: #000;
+      color: #fff;
+      width: 100%;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 15px 10px 15px;
+      font-family: 'Poppins', sans-serif !important;
+      font-weight: 300;
+      margin-top: 40px;
+      text-align: center;
+    }
+  }
+  .itsdone  {
+    margin-top: 30px;
+    .form-control {
+      margin: 10px 0px !important;
+    }
+    h2 {
+      font-size: 24px !important;
+      font-family: 'Poppins', sans-serif !important;
+    }
+  }
+  .thanks {
+    .form-control {
+      margin: 10px 0px !important;
+    }
+    h2 {
+      font-size: 18px !important;
+      font-family: 'Poppins', sans-serif !important;
+    }
+  }
+  .feedback {
+    .form-control {
+      margin: 10px 0px !important;
+    }
+    h2 {
+      font-size: 18px !important;
+      font-family: 'Poppins', sans-serif !important;
+      font-weight: 300 !important;
+    }
+  }
+  .whatelementswouldyouchangeorimprove {
+    label {
+      margin-bottom: 60px;
+    }
+  }
+  >.container {
+    padding-right: 25px;
+    padding-left: 25px;
+  }
+  textarea.form-control {
+    height: 100px;
+  }
+  .longanswer {
+    .umbraco-forms-label {
+      margin-top: 8px;
+    }
+    .form-control {
+      border: 1px solid #707070;
+    }
+  }
+  .btn.prev.cancel {
+    display: none;
+  }
+  input {
+    border: 1px solid;
+    height: 45px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: #000;
+  }
+  .singlechoice {
+    > label {
+      // display: none !important;
+      margin-bottom: 50px;
+    }
+    &[style="display: flex;"] {
+      label {
+        display: block !important;
+      }
+    }
+
+    .col-sm-12 {
+      > div {
+        display: flex;
+        gap: 20px;
+        .radio {
+          text-align: center;
+          padding: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border: 1px solid #707070;
+          height: 45px;
+          font-size: 18px;
+          font-family: 'Poppins', sans-serif;
+          label {
+            display: flex;
+            margin-bottom: 0;
+            width: 100%;
+            height: 100%;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            &.radio-active {
+              color: #fff;
+              background-color: #000;
+            }
+            input {
+              opacity: 1;
+              display: none;
+              // &:checked {
+              //   + .btn-style {
+              //       background-color: rgba(0, 0, 0, 0.215);
+              //       width: 100%;
+              //       display: flex;
+              //       height: 100%;
+              //       position: absolute;
+              //       z-index: 0;
+              //     }
+              //   }
+              // }
+            }
+          }
+        }
+      }
+    }
+
+    &.howoftendoyouvisitthefoodhall {
+      .col-sm-12 {
+        display: inline-block;
+        > div {
+          flex-direction: column;
+        }
+        .radio {
+          text-align: center;
+          padding: 0;
+          display: inline-block;
+          display: block;
+          width: auto;
+          border: 0;
+          position: relative;
+
+          display: flex;
+          justify-content: start;
+          align-items: center;
+          margin-bottom: 10px;
+          label {
+            display: inline-block;
+            margin-bottom: 0;
+            width: auto;
+            height: auto;
+            cursor: pointer;
+            position: relative;
+            text-align: left;
+            margin-left: 45px;
+            font-size: 16px;
+            // font-weight: 900;
+            &::before {
+              position: absolute;
+              border: 1px solid rgba(0, 0, 0, 0.25);
+              height: 30px;
+              width: 30px;
+              content: "";
+              left: -40px;
+              top: -4px;
+              border-radius: 50%;
+            }
+            &.radio-active {
+              color: black;
+              background-color: white;
+            }
+            input {
+              opacity: 1;
+              display: none;
+
+              &:checked {
+                + .btn-style {
+                  background-color: rgba(0, 0, 0, 1);
+                  width: 100%;
+                  display: flex;
+                  position: absolute;
+                  z-index: 0;
+                  height: 20px;
+                  width: 20px;
+                  left: -35px;
+                  top: 1px;
+                  border-radius: 50%;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .multiplechoice {
+    .checkboxlist {
+      .checkbox-wrapper {
+        display: flex;
+        align-items: center;
+        position: relative;
+        margin-bottom: 10px;
+        .form-control {
+          display: inline-block;
+          width: auto;
+          display: none;
+        }
+        label {
+          display: inline-block;
+          margin-bottom: 0;
+          width: auto;
+          height: auto;
+          cursor: pointer;
+          position: relative;
+          text-align: left;
+          margin-left: 45px;
+          // font-weight: 900;
+          font-family: 'Poppins', sans-serif;
+          font-size: 16px;
+          &::before {
+            position: absolute;
+            border: 1px solid rgba(0, 0, 0, 0.25);
+            height: 30px;
+            width: 30px;
+            content: "";
+            left: -40px;
+            top: -4px;
+            border-radius: 0;
+          }
+        }
+        &.radio-active {
+          position: relative;
+          // margin-left: 45px;
+          &::before {
+            background-color: rgba(0, 0, 0, 1);
+            display: flex;
+            content: " ";
+            position: absolute;
+            z-index: 0;
+            height: 20px;
+            width: 20px;
+            left: 10px;
+            top: 1px;
+            border-radius: 0;
+          }
+          input {
+            opacity: 1;
+            display: none;
+
+            // &:checked {
+            //   + label {
+            //     background-color: rgba(0, 0, 0, 1);
+            //     width: 100%;
+            //     display: flex;
+            //     position: unset;
+            //     z-index: 0;
+            //     height: 20px;
+            //     width: 20px;
+            //     left: 0px;
+            //     top: 1px;
+            //     border-radius: 0;
+            //   }
+            // }
+          }
+        }
+      }
+    }
+  }
+
+  .titleanddescription {
+    .form-control {
+      border: 0px !important;
+      margin: 40px 0px;
+      padding-inline-start: 0px;
+      h2 {
+        font-family: 'Poppins', sans-serif;
+        color: #000;
+        font-weight: 600;
+        font-size: 24px;
+      }
+    }
+  }
+  .umbraco-forms-label {
+    display: block !important;
+    margin-bottom: 20px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 18px;
+    color: #000;
+  }
+  .emailaddress {
+    margin-top: 40px;
+  }
+
+  .next {
+    background: #000;
+    color: #fff;
+    padding: 15px 40px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 18px;
+    line-height: 10px;
+  }
+}
+
+@media screen and (min-width: 769px) {
+  .hunaSurveyHeadOne {
+    width: 100%;
+    max-width: 600px;
+    margin-inline: auto;
+  }
+}
+@media screen and (max-width: 768.99px) {
+  .hunaSurveyHeadOne {
+    margin-top: 40px;
+    margin-bottom: 60px;
+    .next {
+      position: fixed;
+      bottom: 20px;
+      text-align: center;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 0;
+      line-height: 10px;
+      width: 100%;
+      max-width: 90%;
+      
+    }
+    .singlechoice .col-sm-12 > div {
+      flex-direction: column;
+    }
+  }
+}
+
+// Events Cards Start
+.main-offer {
+  .mainoff-holder {
+    .offer-box {
+      .off-title {
+        color: #ffffff;
+      }
+      .offer-date {
+        strong {
+          color: #ffffff;
+        }
+      }
+      .offer-datebox {
+        a {
+          color: #ffffff;
+        }
+      }
+    }
+  }
+}
+// Events Cards End

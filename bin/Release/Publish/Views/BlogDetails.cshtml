@@ -1,0 +1,118 @@
+﻿@using ContentModels = Umbraco.Web.PublishedModels;
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.BlogDetails>
+@using Umbraco.Web.Mvc;
+@{
+    Layout = "master.cshtml";
+    // set page title segment
+    ViewBag.PageTitle = Model.BlogTitle;
+
+    // meta fallback
+    ViewBag.MetaDescription = Model.SmallDetails;
+
+    var otherBlogs = GetOtherBlogs();
+}
+<section class="product-details news-details">
+    <div class="container-fluid custom-container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <!--Start Breadcrumbs-->
+                <nav aria-label="breadcrumb" class="breadcrumb-holder">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="@Umbraco.GetDictionaryValue("LogoHref")">@Umbraco.GetDictionaryValue("Home")</a></li>
+                        <li class="breadcrumb-seprator"><i class="fas fa-angle-right"></i></li>
+                        <li class="breadcrumb-item">
+                            <a href="@Umbraco.GetDictionaryValue("MediaCenterHref")">@Umbraco.GetDictionaryValue("MediaCentre")</a>
+                        </li>
+                        <li class="breadcrumb-seprator"><i class="fas fa-angle-right"></i></li>
+                        <li class="breadcrumb-item active" aria-current="page">@Umbraco.GetDictionaryValue("Blogs")</li>
+                    </ol>
+                </nav>
+                <!--End Breadcrumbs-->
+                <div class="product-box">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="title post-title">
+                                <h1>@Model.Value("blogTitle")</h1>
+                            </div>
+                            @{
+                                var blogsBigImg = Model.Value<IPublishedContent>("bigImage");
+                                if (blogsBigImg != null)
+                                {
+                                    <div class="blog-item blog-details">
+                                        <div class="image">
+                                            <div class="date"><p><b>@String.Format("{0:dd MMM, yyyy}", Model.Value("postingDate"))</b></p></div>
+                                            <img src="@blogsBigImg.Url()" alt="@Model.Value("blogTitle")" />
+                                        </div>
+                                        <div class="text">
+                                            @Html.Raw(Model.Value("bigDetails"))
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            <!-- Blog Post Ends  -->
+                            <div class="share-box">
+                                <ul>
+                                    <li>
+                                        <h5>@Umbraco.GetDictionaryValue("Share")</h5>
+                                    </li>
+                                    <li class="fb-box">
+                                        <a href="javascript:void:(0);" data-text="@Model.Value("blogTitle")" data-url="" data-type="facebook" class="gtm-track-store-social-share" name="@Model.Value("blogTitle")-Facebook">
+                                            <img src="/assets/images/fb_white.png" alt="Facebook" />
+                                        </a>
+                                    </li>
+                                    <li class="twit-box">
+                                        <a href="javascript:void:(0);" data-text="@Model.Value("blogTitle")" data-url="" data-type="twitter" class="gtm-track-store-social-share" name="@Model.Value("blogTitle")-Twitter">
+                                            <img src="/assets/images/twitter_white.png" alt="Twitter" />
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <!-- Share Button Ends  -->
+                        </div>
+                        <div class="col-md-4">
+                            <div class="title side-title">
+                                <h4>@Umbraco.GetDictionaryValue("OtherBlogs")</h4>
+                            </div>
+                            @foreach (IPublishedContent itemOB in otherBlogs)
+                            {
+                                string blogsDet = Convert.ToString(itemOB.Value("smallDetails"));
+                                if (!string.IsNullOrEmpty(blogsDet))
+                                {
+                                    blogsDet = blogsDet.Substring(0, Math.Min(blogsDet.Length, 78));
+                                    if (blogsDet.Length == 78)
+                                    {
+                                        blogsDet = blogsDet + "..";
+                                    }
+                                }
+                                var itemOBImg = itemOB.Value<IPublishedContent>("thumbImg");
+                                <div class="blog-item">
+                                    <a href="@itemOB.Url()"><img class="othernewsimg" src="@itemOBImg.Url()" alt="@itemOB.Value("blogTitle")" /></a>
+                                    <div class="othernewsinfo">
+                                        <a href="@itemOB.Url()"><h3>@itemOB.Value("blogTitle")</h3></a>
+                                        <p style="margin-bottom:6px;"><b>@String.Format("{0:dd MMM, yyyy}", itemOB.Value("postingDate"))</b></p>
+                                        <p>@blogsDet</p>
+                                        <a href="@itemOB.Url()" class="btn btn-primary gtm-track-more-event" name="@Model.Value("blogTitle")-ReadMore">@Umbraco.GetDictionaryValue("ReadMore")</a>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@functions {
+    private IEnumerable<IPublishedContent> GetOtherBlogs()
+    {
+        var currBlogsId = Model.Id;
+
+        IEnumerable<IPublishedContent> otherBlogs = Model.AncestorOrSelf("blogLandingDocType").Children()
+        .Where(x => x.IsVisible() && x.Id != currBlogsId)
+        .Where(e => e.Value<IPublishedContent>("thumbImg") != null)
+        .OrderByDescending(c => c.Value<DateTime?>("postingDate")).Take(2);
+
+        return otherBlogs;
+    }
+}

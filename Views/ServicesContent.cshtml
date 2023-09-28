@@ -1,0 +1,80 @@
+﻿@using ContentModels = Umbraco.Web.PublishedModels;
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.ServicesContent>
+@using Umbraco.Web.Mvc;
+@{
+    /**/
+
+    Layout = "Master.cshtml";
+    ViewBag.MetaTitle = @Model.Value("metaTitle");
+    ViewBag.MetaDescription = @Model.Value("metaDescription");
+    ViewBag.MetaKeyword = @Model.Value("metaKeyword");
+
+    // set page title segment
+    ViewBag.PageTitle = Model.Value("pageTitle");
+
+    // get parent for breadcrumb
+    var parent = Model.Parent;
+}
+<style type="text/css">
+    .page-content .content .video-thumb {
+        display: block;
+    }
+
+    .page-content h1.title {
+        width: 100%;
+    }
+</style>
+<!--Start Main Banner-->
+@{
+    var serviceBannerImg = Model.Value<IPublishedContent>("servicesContentBanner");
+    if (serviceBannerImg != null)
+    {
+        <section class="main-banner">
+            <div class="container-fluid custom-container-fluid">
+                <div class="main-slide">
+                    <div class="slide">
+                        <img src="@serviceBannerImg.Url()" alt="@Model.Value("servicesContentTitle")" class="img-fluid" />
+                    </div>
+                </div>
+            </div>
+        </section>
+    }
+}
+<!--End Main Banner-->
+<!--Start Search Box-->
+<section class="filter-holder">
+    <div class="container-fluid custom-container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <!--Start Breadcrumbs-->
+                <nav aria-label="breadcrumb" class="breadcrumb-holder">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="@Umbraco.GetDictionaryValue("logoHref")">@Umbraco.GetDictionaryValue("Home")</a></li>
+                        <li class="breadcrumb-seprator"><i class="fas fa-angle-right"></i></li>
+                        <li class="breadcrumb-item"><a href="@parent.Url()">@parent.Value("servicesMainTitle")</a></li>
+                        <li class="breadcrumb-seprator"><i class="fas fa-angle-right"></i></li>
+                        <li class="breadcrumb-item active" aria-current="page">@Model.Value("servicesContentTitle")</li>
+                    </ol>
+                </nav>
+                <!--End Breadcrumbs-->
+                <div class="filter-box page-content">
+                    <div class="row">
+                        <h1 class="title">@Model.Value("servicesContentTitle")</h1>
+                        @Html.Raw(Model.Value("bigDetails"))
+                        @if (!string.IsNullOrWhiteSpace(Model.Value("videoLink").ToString()))
+                        {
+                            <a href="@Model.Value("videoLink")" class="video-thumb" data-fancybox rel="gallery1">
+                                <span class="icon"></span>
+                                <img src="@Model.Value("videoPoster")" width="100%" />
+                                <video autoplay controls style="display:none;">
+                                    <source src="@Model.Value("videoLink")" type="video/mp4" />
+                                </video>
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--End Search Box-->

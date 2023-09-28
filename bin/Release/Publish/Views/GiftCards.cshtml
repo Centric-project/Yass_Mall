@@ -1,0 +1,152 @@
+﻿@using ContentModels = Umbraco.Web.PublishedModels;
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.GiftCards>
+@using ClientDependency.Core.Mvc
+@using Umbraco.Web.Models
+@{
+    var lang = System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+    Layout = "master.cshtml";
+    ViewBag.PageTitle = Model.GiftTitle;
+
+    // meta fallback
+    ViewBag.MetaDescription = Model.GiftSmallDetails;
+}
+<style>
+    .heroText{
+        display: none;
+    }
+</style>
+<!--Start Inner Page Wrapper-->
+<main class="yasMallGiftCard">
+    <section class="heroSection">
+        <div class="container">
+            <div class="row">
+                <div class="heroImg">
+                    @{
+                        var shopLogo = Model.Value<IPublishedContent>("giftmainbanner");
+                        if (shopLogo != null)
+                        {
+                        <a href="https://www.aldargiftcard.com/adgc/buycard" target="_blank" rel="noopener noreferrer">
+                            <img src="@shopLogo.Url()" />
+                            </a>
+                        }
+                    }
+                            <div class="heroText">
+                                <h1>
+                                    Enjoy amazing offers<br>
+                                    with Aldar Gift Card
+                                </h1>
+                                <a class="btnBlack" href="https://cmmstaging.erewardsredeem.com/adgc/buycard">@Umbraco.GetDictionaryValue("BuyNow")</a>
+                            </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="perfectOccasion">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-12 text-center-x">
+                    <h1>@Model.Value("giftTitle")</h1>
+                    <p>@Html.Raw(Model.Value("giftSmallDetails"))</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="giftDetail">
+        <div class="container">
+            <div class="row align-items-center-x">
+                <div class="col-md-12 col-xl-7">
+                    <p>@Html.Raw(Model.Value("cardFeatures"))</p>
+                @*    <a class="btnBlack mb-5" href="https://www.aldargiftcard.com/adgc/welcome" target="_blank">@Umbraco.GetDictionaryValue("LearnMore")</a>*@
+                </div>
+                <div class="col-md-12 col-xl-5">
+                    @{
+                        var eventDetailPageImg = Model.Value<IPublishedContent>("giftCardImgOne");
+                        if (eventDetailPageImg != null)
+                        {
+
+                            <img src="@eventDetailPageImg.Url()" class="img-fluid" />
+                        }
+                    }
+                    @*<img src="../assets/images/gift-hero-image-2.png" alt="Image" />*@
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+
+
+
+
+
+<style>
+
+    .yasMallGiftCard {
+        margin-top: 90px;
+    }
+
+        .yasMallGiftCard .heroImg {
+            position: relative;
+        }
+
+            .yasMallGiftCard .heroImg img {
+                width: 100%;
+            }
+
+            .yasMallGiftCard .heroImg .heroText {
+                position: absolute;
+                z-index: 1;
+                right: 0;
+                margin-right: 5%;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+
+                .yasMallGiftCard .heroImg .heroText h1 {
+                    font-size: 36px;
+                    color: #ffffff;
+                    font-weight: 600;
+                }
+
+        .yasMallGiftCard .btnBlack {
+            background-color: #000000;
+            padding: 10px 30px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 26px;
+            color: #ffffff;
+            text-decoration: none;
+            margin-top: 10px;
+            display: inline-block;
+            margin-right: 0px;
+        }
+
+        .yasMallGiftCard .perfectOccasion {
+            margin-top: 50px;
+            margin-bottom: 30px;
+        }
+
+            .yasMallGiftCard .perfectOccasion h2 {
+                font-size: 32px;
+                margin-bottom: 40px;
+            }
+
+            .yasMallGiftCard .perfectOccasion p {
+                font-size: 18px;
+            }
+
+        .yasMallGiftCard .giftDetail img {
+            width: 100%;
+        }
+
+        .yasMallGiftCard .giftDetail p {
+            margin-bottom: 30px;
+            font-size: 18px;
+            margin-right: 80px;
+        }
+        .yasMallGiftCard {
+    margin-top: 90px;
+    margin-bottom: 30px;
+}
+</style>
+<!--End Inner Page Wrapper-->

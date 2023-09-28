@@ -1,0 +1,163 @@
+.footer {
+    color: $white;
+    font-size: 0.8125rem;
+
+    a {
+        color: $white;
+        &:hover {
+            color: $primaryBrown;
+        }
+    }
+
+    ul {
+        line-height: 24px;
+    }
+
+    .other-links {
+        @media screen and (max-width: 767px) {
+            margin-top: 20px;
+        }
+
+        .title {
+            font-family: $fontBold;
+        }
+    }
+
+    .contact-links {
+        font-size: 0.625rem;
+        font-family: $fontMedium;
+    }
+
+    .contact-holder {
+        @include direction('en') {
+            padding-left: 0;
+        }
+
+        @include direction('ar') {
+            padding-right: 0;
+        }
+
+        @media screen and (max-width: 767px) {
+            padding-left: 15px !important;
+            padding-right: 15px !important;
+            margin-top: 20px;
+        }
+    }
+
+    .footer-top {
+        background-color: $black;
+        padding: 30px 0;
+    }
+
+    .top-links {
+        border-top: 1px solid $white;
+        border-bottom: 1px solid $white;
+        padding: 8px 0;
+        margin-top: 20px;
+
+        .title {
+            font-size: 1.125rem;
+            margin-right: 20px;
+        }
+
+        .left-links {
+            @media screen and (max-width: 767px) {
+                float: none !important;
+            }
+
+            i {
+                font-size: 1rem;
+                line-height: 24px;
+            }
+        }
+
+        .right-links {
+            @media screen and (max-width: 767px) {
+                float: none !important;
+            }
+
+            li {
+                @include direction('en') {
+                    margin-left: 10px;
+                }
+
+                @include direction('ar') {
+                    margin-right: 10px;
+                }
+            }
+        }
+    }
+
+    .footer-bottom {
+        background-color:$primaryBrown;
+        padding: 13px 0;
+        font-size: 0.625rem;
+
+        @media screen and (max-width: 767px) {
+            text-align: center;
+        }
+
+        .text {
+            font-family: $fontBold;
+        }
+
+        .aldar {
+            @include direction('en') {
+                float: right;
+            }
+
+            @include direction('ar') {
+                float: left;
+            }
+
+            @media screen and (max-width: 767px) {
+                float: none !important;
+                display: flex;
+                justify-content: center;
+                gap: 30px;
+                align-items: center;
+            }
+        }
+
+        ul {
+            @include flexbox();
+
+            li {
+                @include direction('en') {
+                    margin-right: 25px;
+                }
+
+                @include direction('ar') {
+                    margin-left: 25px;
+                }
+
+                &:last-child {
+                    margin: 0;
+                }
+            }
+
+            @media screen and (max-width: 767px) {
+                flex-wrap: wrap;
+                margin: 0;
+                justify-content: center;
+
+                .text {
+                    width: 100%;
+                    margin: 0;
+                    text-align: center;
+                }
+
+                li {
+                    margin: 0 10px;
+                }
+            }
+        }
+    }
+}
+
+
+footer {
+    figure.logo-holder {
+        display: none;
+    }
+}

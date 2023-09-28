@@ -1,0 +1,150 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage
+@{
+    Layout = "Master.cshtml";
+    //var selection = Model.Content.Site().Children().Where(x => x.IsVisible());
+    var i = 0;
+
+    // set page title segment
+    ViewBag.PageTitle = Model.Value("entertainmentTitle");
+
+    // meta fallback
+    ViewBag.MetaDescription = Model.Value("smallDetails");
+}
+<!--Start Main Banner-->
+@{
+    var mainBannerImg = Model.Value<IPublishedContent>("entertainDetailPageBanner");
+    if (mainBannerImg != null)
+    {
+        <section class="main-banner">
+            <div class="container-fluid custom-container-fluid">
+                <div class="main-slide">
+                    <div class="slide">
+                        <img src="@mainBannerImg.Url()" alt="@Model.Value("entertainmentTitle")" class="img-fluid" />
+                    </div>
+                </div>
+            </div>
+        </section>
+    }
+}
+<!--End Main Banner-->
+<!--Start Product Details-->
+<section class="product-details">
+    <div class="container-fluid custom-container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <!--Start Breadcrumbs-->
+                <nav aria-label="breadcrumb" class="breadcrumb-holder">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="@Umbraco.GetDictionaryValue("logoHref")">@Umbraco.GetDictionaryValue("home")</a></li>
+                        <li class="breadcrumb-seprator"><i class="fas fa-angle-right"></i></li>
+                        <li class="breadcrumb-item"><a href="@Umbraco.GetDictionaryValue("entertainmentHref")">@Umbraco.GetDictionaryValue("entertainment")</a></li>
+                        <li class="breadcrumb-seprator"><i class="fas fa-angle-right"></i></li>
+                        <li class="breadcrumb-item active" aria-current="page">@Model.Value("entertainmentTitle")</li>
+                    </ol>
+                </nav>
+                <!--End Breadcrumbs-->
+                <div class="product-box">
+                    <div class="row">
+                        <div class="col-lg-3 col-md-4">
+                            <div class="brand-holder">
+                                @{
+                                    var entertainLogo = Model.Value<IPublishedContent>("entertainLogo");
+                                    if (entertainLogo != null)
+                                    {
+                                        <img src="@entertainLogo.Url()" alt="@Model.Value("entertainmentTitle")" />
+                                    }
+                                }
+                            </div>
+                            <div class="share-box">
+                                <ul>
+                                    <li>
+                                        <a href="javascript:void:(0);" data-text="@Model.Value("entertainmentTitle")" data-url="" data-type="facebook">
+                                            <img src="/assets/images/facebook.png" alt="Facebook" />
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void:(0);" data-text="@Model.Value("entertainmentTitle")" data-url="" data-type="twitter">
+                                            <img src="/assets/images/twitter.png" alt="Twitter" />
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void:(0);">
+                                            <img src="/assets/images/share.png" alt="Others" />
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-5">
+                            <div class="prod-details">
+                                <h2 class="prod-title">@Model.Value("entertainmentTitle")</h2>
+                                <p class="description">
+                                    @Model.Value("smallDetails")
+                                </p>
+                                <p class="contact">
+                                    @*<h5>Phone Number:</h5><strong>02 6120870</strong>*@
+                                    @Html.Raw(Model.Value("contactUs"))
+                                </p>
+                                <p class="timing">
+                                    @*<h5>Timing:</h5>*@
+                                    @Html.Raw(Model.Value("openingTimes"))
+                                </p>
+                                <p class="Location:">
+                                    @{
+                                        string floorLoc = Model.Value<string>("floorName");
+                                        if (!string.IsNullOrWhiteSpace(floorLoc))
+                                        {
+                                            <h5>@Umbraco.GetDictionaryValue("Location"):</h5>
+                                            @floorLoc;
+                                        }
+                                    }
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-lg-5 col-md-3">
+                            @{
+                                var locationMapImg = Model.Value<IPublishedContent>("locationMapImg");
+                                if (locationMapImg != null)
+                                {
+                                    <a class="map-img" data-toggle="modal" data-target="#zoomModal">
+                                        <img src="@locationMapImg.Url()" alt="@(Model.Value("entertainmentTitle")) - Map" />
+                                    </a>
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="zoomModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                                <div class="modal-body">
+                                                    @{
+                                                        var locationMapBigImg = Model.Value<IPublishedContent>("locationMapBigImg");
+                                                        if (locationMapBigImg != null)
+                                                        {
+                                                            <img src="@locationMapBigImg.Url()" alt="@(Model.Value("entertainmentTitle")) - Map" />
+                                                        }
+                                                        else
+                                                        {
+                                                            <img src="@locationMapImg.Url()" alt="@(Model.Value("entertainmentTitle")) - Map" />
+                                                        }
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <p>Location map is not available.</p>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--End Product Details-->
+@* the fun starts here *@
+

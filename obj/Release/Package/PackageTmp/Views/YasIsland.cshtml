@@ -1,0 +1,177 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage
+@using ContentModels = Umbraco.Web.PublishedModels;
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.YasIsland>
+@using Umbraco.Web.Mvc;
+@using System.Text.RegularExpressions;
+@{
+    Layout = "master.cshtml";
+
+    var lang = System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+
+    var itemlist = Model.Children().Where(x => x.IsVisible());
+    int itemCnt = itemlist.Count();
+
+    // sort order
+    string sort = Request.QueryString["sort"];
+    // set up pages
+    int page = 0, pageSize = 24;
+    int.TryParse(Request.QueryString["p"], out page);
+    // get page count
+    int pageCount = (itemCnt % pageSize != 0) ? (itemCnt / pageSize) + 1 : itemCnt / pageSize; // get page count
+
+
+    if (string.IsNullOrEmpty(sort)) { sort = ""; }
+    if (sort.ToLower() == "desc")
+    {
+        itemlist = itemlist.OrderByDescending(x => x.Name);
+    }
+    else
+    {
+        itemlist = itemlist.OrderBy(x => x.Name);
+    }
+    itemlist = itemlist.Skip(page * pageSize).Take(pageSize);
+
+    // set page title segment
+    ViewBag.PageTitle = Model.Value("yasIslandTitle");
+
+    // meta fallback
+    ViewBag.MetaDescription = Model.Value("yasIslandTitle");
+}
+
+<style type="text/css">
+    .brand-box .brand-logo {
+        width: 63%;
+    }
+</style>
+<!--Start Main Banner-->
+@{
+    var YasIslandBannerImg = Model.Value<IPublishedContent>("yasIslandBanner");
+    if (YasIslandBannerImg != null)
+    {
+        <section class="main-banner">
+            <div class="container-fluid custom-container-fluid">
+                <div class="main-slide">
+                    <div class="slide">
+                        <img src="@YasIslandBannerImg.Url()" alt="@Model.YasIslandTitle" class="img-fluid" />
+                    </div>
+                </div>
+            </div>
+        </section>
+    }
+}
+<!--End Main Banner-->
+<!--Start Search Box-->
+<section class="filter-holder">
+    <div class="container-fluid custom-container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <!--Start Breadcrumbs-->
+                <nav aria-label="breadcrumb" class="breadcrumb-holder">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="@Umbraco.GetDictionaryValue("logoHref")">@Umbraco.GetDictionaryValue("home")</a></li>
+                        <li class="breadcrumb-seprator"><i class="fas fa-angle-right"></i></li>
+                        <li class="breadcrumb-item active" aria-current="page">@Model.Value("yasIslandTitle")</li>
+                    </ol>
+                </nav>
+                <!--End Breadcrumbs-->
+                <div class="filter-box">
+                    <div class="row">
+                        @Html.Raw(Model.Value("yasIslandBigDetails"))
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--End Search Box-->
+<!--Start Search Result-->
+<section class="search-result">
+    <div class="container-fluid custom-container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="search-result-container">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="result-detail">
+                                @if (lang == "ar")
+                                {
+                                    @("نتيجة البحث : " + itemCnt + " العثور على العلامات التجارية")
+                                }
+                                @if (lang == "en")
+                                {
+                                    @("Search Result : " + itemCnt + " Services Found")
+                                }
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="sort-box">
+                                <label for="cmbSortData">@Umbraco.GetDictionaryValue("SearchOrder")</label>
+                                <select id="cmbSortData" name="cmbSortData" class="form-control">
+                                    <option @(sort == "asc" ? "selected" : "") value="asc">@Umbraco.GetDictionaryValue("AlphabetAtoZ")</option>
+                                    <option @(sort == "desc" ? "selected" : "") value="desc">@Umbraco.GetDictionaryValue("AlphabetZtoA")</option>
+                                </select>
+                            </div>
+                        </div>
+                        @foreach (var item in itemlist)
+                        {
+                            <div class="col-md-3">
+                                <div class="brand-box gtm-mainsec" data-section="@Model.Name">
+                                    <a href="@item.Url" name="@item.Name-tile">
+                                        <div class="prod-name">
+                                            @Html.Raw(item.Value("yIslandLstTitle"))
+                                        </div>
+                                        @{
+                                            var yIslandListingImg = item.Value<IPublishedContent>("yIslandLstListingImage");
+                                            {
+                                                <div class="brand-logo">
+                                                    <img src="@yIslandListingImg.Url()" alt="@item.Value("yasIslandTitle")" />
+                                                </div>
+                                            }
+                                        }
+                                        <div class="sale-cont">
+                                            <strong>@Umbraco.GetDictionaryValue("readmore")</strong>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        }
+                        <div class="col-md-12 load-more-box">
+                            @if (pageCount > 1)
+                            {
+                                <!-- pagination -->
+                                <div class="row paging">
+                                    <div class="col-md-12">
+                                        <div class="sort-alpha-numb">
+                                            <ul>
+                                                @for (int p = 0; p < pageCount; p++)
+                                                {
+                                                    string queryStr = "?p=" + p;
+                                                    if (!string.IsNullOrEmpty(sort)) { queryStr = queryStr + "&sort=" + sort; }
+                                                    <li class="@(p == page ? "active" : null)"><a href="@queryStr">@(p + 1)</a></li>
+                                                }
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            <!-- Total: @itemCnt, Pages: @pageCount -->
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--End Search Result-->
+<script type="text/javascript">
+    $(function () {
+        $(".search-result-container .brand-box").slice(0, 24).show();
+
+        $("#cmbSortData").change(function () {
+            const parsedUrl = new URL(window.location.href);
+            parsedUrl.searchParams.set('sort', this.value);
+            window.location.href = parsedUrl.href;
+        });
+    });
+</script>

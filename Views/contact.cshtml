@@ -1,0 +1,741 @@
+﻿@inherits UmbracoViewPage<ContactUs>
+@using ContentModels = Umbraco.Web.PublishedModels;
+@using System.Configuration;
+@{
+    Layout = "master.cshtml";
+
+
+    //var coordinates = Model.MapCoordinates.ToString().Split(',');
+
+    //var latitude = coordinates[0];
+    //var longitude = coordinates[1];
+    //var zoomLevel = coordinates[2];
+
+    //// Build the coordinates string
+    //var coordinatesString = longitude + "," + latitude + "," + longitude + "," + latitude;
+
+    var googleMapsApiKey = ConfigurationManager.AppSettings["GoogleMapsApiKey"];
+
+    // map detail
+    var mapLat = Model.GoogleMapLatitude;
+    var mapLong = Model.GoogleMapLongitude;
+    var mapAddress = Model.GoogleMapMarkerAddress;
+
+}
+<style type="text/css">
+    @@media (max-width: 767px) {
+        .filter-box {
+            padding: 0px;
+        }
+    }
+
+    .filter-box {
+        width: 95% !important;
+    }
+
+    .inner-section {
+        padding: 0px;
+    }
+</style>
+<!--Start Main Banner-->
+@{
+    var contactBannerImg = Model.ContactMainBanner;
+    if (contactBannerImg != null)
+    {
+        <section class="main-banner">
+            <div class="container-fluid custom-container-fluid">
+                <div class="main-slide">
+                    <div class="slide">
+                        <img src="@contactBannerImg.Url" alt="@Model.ContactMainTitle" class="img-fluid" />
+                    </div>
+                </div>
+            </div>
+        </section>
+    }
+}
+<!--End Main Banner-->
+<!--Start Inner Page Wrapper-->
+<div class="inner-section">
+    <div class="container-fluid custom-container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <!--Start Breadcrumbs-->
+                <nav aria-label="breadcrumb" class="breadcrumb-holder">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="@Umbraco.GetDictionaryValue("HomeHref")">@Umbraco.GetDictionaryValue("Home")</a></li>
+                        <li class="breadcrumb-seprator"><i class="fas fa-angle-right"></i></li>
+                        <li class="breadcrumb-item active" aria-current="page">@Model.ContactMainTitle</li>
+                    </ol>
+                </nav>
+                <!--End Breadcrumbs-->
+                <div class="filter-box page-content">
+                    <div class="row">
+                        <div class="col-md-5 col-sm-12 col-xs-12">
+                            <!-- .contact-cont-left -->
+                            @Html.Raw(Model.LocateAlJimiIntro)
+                            <!-- .contact-cont-left -->
+
+                            <div class="contact-cont-right">
+                                <div class="contact-cont-wrapper">
+                                    <h5>@Model.GeneralOpeningHoursTitle</h5>
+                                    <ul class="oh-stores">
+                                        @getOpeningHours("generalHoursLine1Days", "generalHoursLine1Hours")
+                                        @getOpeningHours("generalHoursLine2Days", "generalHoursLine2Hours")
+                                        @getOpeningHours("generalHoursLine3Days", "generalHoursLine3Hours")
+                                    </ul>
+                                    <h5>@Model.SpecialtyOpeningHoursTitle</h5>
+                                    <ul class="oh-stores">
+                                        @getOpeningHours("specialtyHoursLine1Store", "specialtyHoursLine1Hours")
+                                        @getOpeningHours("specialtyHoursLine2Store", "specialtyHoursLine2Hours")
+                                        @getOpeningHours("specialtyHoursLine3Store", "specialtyHoursLine3Hours")
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-7 col-sm-12 col-xs-12 contact-formDiv">
+                            <div class="contact-form" id="form">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-md-12 col-md-offset-1">
+                                            @Html.Raw(Model.EnquiryFormTitle)
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form">
+                                                @Umbraco.RenderMacro("renderUmbracoForm", new { FormGuid = Model.ContactForm.ToString(), FormTheme = "contactus-formtheme", ExcludeScripts = "1" })
+                                                <div class="field-validation-error" id="divErrorXSS" style="display: none;color:red;">Please a provide valid value</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- .contact-cont-right -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--End Inner Page Wrapper-->
+<div class="page-content">
+    <div id="map-location">
+        <iframe id="map_canvas" src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d14523.653789645658!2d54.6087162!3d24.4884556!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xe989e0e2486d0718!2sYas%20Mall!5e0!3m2!1sen!2s!4v1612183871486!5m2!1sen!2s"
+                width="100%" height="450" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
+        <div class="location-details">
+            <h3>@Model.DirectionTitle</h3>
+            <p>@Html.Raw(Model.DirectionBigDetails)</p>
+            @{
+                var mapPDFImg = Model.Value<IPublishedContent>("downloadPDFMap");
+                if (mapPDFImg != null)
+                {
+                    <div class="buttons">
+                        <a class="btn btn-primary gtm-track-button-event" target="_blank" href="@mapPDFImg.Url">@Umbraco.GetDictionaryValue("DownloadPDFMap")</a>
+                    </div>
+                }
+            }
+        </div>
+        <!--Google Map Start-->
+        <div id="map_canvas"></div>
+        <!--Google Map End-->
+    </div>
+</div>
+<!--Main Banner Section Container-->
+@*@Html.Partial("~/Views/Partials/SectionHeader.cshtml")*@
+@*<section class="section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h2>Model.ContactMainTitle</h2>
+                    <iframe width="100%" height="400" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"
+                            src="https://www.openstreetmap.org/export/embed.html?bbox=@coordinatesString&amp;layer=mapnik&amp;marker=@Model.MapCoordinates"
+                            style="border: 1px solid black"></iframe>
+                    <br />
+                    <small>
+                        <a href="https://www.openstreetmap.org/?mlat=@latitude&amp;mlon=@longitude#map=@zoomLevel/@latitude/@longitude&amp;layers=N">View Larger Map</a>
+                    </small>
+                </div>
+            </div>
+        </div>
+    </section>*@
+
+@helper getOpeningHours(string name, string hours)
+{
+    if (!string.IsNullOrWhiteSpace(Model.Value<string>(name)))
+    {
+        <li>
+            <span class="store">@Model.Value(name)</span>
+            <span class="time">@Model.Value(hours)</span>
+        </li>
+    }
+}
+
+@section ViewScripts
+{
+    <script src="https://maps.googleapis.com/maps/api/js?key=@googleMapsApiKey" type="text/javascript"></script>
+
+    <script type="text/javascript">
+        function initialize() {
+            var map;
+            var bounds = new google.maps.LatLngBounds();
+            // setting styles here
+            var poi = 'ui/media/element/map-marker.png';
+
+            var mapCenter = new google.maps.LatLng(@mapLat, @mapLong);
+            var infowindow = null;
+            var saturation = 10
+
+            var styles = [];
+            var mapOptions = {
+                center: mapCenter,
+                zoom: 14,
+                scrollwheel: false,
+                styles: styles
+            };
+
+            // Display a map on the page
+            map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
+            map.setTilt(45);
+
+            // Multiple Markers
+            var markers = [
+                ['Office #1', @mapLat, @mapLong]
+            ];
+
+            // Info Window Content
+            var infoWindowContent = [
+                ['<div class="info_content">@Html.Raw((""+mapAddress).Replace("\n",""))</div>']
+            ];
+
+            // Display multiple markers on a map
+            var infoWindow = new google.maps.InfoWindow(),
+                marker, i;
+
+            // Loop through our array of markers & place each one on the map
+            for (i = 0; i < markers.length; i++) {
+                var position = new google.maps.LatLng(markers[i][1], markers[i][2]);
+                bounds.extend(position);
+                marker = new google.maps.Marker({
+                    position: position,
+                    map: map,
+                    title: markers[i][0],
+                });
+
+                // Allow each marker to have an info window
+                google.maps.event.addListener(marker, 'click', (function (marker, i) {
+                    return function () {
+                        infoWindow.setContent(infoWindowContent[i][0]);
+                        infoWindow.open(map, marker);
+                    }
+                })(marker, i));
+
+                // Automatically center the map fitting all markers on the screen
+                // map.fitBounds(bounds);
+            }
+
+            // Override our map zoom level once our fitBounds function runs (Make sure it only runs once)
+            var boundsListener = google.maps.event.addListener((map), 'bounds_changed', function (event) {
+                this.setZoom(14);
+                google.maps.event.removeListener(boundsListener);
+            });
+        }
+        google.maps.event.addDomListener(window, 'load', initialize);
+
+
+        $(document).ready(function () {
+
+            $("#btnSubmit").click(function (e) {
+                var invalidFields = 0;
+                var secNL = $("div.contact-form .umbraco-forms-field.mandatory");
+                $(secNL).find("input[type='text']").each(function () {
+                    if ($(this).val() == "") {
+                        invalidFields += 1;
+                    }
+                });
+                $(secNL).find("select > option:selected").each(function () {
+                    if ($(this).val() == "") {
+                        invalidFields += 1;
+                    }
+                });
+                $(secNL).find("textarea").each(function () {
+                    if ($(this).val() == "") {
+                        invalidFields += 1;
+                    }
+                });
+                if (invalidFields == 0) {
+                    gtmTrackEvent_ContactUsClick($(this));
+                }
+            });
+
+            var countriesJSON = [
+                { "ID": "Afghanistan", "CountryName": "Afghanistan" },
+                { "ID": "Albania", "CountryName": "Albania" },
+                { "ID": "Algeria", "CountryName": "Algeria" },
+                { "ID": "Andorra", "CountryName": "Andorra" },
+                { "ID": "Angola", "CountryName": "Angola" },
+                { "ID": "Antigua and Barbuda", "CountryName": "Antigua and Barbuda" },
+                { "ID": "Argentina", "CountryName": "Argentina" },
+                { "ID": "Armenia", "CountryName": "Armenia" },
+                { "ID": "Australia", "CountryName": "Australia" },
+                { "ID": "Austria", "CountryName": "Austria" },
+                { "ID": "Azerbaijan", "CountryName": "Azerbaijan" },
+                { "ID": "Bahamas", "CountryName": "Bahamas" },
+                { "ID": "Bahrain", "CountryName": "Bahrain" },
+                { "ID": "Bangladesh", "CountryName": "Bangladesh" },
+                { "ID": "Barbados", "CountryName": "Barbados" },
+                { "ID": "Belarus", "CountryName": "Belarus" },
+                { "ID": "Belgium", "CountryName": "Belgium" },
+                { "ID": "Belize", "CountryName": "Belize" },
+                { "ID": "Benin", "CountryName": "Benin" },
+                { "ID": "Bhutan", "CountryName": "Bhutan" },
+                { "ID": "Bolivia", "CountryName": "Bolivia" },
+                { "ID": "Bosnia and Herzegovina", "CountryName": "Bosnia and Herzegovina" },
+                { "ID": "Botswana", "CountryName": "Botswana" },
+                { "ID": "Brazil", "CountryName": "Brazil" },
+                { "ID": "Brunei", "CountryName": "Brunei" },
+                { "ID": "Bulgaria", "CountryName": "Bulgaria" },
+                { "ID": "Burkina Faso", "CountryName": "Burkina Faso" },
+                { "ID": " Burma", "CountryName": " Burma" },
+                { "ID": "Burundi", "CountryName": "Burundi" },
+                { "ID": "Cabo Verde", "CountryName": "Cabo Verde" },
+                { "ID": "Cambodia", "CountryName": "Cambodia" },
+                { "ID": "Cameroon", "CountryName": "Cameroon" },
+                { "ID": "Canada", "CountryName": "Canada" },
+                { "ID": "Central African Republic (CAR)", "CountryName": "Central African Republic (CAR)" },
+                { "ID": "Chad", "CountryName": "Chad" },
+                { "ID": "Chile", "CountryName": "Chile" },
+                { "ID": "China", "CountryName": "China" },
+                { "ID": "Colombia", "CountryName": "Colombia" },
+                { "ID": "Comoros", "CountryName": "Comoros" },
+                { "ID": "Congo, Democratic Republic of the", "CountryName": "Congo, Democratic Republic of the" },
+                { "ID": "Congo, Republic of the", "CountryName": "Congo, Republic of the" },
+                { "ID": "Costa Rica", "CountryName": "Costa Rica" },
+                { "ID": "Cote d'Ivoire", "CountryName": "Cote d'Ivoire" },
+                { "ID": "Croatia", "CountryName": "Croatia" },
+                { "ID": "Cuba", "CountryName": "Cuba" },
+                { "ID": "Cyprus", "CountryName": "Cyprus" },
+                { "ID": "Czechia", "CountryName": "Czechia" },
+                { "ID": "Denmark", "CountryName": "Denmark" },
+                { "ID": "Djibouti", "CountryName": "Djibouti" },
+                { "ID": "Dominica", "CountryName": "Dominica" },
+                { "ID": "Dominican Republic", "CountryName": "Dominican Republic" },
+                { "ID": "Ecuador", "CountryName": "Ecuador" },
+                { "ID": "Egypt", "CountryName": "Egypt" },
+                { "ID": "El Salvador", "CountryName": "El Salvador" },
+                { "ID": "Equatorial Guinea", "CountryName": "Equatorial Guinea" },
+                { "ID": "Eritrea", "CountryName": "Eritrea" },
+                { "ID": "Estonia", "CountryName": "Estonia" },
+                { "ID": "Ethiopia", "CountryName": "Ethiopia" },
+                { "ID": "Fiji", "CountryName": "Fiji" },
+                { "ID": "Finland", "CountryName": "Finland" },
+                { "ID": "France", "CountryName": "France" },
+                { "ID": "Gabon", "CountryName": "Gabon" },
+                { "ID": "Gambia", "CountryName": "Gambia" },
+                { "ID": "Georgia", "CountryName": "Georgia" },
+                { "ID": "Germany", "CountryName": "Germany" },
+                { "ID": "Ghana", "CountryName": "Ghana" },
+                { "ID": "Greece", "CountryName": "Greece" },
+                { "ID": "Grenada", "CountryName": "Grenada" },
+                { "ID": "Guatemala", "CountryName": "Guatemala" },
+                { "ID": "Guinea", "CountryName": "Guinea" },
+                { "ID": "Guinea-Bissau", "CountryName": "Guinea-Bissau" },
+                { "ID": "Guyana", "CountryName": "Guyana" },
+                { "ID": "Haiti", "CountryName": "Haiti" },
+                { "ID": "Honduras", "CountryName": "Honduras" },
+                { "ID": "Hungary", "CountryName": "Hungary" },
+                { "ID": "Iceland", "CountryName": "Iceland" },
+                { "ID": "India", "CountryName": "India" },
+                { "ID": "Indonesia", "CountryName": "Indonesia" },
+                { "ID": "Iran", "CountryName": "Iran" },
+                { "ID": "Iraq", "CountryName": "Iraq" },
+                { "ID": "Ireland", "CountryName": "Ireland" },
+                { "ID": "Israel", "CountryName": "Israel" },
+                { "ID": "Italy", "CountryName": "Italy" },
+                { "ID": "Jamaica", "CountryName": "Jamaica" },
+                { "ID": "Japan", "CountryName": "Japan" },
+                { "ID": "Jordan", "CountryName": "Jordan" },
+                { "ID": "Kazakhstan", "CountryName": "Kazakhstan" },
+                { "ID": "Kenya", "CountryName": "Kenya" },
+                { "ID": "Kiribati", "CountryName": "Kiribati" },
+                { "ID": "Kosovo", "CountryName": "Kosovo" },
+                { "ID": "Kuwait", "CountryName": "Kuwait" },
+                { "ID": "Kyrgyzstan", "CountryName": "Kyrgyzstan" },
+                { "ID": "Laos", "CountryName": "Laos" },
+                { "ID": "Latvia", "CountryName": "Latvia" },
+                { "ID": "Lebanon", "CountryName": "Lebanon" },
+                { "ID": "Lesotho", "CountryName": "Lesotho" },
+                { "ID": "Liberia", "CountryName": "Liberia" },
+                { "ID": "Libya", "CountryName": "Libya" },
+                { "ID": "Liechtenstein", "CountryName": "Liechtenstein" },
+                { "ID": "Lithuania", "CountryName": "Lithuania" },
+                { "ID": "Luxembourg", "CountryName": "Luxembourg" },
+                { "ID": " Macedonia", "CountryName": " Macedonia" },
+                { "ID": "Madagascar", "CountryName": "Madagascar" },
+                { "ID": "Malawi", "CountryName": "Malawi" },
+                { "ID": "Malaysia", "CountryName": "Malaysia" },
+                { "ID": "Maldives", "CountryName": "Maldives" },
+                { "ID": "Mali", "CountryName": "Mali" },
+                { "ID": "Malta", "CountryName": "Malta" },
+                { "ID": "Marshall Islands", "CountryName": "Marshall Islands" },
+                { "ID": "Mauritania", "CountryName": "Mauritania" },
+                { "ID": "Mauritius", "CountryName": "Mauritius" },
+                { "ID": "Mexico", "CountryName": "Mexico" },
+                { "ID": "Micronesia", "CountryName": "Micronesia" },
+                { "ID": "Moldova", "CountryName": "Moldova" },
+                { "ID": "Monaco", "CountryName": "Monaco" },
+                { "ID": "Mongolia", "CountryName": "Mongolia" },
+                { "ID": "Montenegro", "CountryName": "Montenegro" },
+                { "ID": "Morocco", "CountryName": "Morocco" },
+                { "ID": "Mozambique", "CountryName": "Mozambique" },
+                { "ID": "Namibia", "CountryName": "Namibia" },
+                { "ID": "Nauru", "CountryName": "Nauru" },
+                { "ID": "Nepal", "CountryName": "Nepal" },
+                { "ID": "Netherlands", "CountryName": "Netherlands" },
+                { "ID": "New Zealand", "CountryName": "New Zealand" },
+                { "ID": "Nicaragua", "CountryName": "Nicaragua" },
+                { "ID": "Niger", "CountryName": "Niger" },
+                { "ID": "Nigeria", "CountryName": "Nigeria" },
+                { "ID": "North Korea", "CountryName": "North Korea" },
+                { "ID": "Norway", "CountryName": "Norway" },
+                { "ID": "Oman", "CountryName": "Oman" },
+                { "ID": "Pakistan", "CountryName": "Pakistan" },
+                { "ID": "Palau", "CountryName": "Palau" },
+                { "ID": "Palestine", "CountryName": "Palestine" },
+                { "ID": "Panama", "CountryName": "Panama" },
+                { "ID": "Papua New Guinea", "CountryName": "Papua New Guinea" },
+                { "ID": "Paraguay", "CountryName": "Paraguay" },
+                { "ID": "Peru", "CountryName": "Peru" },
+                { "ID": "Philippines", "CountryName": "Philippines" },
+                { "ID": "Poland", "CountryName": "Poland" },
+                { "ID": "Portugal", "CountryName": "Portugal" },
+                { "ID": "Qatar", "CountryName": "Qatar" },
+                { "ID": "Romania", "CountryName": "Romania" },
+                { "ID": "Russia", "CountryName": "Russia" },
+                { "ID": "Rwanda", "CountryName": "Rwanda" },
+                { "ID": "Saint Kitts and Nevis", "CountryName": "Saint Kitts and Nevis" },
+                { "ID": "Saint Lucia", "CountryName": "Saint Lucia" },
+                { "ID": "Saint Vincent and the Grenadines", "CountryName": "Saint Vincent and the Grenadines" },
+                { "ID": "Samoa", "CountryName": "Samoa" },
+                { "ID": "San Marino", "CountryName": "San Marino" },
+                { "ID": "Sao Tome and Principe", "CountryName": "Sao Tome and Principe" },
+                { "ID": "Saudi Arabia", "CountryName": "Saudi Arabia" },
+                { "ID": "Senegal", "CountryName": "Senegal" },
+                { "ID": "Serbia", "CountryName": "Serbia" },
+                { "ID": "Seychelles", "CountryName": "Seychelles" },
+                { "ID": "Sierra Leone", "CountryName": "Sierra Leone" },
+                { "ID": "Singapore", "CountryName": "Singapore" },
+                { "ID": "Slovakia", "CountryName": "Slovakia" },
+                { "ID": "Slovenia", "CountryName": "Slovenia" },
+                { "ID": "Solomon Islands", "CountryName": "Solomon Islands" },
+                { "ID": "Somalia", "CountryName": "Somalia" },
+                { "ID": "South Africa", "CountryName": "South Africa" },
+                { "ID": "South Korea", "CountryName": "South Korea" },
+                { "ID": "South Sudan", "CountryName": "South Sudan" },
+                { "ID": "Spain", "CountryName": "Spain" },
+                { "ID": "SriLanka", "CountryName": "SriLanka" },
+                { "ID": "Sudan", "CountryName": "Sudan" },
+                { "ID": "Suriname", "CountryName": "Suriname" },
+                { "ID": "Swaziland", "CountryName": "Swaziland" },
+                { "ID": "Sweden", "CountryName": "Sweden" },
+                { "ID": "Switzerland", "CountryName": "Switzerland" },
+                { "ID": "Syria", "CountryName": "Syria" },
+                { "ID": "Taiwan", "CountryName": "Taiwan" },
+                { "ID": "Tajikistan", "CountryName": "Tajikistan" },
+                { "ID": "Tanzania", "CountryName": "Tanzania" },
+                { "ID": "Thailand", "CountryName": "Thailand" },
+                { "ID": "Timor-Leste", "CountryName": "Timor-Leste" },
+                { "ID": "Togo", "CountryName": "Togo" },
+                { "ID": "Tonga", "CountryName": "Tonga" },
+                { "ID": "Trinidad and Tobago", "CountryName": "Trinidad and Tobago" },
+                { "ID": "Tunisia", "CountryName": "Tunisia" },
+                { "ID": "Turkey", "CountryName": "Turkey" },
+                { "ID": "Turkmenistan", "CountryName": "Turkmenistan" },
+                { "ID": "Tuvalu", "CountryName": "Tuvalu" },
+                { "ID": "Uganda", "CountryName": "Uganda" },
+                { "ID": "Ukraine", "CountryName": "Ukraine" },
+                { "ID": "United Arab Emirates (UAE)", "CountryName": "United Arab Emirates (UAE)" },
+                { "ID": "United Kingdom (UK)", "CountryName": "United Kingdom (UK)" },
+                { "ID": "United States of America (USA)", "CountryName": "United States of America (USA)" },
+                { "ID": "Uruguay", "CountryName": "Uruguay" },
+                { "ID": "Uzbekistan", "CountryName": "Uzbekistan" },
+                { "ID": "Vanuatu", "CountryName": "Vanuatu" },
+                { "ID": "Vatican City (Holy See)", "CountryName": "Vatican City (Holy See)" },
+                { "ID": "Venezuela", "CountryName": "Venezuela" },
+                { "ID": "Vietnam", "CountryName": "Vietnam" },
+                { "ID": "Yemen", "CountryName": "Yemen" },
+                { "ID": "Zambia", "CountryName": "Zambia" },
+                { "ID": "Zimbabwe", "CountryName": "Zimbabwe" }
+            ];
+            $.each(countriesJSON, function (i, item) {
+                $('div.country.dropdown select').append($('<option>').text(item.ID).attr('value', item.CountryName));
+            });
+
+            var nationalityJSON = [
+                { "ID": "Afghan", "NationalityName": "Afghan" },
+                { "ID": "Albanian", "NationalityName": "Albanian" },
+                { "ID": "Algerian", "NationalityName": "Algerian" },
+                { "ID": "American", "NationalityName": "American" },
+                { "ID": "Andorran", "NationalityName": "Andorran" },
+                { "ID": "Angolan", "NationalityName": "Angolan" },
+                { "ID": "Antiguans", "NationalityName": "Antiguans" },
+                { "ID": "Argentinean", "NationalityName": "Argentinean" },
+                { "ID": "Armenian", "NationalityName": "Armenian" },
+                { "ID": "Australian", "NationalityName": "Australian" },
+                { "ID": "Austrian", "NationalityName": "Austrian" },
+                { "ID": "Azerbaijani", "NationalityName": "Azerbaijani" },
+                { "ID": "Bahamian", "NationalityName": "Bahamian" },
+                { "ID": "Bahraini", "NationalityName": "Bahraini" },
+                { "ID": "Bangladeshi", "NationalityName": "Bangladeshi" },
+                { "ID": "Barbadian", "NationalityName": "Barbadian" },
+                { "ID": "Barbudans", "NationalityName": "Barbudans" },
+                { "ID": "Batswana", "NationalityName": "Batswana" },
+                { "ID": "Belarusian", "NationalityName": "Belarusian" },
+                { "ID": "Belgian", "NationalityName": "Belgian" },
+                { "ID": "Belizean", "NationalityName": "Belizean" },
+                { "ID": "Beninese", "NationalityName": "Beninese" },
+                { "ID": "Bhutanese", "NationalityName": "Bhutanese" },
+                { "ID": "Bolivian", "NationalityName": "Bolivian" },
+                { "ID": "Bosnian", "NationalityName": "Bosnian" },
+                { "ID": "Brazilian", "NationalityName": "Brazilian" },
+                { "ID": "British", "NationalityName": "British" },
+                { "ID": "Bruneian", "NationalityName": "Bruneian" },
+                { "ID": "Bulgarian", "NationalityName": "Bulgarian" },
+                { "ID": "Burkinabe", "NationalityName": "Burkinabe" },
+                { "ID": "Burmese", "NationalityName": "Burmese" },
+                { "ID": "Burundian", "NationalityName": "Burundian" },
+                { "ID": "Cambodian", "NationalityName": "Cambodian" },
+                { "ID": "Cameroonian", "NationalityName": "Cameroonian" },
+                { "ID": "Canadian", "NationalityName": "Canadian" },
+                { "ID": "Cape Verdean", "NationalityName": "Cape Verdean" },
+                { "ID": "Central African", "NationalityName": "Central African" },
+                { "ID": "Chadian", "NationalityName": "Chadian" },
+                { "ID": "Chilean", "NationalityName": "Chilean" },
+                { "ID": "Chinese", "NationalityName": "Chinese" },
+                { "ID": "Colombian", "NationalityName": "Colombian" },
+                { "ID": "Comoran", "NationalityName": "Comoran" },
+                { "ID": "Congolese", "NationalityName": "Congolese" },
+                { "ID": "Costa Rican", "NationalityName": "Costa Rican" },
+                { "ID": "Croatian", "NationalityName": "Croatian" },
+                { "ID": "Cuban", "NationalityName": "Cuban" },
+                { "ID": "Cypriot", "NationalityName": "Cypriot" },
+                { "ID": "Czech", "NationalityName": "Czech" },
+                { "ID": "Danish", "NationalityName": "Danish" },
+                { "ID": "Djibouti", "NationalityName": "Djibouti" },
+                { "ID": "Dominican", "NationalityName": "Dominican" },
+                { "ID": "Dutch", "NationalityName": "Dutch" },
+                { "ID": "East Timorese", "NationalityName": "East Timorese" },
+                { "ID": "Ecuadorean", "NationalityName": "Ecuadorean" },
+                { "ID": "Egyptian", "NationalityName": "Egyptian" },
+                { "ID": "Emirian", "NationalityName": "Emirian" },
+                { "ID": "Equatorial Guinean", "NationalityName": "Equatorial Guinean" },
+                { "ID": "Eritrean", "NationalityName": "Eritrean" },
+                { "ID": "Estonian", "NationalityName": "Estonian" },
+                { "ID": "Ethiopian", "NationalityName": "Ethiopian" },
+                { "ID": "Fijian", "NationalityName": "Fijian" },
+                { "ID": "Filipino", "NationalityName": "Filipino" },
+                { "ID": "Finnish", "NationalityName": "Finnish" },
+                { "ID": "French", "NationalityName": "French" },
+                { "ID": "Gabonese", "NationalityName": "Gabonese" },
+                { "ID": "Gambian", "NationalityName": "Gambian" },
+                { "ID": "Georgian", "NationalityName": "Georgian" },
+                { "ID": "German", "NationalityName": "German" },
+                { "ID": "Ghanaian", "NationalityName": "Ghanaian" },
+                { "ID": "Greek", "NationalityName": "Greek" },
+                { "ID": "Grenadian", "NationalityName": "Grenadian" },
+                { "ID": "Guatemalan", "NationalityName": "Guatemalan" },
+                { "ID": "Guinea-Bissauan", "NationalityName": "Guinea-Bissauan" },
+                { "ID": "Guinean", "NationalityName": "Guinean" },
+                { "ID": "Guyanese", "NationalityName": "Guyanese" },
+                { "ID": "Haitian", "NationalityName": "Haitian" },
+                { "ID": "Herzegovinian", "NationalityName": "Herzegovinian" },
+                { "ID": "Honduran", "NationalityName": "Honduran" },
+                { "ID": "Hungarian", "NationalityName": "Hungarian" },
+                { "ID": "I-Kiribati", "NationalityName": "I-Kiribati" },
+                { "ID": "Icelander", "NationalityName": "Icelander" },
+                { "ID": "Indian", "NationalityName": "Indian" },
+                { "ID": "Indonesian", "NationalityName": "Indonesian" },
+                { "ID": "Iranian", "NationalityName": "Iranian" },
+                { "ID": "Iraqi", "NationalityName": "Iraqi" },
+                { "ID": "Irish", "NationalityName": "Irish" },
+                { "ID": "Israeli", "NationalityName": "Israeli" },
+                { "ID": "Italian", "NationalityName": "Italian" },
+                { "ID": "Ivorian", "NationalityName": "Ivorian" },
+                { "ID": "Jamaican", "NationalityName": "Jamaican" },
+                { "ID": "Japanese", "NationalityName": "Japanese" },
+                { "ID": "Jordanian", "NationalityName": "Jordanian" },
+                { "ID": "Kazakhstani", "NationalityName": "Kazakhstani" },
+                { "ID": "Kenyan", "NationalityName": "Kenyan" },
+                { "ID": "Kittian and Nevisian", "NationalityName": "Kittian and Nevisian" },
+                { "ID": "Kuwaiti", "NationalityName": "Kuwaiti" },
+                { "ID": "Kyrgyz", "NationalityName": "Kyrgyz" },
+                { "ID": "Laotian", "NationalityName": "Laotian" },
+                { "ID": "Latvian", "NationalityName": "Latvian" },
+                { "ID": "Lebanese", "NationalityName": "Lebanese" },
+                { "ID": "Liberian", "NationalityName": "Liberian" },
+                { "ID": "Libyan", "NationalityName": "Libyan" },
+                { "ID": "Liechtensteiner", "NationalityName": "Liechtensteiner" },
+                { "ID": "Lithuanian", "NationalityName": "Lithuanian" },
+                { "ID": "Luxembourger", "NationalityName": "Luxembourger" },
+                { "ID": "Macedonian", "NationalityName": "Macedonian" },
+                { "ID": "Malagasy", "NationalityName": "Malagasy" },
+                { "ID": "Malawian", "NationalityName": "Malawian" },
+                { "ID": "Malaysian", "NationalityName": "Malaysian" },
+                { "ID": "Maldivian", "NationalityName": "Maldivian" },
+                { "ID": "Malian", "NationalityName": "Malian" },
+                { "ID": "Maltese", "NationalityName": "Maltese" },
+                { "ID": "Marshallese", "NationalityName": "Marshallese" },
+                { "ID": "Mauritanian", "NationalityName": "Mauritanian" },
+                { "ID": "Mauritian", "NationalityName": "Mauritian" },
+                { "ID": "Mexican", "NationalityName": "Mexican" },
+                { "ID": "Micronesian", "NationalityName": "Micronesian" },
+                { "ID": "Moldovan", "NationalityName": "Moldovan" },
+                { "ID": "Monacan", "NationalityName": "Monacan" },
+                { "ID": "Mongolian", "NationalityName": "Mongolian" },
+                { "ID": "Moroccan", "NationalityName": "Moroccan" },
+                { "ID": "Mosotho", "NationalityName": "Mosotho" },
+                { "ID": "Motswana", "NationalityName": "Motswana" },
+                { "ID": "Mozambican", "NationalityName": "Mozambican" },
+                { "ID": "Namibian", "NationalityName": "Namibian" },
+                { "ID": "Nauruan", "NationalityName": "Nauruan" },
+                { "ID": "Nepalese", "NationalityName": "Nepalese" },
+                { "ID": "New Zealander", "NationalityName": "New Zealander" },
+                { "ID": "Ni-Vanuatu", "NationalityName": "Ni-Vanuatu" },
+                { "ID": "Nicaraguan", "NationalityName": "Nicaraguan" },
+                { "ID": "Nigerian", "NationalityName": "Nigerian" },
+                { "ID": "Nigerien", "NationalityName": "Nigerien" },
+                { "ID": "North Korean", "NationalityName": "North Korean" },
+                { "ID": "Northern Irish", "NationalityName": "Northern Irish" },
+                { "ID": "Norwegian", "NationalityName": "Norwegian" },
+                { "ID": "Omani", "NationalityName": "Omani" },
+                { "ID": "Pakistani", "NationalityName": "Pakistani" },
+                { "ID": "Palauan", "NationalityName": "Palauan" },
+                { "ID": "Panamanian", "NationalityName": "Panamanian" },
+                { "ID": "Papua New Guinean", "NationalityName": "Papua New Guinean" },
+                { "ID": "Paraguayan", "NationalityName": "Paraguayan" },
+                { "ID": "Peruvian", "NationalityName": "Peruvian" },
+                { "ID": "Polish", "NationalityName": "Polish" },
+                { "ID": "Portuguese", "NationalityName": "Portuguese" },
+                { "ID": "Qatari", "NationalityName": "Qatari" },
+                { "ID": "Romanian", "NationalityName": "Romanian" },
+                { "ID": "Russian", "NationalityName": "Russian" },
+                { "ID": "Rwandan", "NationalityName": "Rwandan" },
+                { "ID": "Saint Lucian", "NationalityName": "Saint Lucian" },
+                { "ID": "Salvadoran", "NationalityName": "Salvadoran" },
+                { "ID": "Samoan", "NationalityName": "Samoan" },
+                { "ID": "San Marinese", "NationalityName": "San Marinese" },
+                { "ID": "Sao Tomean", "NationalityName": "Sao Tomean" },
+                { "ID": "Saudi", "NationalityName": "Saudi" },
+                { "ID": "Scottish", "NationalityName": "Scottish" },
+                { "ID": "Senegalese", "NationalityName": "Senegalese" },
+                { "ID": "Serbian", "NationalityName": "Serbian" },
+                { "ID": "Seychellois", "NationalityName": "Seychellois" },
+                { "ID": "Sierra Leonean", "NationalityName": "Sierra Leonean" },
+                { "ID": "Singaporean", "NationalityName": "Singaporean" },
+                { "ID": "Slovakian", "NationalityName": "Slovakian" },
+                { "ID": "Slovenian", "NationalityName": "Slovenian" },
+                { "ID": "Solomon Islander", "NationalityName": "Solomon Islander" },
+                { "ID": "Somali", "NationalityName": "Somali" },
+                { "ID": "South African", "NationalityName": "South African" },
+                { "ID": "South Korean", "NationalityName": "South Korean" },
+                { "ID": "Spanish", "NationalityName": "Spanish" },
+                { "ID": "SriLankan", "NationalityName": "SriLankan" },
+                { "ID": "Sudanese", "NationalityName": "Sudanese" },
+                { "ID": "Surinamer", "NationalityName": "Surinamer" },
+                { "ID": "Swazi", "NationalityName": "Swazi" },
+                { "ID": "Swedish", "NationalityName": "Swedish" },
+                { "ID": "Swiss", "NationalityName": "Swiss" },
+                { "ID": "Syrian", "NationalityName": "Syrian" },
+                { "ID": "Taiwanese", "NationalityName": "Taiwanese" },
+                { "ID": "Tajik", "NationalityName": "Tajik" },
+                { "ID": "Tanzanian", "NationalityName": "Tanzanian" },
+                { "ID": "Thai", "NationalityName": "Thai" },
+                { "ID": "Togolese", "NationalityName": "Togolese" },
+                { "ID": "Tongan", "NationalityName": "Tongan" },
+                { "ID": "Trinidadian or Tobagonian", "NationalityName": "Trinidadian or Tobagonian" },
+                { "ID": "Tunisian", "NationalityName": "Tunisian" },
+                { "ID": "Turkish", "NationalityName": "Turkish" },
+                { "ID": "Tuvaluan", "NationalityName": "Tuvaluan" },
+                { "ID": "Ugandan", "NationalityName": "Ugandan" },
+                { "ID": "Ukrainian", "NationalityName": "Ukrainian" },
+                { "ID": "Uruguayan", "NationalityName": "Uruguayan" },
+                { "ID": "Uzbekistani", "NationalityName": "Uzbekistani" },
+                { "ID": "Venezuelan", "NationalityName": "Venezuelan" },
+                { "ID": "Vietnamese", "NationalityName": "Vietnamese" },
+                { "ID": "Welsh", "NationalityName": "Welsh" },
+                { "ID": "Yemenite", "NationalityName": "Yemenite" },
+                { "ID": "Zambian", "NationalityName": "Zambian" },
+                { "ID": "Zimbabwean", "NationalityName": "Zimbabwean" }
+            ];
+            $.each(nationalityJSON, function (i, item) {
+                $('div.nationality.dropdown select').append($('<option>').text(item.ID).attr('value', item.NationalityName));
+            });
+        });
+
+       //Validation for input fields
+        $('#btnSubmit').click(function () {
+            var firstName = $('#7872e3a1-1fec-43ae-ad94-dff05865a08b').val();
+            var lastName = $('#f6718dda-0e45-48f9-bf8f-ecfe8a500a9e').val();
+            var mobileName = $('#c9204231-7756-4e10-cb50-60870fb4bb73').val();
+            var comments = $('#216dcdb8-94e0-45a4-d5cb-50bbe71d3b93').val();
+            var chkNumb = /^((\+[1-9]{1,4}[ \-]*)|(\([0-9]{2,3}\)[ \-]*)|([0-9]{2,4})[ \-]*)*?[0-9]{3,4}?[ \-]*[0-9]{3,4}?$/;
+            var letters = /^[A-Za-z ]+$/;
+            var commentsExp = /^[a-z0-9 ]+$/i
+            var numbers = /^[0-9]+$/;
+            //var emailAddress = $('#a8c98ebc-27c9-4a01-d57c-1a42fd54f2d4').val();
+            //var chkEmail = /^([\w-\.]+)@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+            if (firstName) {
+                if (firstName.match(letters)) {
+                    $('#7872e3a1-1fec-43ae-ad94-dff05865a08b').css('border-color', '');
+                    $('#divErrorXSS').hide();
+                }
+                else {
+                    $('#7872e3a1-1fec-43ae-ad94-dff05865a08b').css('border-color', '#45454a');
+                    $('#7872e3a1-1fec-43ae-ad94-dff05865a08b').focus();
+                    $('#divErrorXSS').show();
+                    return false;
+                }
+            }
+            if (lastName) {
+                if (lastName.match(letters)) {
+                    $('#f6718dda-0e45-48f9-bf8f-ecfe8a500a9e').css('border-color', '');
+                    $('#divErrorXSS').hide();
+                }
+                else {
+                    $('#f6718dda-0e45-48f9-bf8f-ecfe8a500a9e').css('border-color', '#45454a');
+                    $('#f6718dda-0e45-48f9-bf8f-ecfe8a500a9e').focus();
+                    $('#divErrorXSS').show();
+                    return false;
+                }
+            }
+            if (mobileName) {
+                if (mobileName.match(chkNumb)) {
+                    $('#c9204231-7756-4e10-cb50-60870fb4bb73').css('border-color', '');
+                }
+                else {
+                    $('#c9204231-7756-4e10-cb50-60870fb4bb73').css('border-color', '#45454a');
+                    $('#c9204231-7756-4e10-cb50-60870fb4bb73').focus();
+                    return false;
+                }
+            }
+            //if (emailAddress.match(chkEmail)) {
+            //    $('#a8c98ebc-27c9-4a01-d57c-1a42fd54f2d4').css('border-color', '');
+            //}
+            //else {
+            //    $('#a8c98ebc-27c9-4a01-d57c-1a42fd54f2d4').css('border-color', '#45454a');
+            //    $('#a8c98ebc-27c9-4a01-d57c-1a42fd54f2d4').focus();
+            //    return false;
+            //}
+            if (comments) {
+                if (comments.match(commentsExp)) {
+                    $('#216dcdb8-94e0-45a4-d5cb-50bbe71d3b93').css('border-color', '');
+                }
+                else {
+                    $('#216dcdb8-94e0-45a4-d5cb-50bbe71d3b93').css('border-color', '#45454a');
+                    $('#216dcdb8-94e0-45a4-d5cb-50bbe71d3b93').focus();
+                    return false;
+                }
+            }
+        });
+     </script>
+}

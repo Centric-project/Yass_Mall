@@ -1,0 +1,140 @@
+﻿@using ContentModels = Umbraco.Web.PublishedModels;
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.NewsLandingDocType>
+@using Umbraco.Web.Mvc;
+@{
+    Layout = "master.cshtml";
+    // set page title segment
+    ViewBag.PageTitle = Model.NewsMainTitle;
+
+    // set up pages
+    int page = 0;
+    int pageSize = 10;
+    int.TryParse(Request.QueryString["p"], out page);
+
+    // get items
+    var newsListing = GetNewsListing(page, pageSize);
+
+    // get page count
+    int pageCount = (newsListing.TotalCount % pageSize != 0) ? (newsListing.TotalCount / pageSize) + 1 : newsListing.TotalCount / pageSize; // get page count
+
+}
+<!--Start Main Banner-->
+@{
+    var newsBannerImg = Model.Value<IPublishedContent>("newsMainBanner");
+    if (newsBannerImg != null)
+    {
+        <section class="main-banner">
+            <div class="container-fluid custom-container-fluid">
+                <div class="main-slide">
+                    <div class="slide">
+                        <img src="@newsBannerImg.Url()" alt="@Model.Value("newsMainTitle")" class="img-fluid" />
+                    </div>
+                </div>
+            </div>
+        </section>
+    }
+}
+<!--End Main Banner-->
+<!--Start Inner Page Wrapper-->
+<div class="inner-section">
+    <div class="container-fluid custom-container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <!--Start Breadcrumbs-->
+                <nav aria-label="breadcrumb" class="breadcrumb-holder">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="@Umbraco.GetDictionaryValue("LogoHref")">@Umbraco.GetDictionaryValue("Home")</a></li>
+                        <li class="breadcrumb-seprator"><i class="fas fa-angle-right"></i></li>
+                        <li class="breadcrumb-item">
+                            <a href="@Umbraco.GetDictionaryValue("MediaCenterHref")">@Umbraco.GetDictionaryValue("MediaCentre")</a>
+                        </li>
+                        <li class="breadcrumb-seprator"><i class="fas fa-angle-right"></i></li>
+                        <li class="breadcrumb-item active" aria-current="page">@Model.Value("newsMainTitle")</li>
+                    </ol>
+                </nav>
+                <!--End Breadcrumbs-->
+                <!--Start Main Title-->
+                <div class="clearfix title-holder">
+                    <h1 class="title">@Model.Value("newsMainTitle")</h1>
+                </div>
+                <!--End Main Title-->
+
+                <div class="content">
+                    <div class="row">
+                        @foreach (IPublishedContent newsItem in newsListing.Items)
+                        {
+                            var newsThumbImg = newsItem.Value<IPublishedContent>("thumbImg");
+                            if (newsThumbImg != null)
+                            {
+                                string newsDet = Convert.ToString(newsItem.Value("smallDetails"));
+                                if (!string.IsNullOrEmpty(newsDet))
+                                {
+                                    newsDet = newsDet.Substring(0, Math.Min(newsDet.Length, 78));
+                                    if (newsDet.Length == 78)
+                                    {
+                                        newsDet = newsDet + "..";
+                                    }
+                                }
+                                <div class="col-md-6 col-sm-12 blog-item blog-list">
+                                    <div class="row">
+                                        <div class="image col-lg-6 col-md-12">
+                                            <a href="@newsItem.Url()"> <img src="@newsThumbImg.Url()?width=319&height=200&mode=crop" alt="@newsItem.Value("newsMainTitle")" /></a>
+                                        </div>
+                                        <div class="newsinfo col-lg-6 col-md-12">
+                                            <a href="@newsItem.Url()"><h3>@newsItem.Value("newsMainTitle")</h3></a>
+                                            <p class="newsdate"><b>@String.Format("{0:dd MMM, yyyy}", newsItem.Value("postingDate"))</b></p>
+                                            <p class="newsdet">@newsDet</p>
+                                            <a href="@newsItem.Url()" class="btn btn-primary gtm-track-more-event" name="@newsItem.Name-ReadMore">@Umbraco.GetDictionaryValue("ReadMore")</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+
+                    @if (pageCount > 1)
+                    {
+                        <!-- pagination -->
+                        <div class="row paging">
+                            <div class="col-md-12">
+                                <div class="sort-alpha-numb">
+                                    <ul>
+                                        @for (int p = 0; p < pageCount; p++)
+                                        {
+                                            <li class="@(p == page ? "active" : null) gtm-track-paging-event" name="@((p + 1) + "-Paging")"><a href="?p=@p">@(p + 1)</a></li>
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <!-- Total: @newsListing.TotalCount, Pages: @pageCount -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@functions {
+
+    private dynamic GetNewsListing(int page, int pageSize)
+    {
+        IEnumerable<IPublishedContent> items = null;
+        int totalCount = 0;
+
+        totalCount = Model.Children()
+                .Where(x => x.IsVisible() && x.Value<IPublishedContent>("thumbImg") != null)
+                .Count();
+
+        items = Model.Children()
+                .Where(x => x.IsVisible() && x.Value<IPublishedContent>("thumbImg") != null)
+                .OrderByDescending(c => c.Value<DateTime?>("postingDate"))
+                .Skip(page * pageSize)
+                .Take(pageSize);
+
+        return new
+        {
+            Items = items == null ? new List<IPublishedContent>() : items,
+            TotalCount = totalCount
+        };
+    }
+}

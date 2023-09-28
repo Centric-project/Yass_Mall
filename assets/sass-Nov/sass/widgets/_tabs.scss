@@ -1,0 +1,168 @@
+.custom-tabs {
+
+    .nav-tabs {
+        @include justify-content(center);
+        border-bottom: 0;
+
+        .nav-item {
+            margin: 0;
+            background-color: #fcfbfa;
+
+            @media screen and (max-width: 500px) {
+                width: 100%;
+            }
+
+            .nav-link {
+                border: 0;
+                min-width: 280px;
+                text-align: center;
+                padding: 12px;
+                border-bottom: 2px solid $primaryPink;
+                color: $primaryPink;
+                font-family: $fontBold;
+                border-radius: 0;
+                border-left: 1px solid $primaryPink;
+                border-right: 1px solid $primaryPink;
+                cursor: pointer;
+                @media screen and (max-width: 991px) {
+                    min-width: auto;
+                    border: 1px solid #EC6758 !important;
+                }
+
+                &:hover,
+                &.active {
+                    background-color: $primaryPink;
+                    color: $white;
+                }
+
+            }
+
+            &:first-child {
+                .nav-link {
+
+                    @include direction('en') {
+                        border-left: 0;
+                    }
+
+                    @include direction('ar') {
+                        border-right: 0;
+                    }
+                }
+            }
+
+
+            &:last-child {
+                .nav-link {
+                    @include direction('en') {
+                        border-right: 0;
+                    }
+
+                    @include direction('ar') {
+                        border-left: 0;
+                    }
+                }
+            }
+        }
+    }
+
+    .tab-content {
+        padding-top: 50px;
+
+        @media screen and (max-width: 991px) {
+            padding-top: 25px;
+        }
+    }
+}
+
+.custom-accordion {
+    .card {
+        border-color: $primaryPink;
+        border-radius: 0;
+        margin-bottom: 15px;
+
+        .card-header {
+            border: 0;
+            background-color: $primaryPink;
+            padding: 0;
+            border-radius: 0;
+            h2 {
+                line-height: 0;
+            }
+            .btn {
+                color: $white;
+                font-family: $fontMedium;
+                font-size: 1rem;
+                font-weight: 300;
+                @include direction('en') {
+                    text-align: left;
+                    padding: 10px 40px 10px 15px;
+                }
+
+                @include direction('ar') {
+                    text-align: right;
+                    padding: 10px 15px 10px 40px;
+                }
+
+                .btn-collapse {
+                    position: absolute;
+                    height: 17px;
+                    width: 14.88px;
+                    top: 50%;
+                    margin-top: -8.5px;
+
+                    @include direction('en') {
+                        right: 1.25rem;
+                    }
+
+                    @include direction('ar') {
+                        left: 1.25rem;
+                    }
+
+                    .fas {
+                        position: absolute;
+                        font-size: 17px;
+                        display: none;
+
+                        @include direction('en') {
+                            right: 0;
+                        }
+
+                        @include direction('ar') {
+                            left: 0;
+                        }
+
+                        &.fa-minus {
+                            display: block;
+                        }
+                    }
+                }
+
+                &.collapsed {
+                    background-color: $white;
+                    color: #333;
+
+                    .btn-collapse {
+
+                        .fa-plus {
+                            display: block;
+                        }
+                    }
+                }
+
+                &:hover,
+                &:focus,
+                &:active {
+                    text-decoration: none;
+                }
+
+            }
+
+
+        }
+
+        .card-body {
+            padding: 10px 15px;
+        }
+
+    }
+}

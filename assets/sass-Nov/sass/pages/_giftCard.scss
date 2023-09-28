@@ -1,0 +1,333 @@
+.gift-theme {
+    background-color: #000;
+    color: $white;
+    padding: 0;
+    .inner-banner {
+        &.db-bg {
+            &:before {
+                background: #ffd400;
+            }
+        }
+    }
+
+    .breadcrumb-holder {
+        .breadcrumb {
+            li {
+                color: $white;
+
+                a {
+                    color: $white;
+                }
+            }
+        }
+    }
+
+    .title-holder {
+        padding: 0 0 10px;
+
+        .title {
+            color: $white;
+            font-family: $fontRegular;
+        }
+    }
+
+    .btn-primary {
+        background-color: #cccccc;
+        @include border-radius(2px);
+        color: #000;
+        text-decoration: none;
+
+        &:not(:disabled):not(.disabled).active,
+        &:not(:disabled):not(.disabled):active,
+        &:hover,
+        &:active,
+        &:focus {
+            background-color: $primaryYellow;
+            color: #000;
+        }
+    }
+
+    a {
+        color: $white;
+        text-decoration: underline;
+
+        &:hover {
+            color: $primaryYellow;
+            text-decoration: none;
+        }
+    }
+}
+
+.aldarcard-img {
+    text-align: center;
+
+    figure {
+        margin: 0 auto;
+
+        @media screen and (max-width: 991px) {
+            margin-bottom: 25px;
+        }
+    }
+}
+
+.aldarcard-content {
+    text-align: center;
+
+    .aldarcard-holder {
+        width: 70%;
+        margin: 0 auto;
+
+        .aldarcard-card {
+            margin-bottom: 25px;
+
+            img {
+                margin: 0 auto;
+            }
+        }
+
+        .aldarcard-info {
+            line-height: 32px;
+            font-size: 1.125rem;
+            margin-bottom: 30px;
+
+            strong {
+                font-family: $fontBold;
+            }
+
+            small {
+                font-size: 0.875rem;
+                line-height: 24px;
+                display: block;
+            }
+        }
+
+        .aldarcard-contact {
+            figure {
+                margin-bottom: 25px;
+            }
+
+            .term-text {
+                margin: 25px 0 0;
+            }
+        }
+    }
+}
+
+.redemption-listing {
+    .title-holder {
+        padding-bottom: 30px;
+    }
+}
+
+.red-list {
+    @include flexbox();
+    @include flex-wrap(wrap);
+    margin: 0 -15px;
+
+    li {
+        -ms-flex: 0 0 14.28%;
+        flex: 0 0 14.28%;
+        max-width: 14.28%;
+        padding: 0 15px;
+        text-align: center;
+
+        @media screen and (max-width: 991px) {
+            -ms-flex: auto;
+            flex: auto;
+            max-width: initial;
+            padding: 10px;
+        }
+
+        .red-name {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto;
+            @include border-radius(50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #333;
+            @include transition (all 0.2s ease-in 0s);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+
+            &::before {
+                @include shine-hover();
+            }
+
+            &:hover {
+                background: $primaryGreenHover;
+                color: $white;
+
+                &::before {
+                    -webkit-animation: shine .75s;
+                    animation: shine .75s;
+                }
+
+            }
+        }
+    }
+}
+
+.red-benefits {
+    padding: 50px 0 20px;
+
+    .benefit-box {
+        @include flexbox();
+        @include flex-wrap(wrap);
+        @include align-content(flex-end);
+        height: 100%;
+
+        figure {
+            margin: 0 auto 30px;
+        }
+
+        .bnf-info {
+            text-align: center;
+            width: 100%;
+            line-height: 24px;
+
+            @media screen and (max-width:767px) {
+                margin-bottom: 40px;
+            }
+        }
+    }
+}
+
+.inner-giftcard {
+    background-color: #333333;
+    padding: 20px 0 0;
+
+    .giftcard-content {
+        color: #fff;
+        font-size: 0.75rem;
+
+        .title-holder {
+            padding-bottom: 30px;
+        }
+
+        p {
+            margin: 30px 0 0;
+        }
+    }
+}
+
+.contact-options {
+    text-align: center;
+    padding: 40px 0;
+
+    .option {
+        display: inline-block;
+        vertical-align: top;
+        padding: 30px;
+        min-width: 20%;
+
+        @include direction('en') {
+            border-right: 1px solid #333;
+
+            &:last-child {
+                border: 0;
+            }
+        }
+
+        @include direction('ar') {
+            border-left: 1px solid #333;
+
+            &:last-child {
+                border: 0;
+            }
+        }
+
+
+
+        small,
+        strong {
+            display: block;
+            font-size: 0.875rem;
+        }
+
+        strong {
+            margin-top: 30px;
+            font-family: $fontBold;
+        }
+    }
+
+}
+
+
+.emailbox {
+    text-align: center;
+    font-size: 1.125rem;
+
+    img {
+        max-width: 25px;
+        filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(304deg) brightness(104%) contrast(103%);
+    }
+
+    i {
+        margin: 0 5px;
+
+        img {
+            max-width: 25px;
+            filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(304deg) brightness(104%) contrast(103%);
+        }
+    }
+}
+
+.card-features {
+    .cardfea-img {
+        @media screen and (max-width: 767px) {
+            padding-right: 15px;
+            padding-left: 15px;
+        }
+
+        figure {
+            margin: 0;
+        }
+    }
+
+    .cardfea-info {
+        align-self: center;
+        padding: 25px;
+
+        .title-holder {
+            .title {
+                text-transform: none;
+                text-align: center;
+
+                @include direction('en'){
+                    // text-align: left;
+                }
+
+                @include direction('ar'){
+                    // text-align: right;
+                }
+            }
+        }
+    }
+}
+
+
+.cardfea-listing {
+    li {
+        
+        background-repeat: no-repeat;
+        margin-top: 20px;
+        min-height: 24px;
+        line-height: 24px;
+
+
+        @include direction('en') {
+            background-image: url(/assets/images/icon-arrow.png);
+            padding-left: 40px;
+        }
+
+
+        @include direction('ar') {
+            background-image: url(/assets/images/icon-arrow-right.png);
+            background-position: top right;
+            padding-right: 40px;
+        }
+    }
+}

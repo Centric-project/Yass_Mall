@@ -1,0 +1,64 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage
+@{
+    Layout = "master.cshtml";
+
+    var lang = System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+
+    ViewBag.PageTitle = Model.Value("gpMainTitle");
+
+    // meta fallback
+    ViewBag.MetaDescription = Model.Value("gpMainTitle");
+}
+<style type="text/css">
+    .title-holder {
+        padding: 0px !important;
+    }
+</style>
+<!--Start Main Banner-->
+@{
+    var mainBannerImg = Model.Value<IPublishedContent>("gpMainBanner");
+    if (mainBannerImg != null)
+    {
+        <section class="main-banner">
+            <div class="container-fluid custom-container-fluid">
+                <div class="main-slide">
+                    <div class="slide">
+                        <img src="@mainBannerImg.Url()" alt="@Model.Value("gpMainTitle")" class="img-fluid" />
+                    </div>
+                </div>
+            </div>
+        </section>
+    }
+}
+<!--End Main Banner-->
+<!--Start Inner Page Wrapper-->
+<div class="inner-section">
+    <div class="container-fluid custom-container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <!--Start Breadcrumbs-->
+                <nav aria-label="breadcrumb" class="breadcrumb-holder">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="@Umbraco.GetDictionaryValue("LogoHref")">@Umbraco.GetDictionaryValue("Home")</a></li>
+                        <li class="breadcrumb-seprator"><i class="fas fa-angle-right"></i></li>
+                        <li class="breadcrumb-item active" aria-current="page">@Model.Value("gpMainTitle")</li>
+                    </ol>
+                </nav>
+                <!--End Breadcrumbs-->
+                <!--Start Main Title-->
+                <div class="clearfix title-holder">
+                    <h1 class="title">@Model.Value("gpMainTitle")</h1>
+                </div>
+                <!--End Main Title-->
+                <div class="filter-box page-content">
+                    <div class="row">
+                        <div class="col-md-12">
+                            @Html.Raw(Model.Value("gpBigDetails"))
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--End Inner Page Wrapper-->

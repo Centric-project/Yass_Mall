@@ -1,0 +1,77 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage
+@using ContentModels = Umbraco.Web.PublishedModels;
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.PlanYourVisitContent>
+@using Umbraco.Web.Mvc;
+@using System.Text.RegularExpressions;
+@{
+    Layout = "master.cshtml";
+}
+
+<style type="text/css">
+    .page-content .content .video-thumb {
+        display: block;
+    }
+
+    .page-content h1.title {
+        width: 100%;
+    }
+</style>
+<!--Start Main Banner-->
+@{
+    var planContBannerImg = Model.Value<IPublishedContent>("planContentBanner");
+    if (planContBannerImg != null)
+    {
+        <section class="main-banner">
+            <div class="container-fluid custom-container-fluid">
+                <div class="main-slide">
+                    <div class="slide">
+                        <img src="@planContBannerImg.Url()" alt="@Model.PlanContentTitle" class="img-fluid" />
+                    </div>
+                </div>
+            </div>
+        </section>
+    }
+}
+<!--End Main Banner-->
+<!--Start Search Box-->
+<section class="filter-holder">
+    <div class="container-fluid custom-container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <!--Start Breadcrumbs-->
+                <nav aria-label="breadcrumb" class="breadcrumb-holder">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="@Umbraco.GetDictionaryValue("logoHref")">@Umbraco.GetDictionaryValue("home")</a></li>
+                        <li class="breadcrumb-seprator"><i class="fas fa-angle-right"></i></li>
+                        <li class="breadcrumb-item"><a href="@Model.Parent.Url()">@Model.Parent.Value("planTitle")</a></li>
+                        <li class="breadcrumb-seprator"><i class="fas fa-angle-right"></i></li>
+                        <li class="breadcrumb-item active" aria-current="page">@Model.Value("planContentTitle")</li>
+                    </ol>
+                </nav>
+                <!--End Breadcrumbs-->
+                <div class="filter-box page-content">
+                    <div class="row">
+                        <h1 class="title">@Model.Value("planContentTitle")</h1>
+                        @Html.Raw(Model.Value("planBigDetails"))
+                        @if (!string.IsNullOrWhiteSpace(Model.Value("planVideoLink").ToString()))
+                        {
+                            <a href="@Model.Value("planVideoLink")" class="video-thumb" data-fancybox rel="gallery1">
+                                <span class="icon"></span>
+                                @{
+                                    var planContVideoPos = Model.Value<IPublishedContent>("planVideoPoster");
+                                    {
+                                        <img src="@planContVideoPos.Url()" width="100%" />
+                                    }
+                                }
+                                <video autoplay controls style="display:none;">
+                                    <source src="@Model.Value("planVideoLink")" type="video/mp4" />
+                                </video>
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--End Search Box-->

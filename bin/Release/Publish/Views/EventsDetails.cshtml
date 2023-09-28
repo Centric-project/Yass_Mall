@@ -1,0 +1,238 @@
+﻿@using ContentModels = Umbraco.Web.PublishedModels;
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.EventDetails>
+@using Umbraco.Web.Mvc;
+@{
+    Layout = "master.cshtml";
+    ViewBag.PageTitle = Model.EventTitle;
+
+    var lang = System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+    // You May Like Offers
+    var randomevents = GetEvents();
+}
+<style type="text/css">
+    .offer-detail-holder .offdetail-img .db-bg {
+        padding: 0px !important;
+    }
+
+    .offdetail-content p {
+        text-align: justify;
+    }
+</style>
+<!--Start Main Banner-->
+@{
+    var mainBannerImg = Model.Value<IPublishedContent>("eventDetailPageBanner");
+    if (mainBannerImg != null)
+    {
+        <section class="main-banner">
+            <div class="container-fluid custom-container-fluid">
+                <div class="main-slide">
+                    @{
+                        var obVideo = Model.Value<IPublishedContent>("eventDetailPageBannerVideo");
+                        if (obVideo != null)
+                        {
+                            @*var obExt = OfferBanner.GetProperty("umbracoExtension").Value;
+                                if (obExt == "mp4")*@
+                            <div class="slide video-slide">
+                                <div class="clearfix sliderVideo-holder">
+                                    <video id="slider_video" class="tv_video hide-for-small-only"
+                                           poster="@mainBannerImg.Url()" controls="controls" autoplay muted>
+                                        <source src="@obVideo.Url()" type="video/mp4" />
+                                        Your browser does not support the video tag.
+                                    </video>
+                                    @*<div class="play-bt"></div>
+                                        <div class="pause-bt" style="display:none;"></div>*@
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="slide">
+                                <img src="@mainBannerImg.Url()" alt="@Model.Value("eventTitle")" class="img-fluid" />
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </section>
+    }
+}
+<!--End Main Banner-->
+<!--Start Inner Page Wrapper-->
+<div class="inner-section">
+    <div class="container-fluid custom-container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <!--Start Breadcrumbs-->
+                <nav aria-label="breadcrumb" class="breadcrumb-holder">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a class="gtm-track-button-event" name="btnBreadCrumbsHome" href="@Umbraco.GetDictionaryValue("LogoHref")">@Umbraco.GetDictionaryValue("Home")</a></li>
+                        <li class="breadcrumb-seprator"><i class="fas fa-angle-right"></i></li>
+                        <li class="breadcrumb-item" aria-current="page"><a class="gtm-track-button-event" name="btnBreadCrumbsEvents" href="@Umbraco.GetDictionaryValue("EventsHref")">@Umbraco.GetDictionaryValue("Events")</a></li>
+                        <li class="breadcrumb-seprator"><i class="fas fa-angle-right"></i></li>
+                        <li class="breadcrumb-item active" aria-current="page">@Model.Value("eventTitle")</li>
+                    </ol>
+                </nav>
+                <!--End Breadcrumbs-->
+                <!--Start Detail Section-->
+                <section class="offer-detail-holder">
+                    <div class="row">
+                        <div class="col-md-6 offdetail-content">
+                            <div class="offers-box">
+                                <h5 class="off-title">@Model.Value("eventTitle")</h5>
+                                <div class="clearfix offer-datebox">
+                                    <span class="offer-date">
+                                        <i><img src="/assets/images/icon-timecalendar.svg" alt="" class="img-fluid" /></i>
+                                        <strong>
+                                            @String.Format("{0:dd MMM}", Model.Value("eventStartDate")) - @String.Format("{0:dd MMM}", Model.Value("eventEndDate"))
+                                            <span class="year">@String.Format("{0:yyyy}", Model.Value("eventEndDate"))</span>
+                                        </strong>
+                                    </span>
+                                </div>
+                                @Html.Raw(Model.Value("eventBigDetails"))
+                                <div class="share">
+                                    <a href="javascript:void(0)">
+                                        <img src="/assets/images/share-fb.jpg" alt="" class="img-fluid" />
+                                    </a>
+                                    <a href="javascript:void(0)">
+                                        <img src="/assets/images/share-twitter.jpg" alt="" class="img-fluid" />
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 offdetail-img">
+                            <div class="db-bg">
+                                @{
+                                    var eventDetailPageImg = Model.Value<IPublishedContent>("eventDetailPageImg");
+                                    if (eventDetailPageImg != null)
+                                    {
+
+                                        <img src="@eventDetailPageImg.Url()" alt="@Model.Value("eventTitle")" class="img-fluid" />
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!--End Detail Section-->
+                @{
+                    if (randomevents.TotalCount > 0)
+                    {
+                        int itemSno = 1;
+                        <!--Start Main Title-->
+                        @*<div class="clearfix title-holder">
+                            <h5 class="title small-title">@Umbraco.GetDictionaryValue("MoreOffers")</h5>
+                        </div>*@
+                        <!--End Main Title-->
+                        @*<!--Start May Also Like-->
+                        <section class="offers-box">
+                            <div class="row">
+                                @foreach (IPublishedContent events in randomevents.Items)
+                                {
+                                    var eventThumbImage = events.Value<IPublishedContent>("eventThumbImage");
+                                    <div class="col-md-6 @((itemSno % 2) == 0 ? "pl-none" : "pr-none") small-offers">
+                                        <div class="clearfix smalloff-holder">
+                                            <div class="row">
+                                                <div class="col-md-6 pr-none">
+                                                    <div class="offer-box">
+                                                        <h5 class="off-title">@events.Value("eventTitle")</h5>
+                                                        <p class="off-des">@events.Value("eventSmallDetails")</p>
+                                                        <a href="@events.Url()">@Umbraco.GetDictionaryValue("ReadMore")</a>
+                                                        <div class="clearfix offer-datebox">
+                                                            <span class="offer-date">
+                                                                <i><img src="/assets/images/icon-timecalendar.svg" alt="" class="img-fluid" /></i>
+                                                                <strong>
+                                                                    @String.Format("{0:dd MMM}", events.Value("eventStartDate")) - @String.Format("{0:dd MMM}", events.Value("eventEndDate"))
+                                                                    <span class="year">@String.Format("{0:yyyy}", events.Value("offerEndDate"))</span>
+                                                                </strong>
+                                                            </span>
+                                                            <div class="share"><a href="javascript:void(0)"><img src="/assets/images/icon-share.svg" class="img-fluid" alt="" /></a></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 pl-none">
+                                                    <figure>
+                                                        @{
+                                                            if (eventThumbImage != null)
+                                                            {
+                                                                <img src="@eventThumbImage.Url()" alt="@events.Value("eventTitle")" class="img-fluid" />
+                                                            }
+                                                        }
+                                                    </figure>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    itemSno = itemSno + 1;
+                                }
+                            </div>
+                        </section>
+                        <!--End May Also Like-->*@
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<!--End Inner Page Wrapper-->
+<!--Start Featured Box-->
+@{
+    IEnumerable<IPublishedContent> featuredList = Model.Children().Where(x => x.IsVisible());
+    if (featuredList != null)
+    {
+        <section class="box-holder featured-holder">
+            <!--Start Feature Slider-->
+            <div class="container-fluid custom-container-fluid">
+                <div class="row">
+                    <div class="col-md-12" data-aos="fade-up">
+                        <div class="custom-slider feature-slider gtm-mainsec" data-section="feature-slider">
+                            @foreach (var fItem in featuredList)
+                            {
+                                //soon.GetPropertyValue<IPublishedContent>("image");
+                                //var soonImageUrl = soonImage == null ? "" : soonImage.Url;
+                                var fImage = fItem.Value<IPublishedContent>("thumbImage");
+                                if (fImage != null)
+                                {
+                                    <div class="slide">
+                                        <div class="feature-box">
+                                            <figure>
+                                                <img src="@fImage.Url()" alt="@fItem.Value("pageTitle")" class="img-fluid" />
+
+                                            </figure>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--End Feature Slider-->
+        </section>
+    }
+}
+<!--End Featured Box-->
+@functions {
+    private dynamic GetEvents()
+    {
+        var rand = new Random();
+        // var selectedPost = q.Skip(rand.Next(0, q.Count())).Take(1).FirstOrDefault();
+
+        var itmId = Model.Id;
+        IEnumerable<IPublishedContent> items = null;
+
+        int totalCount = Model.AncestorOrSelf("eventsLandingDocType")//Model.AncestorOrSelf(1).DescendantsOfType("offerLandingDocType").Children()
+            .Children().Where(x => x.IsVisible() && x.ContentType.Alias == "eventDetails")
+            .Count();
+
+        items = Model.AncestorOrSelf("eventsLandingDocType").Children()
+            .Where(x => x.IsVisible() && x.ContentType.Alias == "eventDetails" && x.Id != itmId)
+            .Skip(rand.Next(0, totalCount) - 2).Take(2);
+        //.Where(x => x.Id != itmId)
+
+        return new
+        {
+            Items = items == null ? new List<IPublishedContent>() : items,
+            TotalCount = totalCount
+        };
+    }
+}

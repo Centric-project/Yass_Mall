@@ -1,0 +1,260 @@
+﻿@using ContentModels = Umbraco.Web.PublishedModels;
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.EventsLandingDocType>
+@using ClientDependency.Core.Mvc;
+@using Umbraco.Web.Mvc;
+@using System.Text;
+@{
+    var lang = System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+    Layout = "master.cshtml";
+    ViewBag.MetaTitle = Model.EventMainTitle;
+    ViewBag.MetaDescription = Model.SeoMetaDescription;
+    ViewBag.MetaKeyword = Model.Keywords;
+
+    // set page title segment
+    ViewBag.PageTitle = Umbraco.GetDictionaryValue("Events");
+
+    // get items
+    var eventItems = GetEvents();
+}
+<style type="text/css">
+    .mainoff-holder a.main-link {
+        display: block;
+        width: 100%;
+        height: 100%;
+    }
+</style>
+<!--Start Main Banner-->
+@{
+    var EventBanner = Model.Value<IPublishedContent>("eventMainBannerImg");
+    if (EventBanner != null)
+    {
+        <section class="main-banner">
+            <div class="container-fluid custom-container-fluid">
+                <div class="main-slide">
+                    @{
+                        var ebVideo = Model.Value<IPublishedContent>("eventMainBannerVideo");
+                        if (ebVideo != null)
+                        {
+                            @*var obExt = OfferBanner.GetProperty("umbracoExtension").Value;
+                                if (obExt == "mp4")*@
+                            <div class="slide video-slide">
+                                <div class="clearfix sliderVideo-holder">
+                                    <video id="slider_video" class="tv_video hide-for-small-only"
+                                           poster="@EventBanner.Url()" controls="controls" autoplay muted>
+                                        <source src="@ebVideo.Url()" type="video/mp4" />
+                                        Your browser does not support the video tag.
+                                    </video>
+                                    @*<div class="play-bt"></div>
+                                        <div class="pause-bt" style="display:none;"></div>*@
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="slide">
+                                <img src="@EventBanner.Url()" alt="@Model.Value("eventMainTitle")" class="img-fluid" />
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </section>
+    }
+}
+<!--End Main Banner-->
+<!--Start Inner Page Wrapper-->
+<div class="inner-section">
+    <div class="container-fluid custom-container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <!--Start Breadcrumbs-->
+                <nav aria-label="breadcrumb" class="breadcrumb-holder">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a class="gtm-track-button-event" name="btnBreadCrumbsHome" href="@Umbraco.GetDictionaryValue("LogoHref")">@Umbraco.GetDictionaryValue("Home")</a></li>
+                        <li class="breadcrumb-seprator"><i class="fas fa-angle-right"></i></li>
+                        <li class="breadcrumb-item active" aria-current="page">@Umbraco.GetDictionaryValue("Events")</li>
+                    </ol>
+                </nav>
+                <!--End Breadcrumbs-->
+                <!--Start Main Title-->
+                <div class="clearfix title-holder">
+                    <h1 class="title">@Model.Value("eventMainTitle")</h1>
+                </div>
+                <!--End Main Title-->
+                @Html.Raw(Model.Value("eventMainDescription"))
+                @if (eventItems.Count == 0)
+                {
+                    <div class="filter-box page-content">
+                        <div class="row">
+                            <p class="empty-message">
+                                <b>@Html.Raw(Model.Value("noCurrentUpcomingEventsMessage"))</b>
+                            </p>
+                        </div>
+                    </div>
+                }
+                <!--Start Events Listing-->
+                @if (eventItems.Count > 0)
+                {
+                    <section class="offers-box">
+                        @{
+                            StringBuilder strDiv = new StringBuilder();
+                            int maxLoop = Convert.ToInt32(Math.Ceiling((double)eventItems.Count / 7)); //Because we need to repeat the design after every 7 records
+                            for (int i = 0; i < maxLoop; i++)
+                            {
+                                int eventInSecCnt = eventItems.Count - (7 * i);
+                                eventInSecCnt = eventInSecCnt > 7 ? 7 : eventInSecCnt; //To Check the Offers in Every Section of 7
+
+                                strDiv.Append(RenderEventsDiv(eventItems, (i * 7), eventInSecCnt));
+                            }
+                            @:@Html.Raw(strDiv.ToString())
+                        }
+                    </section>
+                }
+                <!--End Offers Listing-->
+            </div>
+        </div>
+    </div>
+</div>
+<!--End Inner Page Wrapper-->
+@functions {
+    private List<IPublishedContent> GetEvents()
+    {
+        List<IPublishedContent> eventItems = Model.Children()/*.AncestorOrSelf(1).DescendantsOfType("offer")*/
+            .Where(x => x.IsVisible() && Convert.ToDateTime(x.Value<DateTime?>("eventEndDate")).Year >= (DateTime.Now.Year - 1)).ToList();
+        return eventItems;
+    }
+    private string RenderEventsDiv(List<IPublishedContent> eventItems, int secIndex, int eventInSecCnt)
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.Append("<div class='row'>"); // First Row Open
+        if (eventInSecCnt >= 1) //Render 1st Div
+        {
+            IPublishedContent eventItem = eventItems[secIndex];
+            var prefix = eventItem.ContentType.Alias == "eventDetails" ? "event" : "event";
+            var eventThumbImage = eventItem.Value<IPublishedContent>(prefix + "ThumbImage");
+            sb.Append("<div class='col-lg-6 col-md-12 pr-none main-offer'><div class='clearfix mainoff-holder'>");
+
+            if (eventThumbImage != null)
+            {
+                sb.Append("<figure><a class='main-link gtm-track-tile-event' href='" + eventItem.Url() + "' name='" + eventItem.Value(prefix + "Title", "en-US") + "-tile'><img src='" + eventThumbImage.Url() + "' alt='"
+                    + eventItem.Value(prefix + "Title") + "' class='img-fluid' /></a></figure>");
+            }
+
+            sb.Append("<div class='offer-box'><h5 class='off-title'>" + eventItem.Value(prefix + "Title") + "</h5>"
+                + eventItem.Value(prefix + "SmallDetails"));
+
+            var eventDate = String.Format("{0:dd MMM}", eventItem.Value(prefix + "StartDate")) + " - "
+                + String.Format("{0:dd MMM}", eventItem.Value(prefix + "EndDate"));
+
+            sb.Append("<div class='clearfix offer-datebox'><span class='offer-date'>" +
+                "<i><img src='/assets/images/icon-timecalendar.svg' alt='" + eventDate + "' class='img-fluid' /></i>" +
+                "<strong>" + eventDate + "</strong></span><a class='offReadMore gtm-track-more-event' href='" + eventItem.Url() + "' name='" + eventItem.Value(prefix + "Title", "en-US") + "-tile'>" + Umbraco.GetDictionaryValue("ReadMore") + "</a></div>");
+            sb.Append("</div></div></div>");
+        }
+        if (eventInSecCnt >= 2) //Render 2nd Div
+        {
+            sb.Append("<div class='col-lg-6 col-md-12 pl-none small-offers'>");
+            sb.Append(Render2ndsDivTemplate(eventItems[secIndex + 1]));
+
+            if (eventInSecCnt >= 3) //Render 3rd Div
+            {
+                sb.Append(Render3rdsDivTemplate(eventItems[secIndex + 2]));
+            }
+
+            sb.Append("</div>");
+        }
+        sb.Append("</div>"); // First Row Close
+
+        if (eventInSecCnt >= 4) //Render 4th Div
+        {
+            sb.Append("<div class='row'>"); // Second Row Open
+
+            sb.Append("<div class='col-lg-6 col-md-12 pr-none small-offers'>"
+                + Render2ndsDivTemplate(eventItems[secIndex + 3]) + "</div>");
+
+            if (eventInSecCnt >= 5) //Render 5th Div
+            {
+                sb.Append("<div class='col-lg-6 col-md-12 pl-none small-offers'>"
+                    + Render2ndsDivTemplate(eventItems[secIndex + 4]) + "</div>");
+            }
+
+            sb.Append("</div>"); // Second Row Close
+        }
+
+        if (eventInSecCnt >= 6) //Render 6th Div
+        {
+            sb.Append("<div class='row'>"); // Third Row Open
+
+            sb.Append("<div class='col-lg-6 col-md-12 pr-none small-offers'>"
+                + Render3rdsDivTemplate(eventItems[secIndex + 5]) + "</div>");
+
+            if (eventInSecCnt >= 7) //Render 7th Div
+            {
+                sb.Append("<div class='col-lg-6 col-md-12 pl-none small-offers'>"
+                    + Render3rdsDivTemplate(eventItems[secIndex + 6]) + "</div>");
+            }
+
+            sb.Append("</div>"); // Third Row Close
+        }
+
+        return sb.ToString();
+    }
+
+    private string Render2ndsDivTemplate(IPublishedContent eventItem)
+    {
+        StringBuilder sb = new StringBuilder();
+        var prefix = eventItem.ContentType.Alias == "eventDetails" ? "event" : "event";
+        var eventThumbImage = eventItem.Value<IPublishedContent>(prefix + "ThumbImage");
+        sb.Append("<div class='clearfix smalloff-holder'><div class='row'><div class='col-md-6 pr-none'>");
+
+        if (eventThumbImage != null)
+        {
+            sb.Append("<figure><a class='main-link gtm-track-tile-event' href='" + eventItem.Url() + "' name='" + eventItem.Value(prefix + "Title", "en-US") + "-tile'><img src='" + eventThumbImage.Url() + "' alt='" +
+                eventItem.Value(prefix + "Title") + "' class='img-fluid' /></a></figure>");
+        }
+
+        sb.Append("</div><div class='col-md-6 pl-none'><div class='offer-box'><h5 class='off-title'>" + eventItem.Value(prefix + "Title") + "</h5>"
+            + eventItem.Value(prefix + "SmallDetails") +
+            "<a class='offReadMore gtm-track-more-event' href='" + eventItem.Url() + "' name='" + eventItem.Value(prefix + "Title", "en-US") + "-tile'>" + Umbraco.GetDictionaryValue("ReadMore") + "</a>");
+
+        var eventDate = String.Format("{0:dd MMM}", eventItem.Value(prefix + "StartDate")) + " - "
+            + String.Format("{0:dd MMM}", eventItem.Value(prefix + "EndDate"));
+
+        sb.Append("<div class='clearfix offer-datebox'><span class='offer-date'>" +
+            "<i><img src='/assets/images/icon-timecalendar.svg' alt='" + eventDate + "' class='img-fluid' /></i>" +
+            "<strong>" + eventDate + "</strong></span></div></div></div></div></div>");
+
+
+        return sb.ToString();
+    }
+    private string Render3rdsDivTemplate(IPublishedContent eventItem)
+    {
+        StringBuilder sb = new StringBuilder();
+        var prefix = eventItem.ContentType.Alias == "eventDetails" ? "event" : "event";
+        var eventThumbImage = eventItem.Value<IPublishedContent>(prefix + "ThumbImage");
+
+        sb.Append("<div class='clearfix smalloff-holder'><div class='row'><div class='col-md-6 pr-none'>" +
+            "<div class='offer-box'><h5 class='off-title'>" + eventItem.Value(prefix + "Title") + "</h5>"
+            + eventItem.Value(prefix + "SmallDetails") +
+            "<a class='offReadMore gtm-track-more-event' href='" + eventItem.Url() + "' name='" + eventItem.Value(prefix + "Title", "en-US") + "-tile'>" + Umbraco.GetDictionaryValue("ReadMore") + "</a>");
+
+        var eventDate = String.Format("{0:dd MMM}", eventItem.Value(prefix + "StartDate")) + " - "
+            + String.Format("{0:dd MMM}", eventItem.Value(prefix + "EndDate"));
+
+        sb.Append("<div class='clearfix offer-datebox'><span class='offer-date'>" +
+            "<i><img src='/assets/images/icon-timecalendar.svg' alt='" + eventDate + "' class='img-fluid' /></i>" +
+            "<strong>" + eventDate + "</strong></span></div></div></div><div class='col-md-6 pl-none'>");
+
+        if (eventThumbImage != null)
+        {
+            sb.Append("<figure><a class='main-link gtm-track-tile-event' href='" + eventItem.Url() + "' name='" + eventItem.Value(prefix + "Title", "en-US") + "-tile'><img src='" + eventThumbImage.Url() + "' alt='"
+                + eventItem.Value(prefix + "Title") + "' class='img-fluid' /></a></figure>");
+        }
+        sb.Append("</div></div></div>");
+
+        return sb.ToString();
+    }
+
+}
+
+

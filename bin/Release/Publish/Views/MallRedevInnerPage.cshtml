@@ -1,0 +1,375 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage
+@{
+    Layout = "Master.cshtml";
+
+    var lang = System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+
+    ViewBag.MetaTitle = Model.Value("metaTitle");
+    ViewBag.MetaDescription = Model.Value("metaDescription");
+    ViewBag.MetaKeyword = Model.Value("metaKeyword");
+
+    // set page title segment
+    ViewBag.PageTitle = Model.Value("metaTitle");
+}
+<style type="text/css">
+    div section.content-wrap {
+        padding: 40px 0;
+    }
+
+    div.inner-section {
+        padding: 0 0 0px;
+    }
+</style>
+<!--Start Main Banner-->
+@{
+    var mrBannerImg = Model.Value<IPublishedContent>("mrMainBanner");
+    if (mrBannerImg != null)
+    {
+        <section class="main-banner">
+            <div class="container-fluid custom-container-fluid">
+                <div class="main-slide">
+                    <div class="slide">
+                        <img src="@mrBannerImg.Url()" alt="@Model.Value("metaTitle")" class="img-fluid" />
+                    </div>
+                </div>
+            </div>
+        </section>
+    }
+}
+<!--End Main Banner-->
+<!--Start Inner Page Wrapper-->
+<div class="inner-section">
+    <div class="container-fluid custom-container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <!--Start Breadcrumbs-->
+                <nav aria-label="breadcrumb" class="breadcrumb-holder">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="@Umbraco.GetDictionaryValue("logoHref")">@Umbraco.GetDictionaryValue("home")</a></li>
+                        <li class="breadcrumb-seprator"><i class="fas fa-angle-right"></i></li>
+                        <li class="breadcrumb-item" aria-current="page"><a href="@Umbraco.GetDictionaryValue("MallRedevelopmentHRef")">@Umbraco.GetDictionaryValue("MallRedevelopment")</a></li>
+                        <li class="breadcrumb-seprator"><i class="fas fa-angle-right"></i></li>
+                        <li class="breadcrumb-item active" aria-current="page">@Model.Name</li>
+                    </ol>
+                </nav>
+                <!--End Breadcrumbs-->
+                @{
+                    var mrTitle = Model.Value("mrMainTitle");
+                    if (mrTitle != null && !string.IsNullOrEmpty(mrTitle.ToString()))
+                    {
+                        <!--Start Main Title-->
+                        <div class="clearfix title-holder">
+                            <h1 class="title">@Model.Value("mrMainTitle")</h1>
+                        </div>
+                        <!--End Main Title-->
+                    }
+                    var mrDescrip = Model.Value<IHtmlString>("mrDescription");
+                    if (mrDescrip != null && !string.IsNullOrEmpty(mrDescrip.ToString()))
+                    {
+                        <div class="filter-box page-content rd-smInfo">
+                            <div class="row">
+                                @Html.Raw(mrDescrip)
+                            </div>
+                        </div>
+                    }
+                }
+                <section class="content-wrap">
+                    <div class="container">
+                        <div class="row">
+                            @{
+                                if (Model.HasValue("mrSecOneDescription"))
+                                {
+                                    var mrSecOneVideoImg = Model.Value<IPublishedContent>("mrSecOneVideoImg");
+                                    if (mrSecOneVideoImg != null)
+                                    {
+                                        <!--Start Section One-->
+                                        <div class="col-md-6">
+                                            <div class="row">
+                                                @{
+                                                    var obExt = mrSecOneVideoImg.Value("umbracoExtension").ToString();
+                                                    if (obExt == "mp4")
+                                                    {
+                                                        var mrVideoPoster = Model.Value<IPublishedContent>("mrVideoPoster");
+                                                        <video id="ban_video" class="tv_video hide-for-small-only" controls="controls"
+                                                               poster="@mrVideoPoster.Url()">
+                                                            <source src="@mrSecOneVideoImg.Url()" type="video/mp4" />
+                                                            Your browser does not support the video tag.
+                                                        </video>
+                                                    }
+                                                    else
+                                                    {
+                                                        <img src="@mrSecOneVideoImg.Url()" alt="" />
+                                                    }
+                                                }
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="cont-wrap">
+                                                <div class="content-box">
+                                                    @Html.Raw(Model.Value("mrSecOneDescription"))
+                                                    @*<a class="know-more" href="javascript:void(0)">Know More</a>*@
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--End Section One-->
+                                    }
+                                }
+                                if (Model.HasValue("mrSecTwoDescription"))
+                                {
+                                    var mrSecTwoVideoImg = Model.Value<IPublishedContent>("mrSecTwoVideoImg");
+                                    if (mrSecTwoVideoImg != null)
+                                    {
+                                        <!--Start Section Two-->
+                                        <div class="col-md-6">
+                                            <div class="cont-wrap">
+                                                <div class="content-box">
+                                                    @Html.Raw(Model.Value("mrSecTwoDescription"))
+                                                    @*<a class="know-more" href="javascript:void(0)">Know More</a>*@
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="row">
+                                                @{
+                                                    var obExt = mrSecTwoVideoImg.Value("umbracoExtension").ToString();
+                                                    if (obExt == "mp4")
+                                                    {
+                                                        var mrVideoPoster = Model.Value<IPublishedContent>("mrVideoPoster");
+                                                        <video id="ban_video" class="tv_video hide-for-small-only" controls="controls"
+                                                               poster="@mrVideoPoster.Url()">
+                                                            <source src="@mrSecTwoVideoImg.Url()" type="video/mp4" />
+                                                            Your browser does not support the video tag.
+                                                        </video>
+                                                    }
+                                                    else
+                                                    {
+                                                        <img src="@mrSecTwoVideoImg.Url()" alt="" />
+                                                    }
+                                                }
+                                            </div>
+                                        </div>
+                                        <!--End Section Two-->
+                                    }
+                                }
+                                if (Model.HasValue("mrSecThreeDescription"))
+                                {
+                                    var mrSecThreeVideoImg = Model.Value<IPublishedContent>("mrSecThreeVideoImg");
+                                    if (mrSecThreeVideoImg != null)
+                                    {
+                                        <!--Start Section Three-->
+                                        <div class="col-md-6">
+                                            <div class="row">
+                                                @{
+                                                    var obExt = mrSecThreeVideoImg.Value("umbracoExtension").ToString();
+                                                    if (obExt == "mp4")
+                                                    {
+                                                        var mrVideoPoster = Model.Value<IPublishedContent>("mrVideoPoster");
+                                                        <video id="ban_video" class="tv_video hide-for-small-only" controls="controls"
+                                                               poster="@mrVideoPoster.Url()">
+                                                            <source src="@mrSecThreeVideoImg.Url()" type="video/mp4" />
+                                                            Your browser does not support the video tag.
+                                                        </video>
+                                                    }
+                                                    else
+                                                    {
+                                                        <img src="@mrSecThreeVideoImg.Url()" alt="" />
+                                                    }
+                                                }
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="cont-wrap">
+                                                <div class="content-box">
+                                                    @Html.Raw(Model.Value("mrSecThreeDescription"))
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--End Section Three-->
+                                    }
+                                }
+                                if (Model.HasValue("mrSecFourDescription"))
+                                {
+                                    var mrSecFourVideoImg = Model.Value<IPublishedContent>("mrSecFourVideoImg");
+                                    if (mrSecFourVideoImg != null)
+                                    {
+                                        <!--Start Section Four-->
+                                        <div class="col-md-6">
+                                            <div class="cont-wrap">
+                                                <div class="content-box">
+                                                    @Html.Raw(Model.Value("mrSecFourDescription"))
+                                                    @*<a class="know-more" href="javascript:void(0)">Know More</a>*@
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="row">
+                                                @{
+                                                    var obExt = mrSecFourVideoImg.Value("umbracoExtension").ToString();
+                                                    if (obExt == "mp4")
+                                                    {
+                                                        var mrVideoPoster = Model.Value<IPublishedContent>("mrVideoPoster");
+                                                        <video id="ban_video" class="tv_video hide-for-small-only" controls="controls"
+                                                               poster="@mrVideoPoster.Url()">
+                                                            <source src="@mrSecFourVideoImg.Url()" type="video/mp4" />
+                                                            Your browser does not support the video tag.
+                                                        </video>
+                                                    }
+                                                    else
+                                                    {
+                                                        <img src="@mrSecFourVideoImg.Url()" alt="" />
+                                                    }
+                                                }
+                                            </div>
+                                        </div>
+                                        <!--End Section Four-->
+                                    }
+                                }
+                                if (Model.HasValue("mrSecFiveDescription"))
+                                {
+                                    var mrSecFiveVideoImg = Model.Value<IPublishedContent>("mrSecFiveVideoImg");
+                                    if (mrSecFiveVideoImg != null)
+                                    {
+                                        <!--Start Section Five-->
+                                        <div class="col-md-6">
+                                            <div class="row">
+                                                @{
+                                                    var obExt = mrSecFiveVideoImg.Value("umbracoExtension").ToString();
+                                                    if (obExt == "mp4")
+                                                    {
+                                                        var mrVideoPoster = Model.Value<IPublishedContent>("mrVideoPoster");
+                                                        <video id="ban_video" class="tv_video hide-for-small-only" controls="controls"
+                                                               poster="@mrVideoPoster.Url()">
+                                                            <source src="@mrSecFiveVideoImg.Url()" type="video/mp4" />
+                                                            Your browser does not support the video tag.
+                                                        </video>
+                                                    }
+                                                    else
+                                                    {
+                                                        <img src="@mrSecFiveVideoImg.Url()" alt="" />
+                                                    }
+                                                }
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="cont-wrap">
+                                                <div class="content-box">
+                                                    @Html.Raw(Model.Value("mrSecFiveDescription"))
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--End Section Five-->
+                                    }
+                                }
+                                if (Model.HasValue("mrSecSixDescription"))
+                                {
+                                    var mrSecSixVideoImg = Model.Value<IPublishedContent>("mrSecSixVideoImg");
+                                    if (mrSecSixVideoImg != null)
+                                    {
+                                        <!--Start Section Six-->
+                                        <div class="col-md-6">
+                                            <div class="cont-wrap">
+                                                <div class="content-box">
+                                                    @Html.Raw(Model.Value("mrSecSixDescription"))
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="row">
+                                                @{
+                                                    var obExt = mrSecSixVideoImg.Value("umbracoExtension").ToString();
+
+                                                    if (obExt == "mp4")
+                                                    {
+                                                        var mrVideoPoster = Model.Value<IPublishedContent>("mrVideoPoster");
+                                                        <video id="ban_video" class="tv_video hide-for-small-only" controls="controls"
+                                                               poster="@mrVideoPoster.Url()">
+                                                            <source src="@mrSecSixVideoImg.Url()" type="video/mp4" />
+                                                            Your browser does not support the video tag.
+                                                        </video>
+                                                    }
+                                                    else
+                                                    {
+                                                        <img src="@mrSecSixVideoImg.Url()" alt="" />
+                                                    }
+                                                }
+                                            </div>
+                                        </div>
+                                        <!--End Section Six-->
+                                    }
+                                }
+                            }
+                        </div>
+                    </div>
+                </section>
+                <br /><br />
+                @{
+                    if (Model.HasValue("mrStepsHTML"))
+                    {
+                        <!--Journey Steps-->
+                        <section class="journey-box rd-steps">
+                            <div class="container">
+                                <div class="row">
+                                    @Html.Raw(Model.Value("mrStepsHTML"))
+                                </div>
+                            </div>
+                        </section>
+                        <!--Journey Steps-->
+                    }
+                }
+            </div>
+        </div>
+    </div>
+    @{
+        var redevExploreImage = Model.Value<IPublishedContent>("redevExploreImage");
+        if (redevExploreImage != null)
+        {
+            <!--Start Explore Redevelopment-->
+            <section class="app-box">
+                <div class="container">
+                    <h2><b>@Model.Value("mrExploreTitle")</b></h2>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="row">
+                                <img src="@redevExploreImage.Url()" alt="@Model.Value("mrExploreTitle")" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="app-content">
+                                @{
+                                    var redevExplLogo = Model.Value<IPublishedContent>("redevExploreLogo");
+                                    if (redevExplLogo != null)
+                                    {
+                                        <img class="etihad-logo" src="@redevExplLogo.Url()" alt="@Model.Value("mrExploreTitle")" />
+                                    }
+                                }
+                                @Html.Raw(Model.Value("redevExploreDetails"))
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!--End Explore Redevelopment-->
+        }
+        IEnumerable<IPublishedContent> redevSliders = Model.Children().Where(x => x.IsVisible());
+        //IEnumerable<IPublishedContent> redevSliders = Model.Content.Children().Where(x => x.IsVisible());
+        if (redevSliders.Count() > 0)
+        {
+            <section class="inspiration">
+                <div class="container">
+                    <div class="col-md-12">
+                        <h2><b>@Model.Value("mrExploreTitle")</b></h2>
+                        <div class="inspiration-slider">
+                            @foreach (IPublishedContent slideItem in redevSliders)
+                            {
+                                var sliderImage = slideItem.Value<IPublishedContent>("sliderImage");
+                                <div><img src="@sliderImage.Url()" class="img-fluid" alt="@sliderImage.Name" /></div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </section>
+        }
+
+    }
+</div>
+<!--End Inner Page Wrapper-->

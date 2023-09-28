@@ -1,0 +1,81 @@
+.btn {
+    font-size: 0.875rem;
+    border-radius: 0;
+    border: 0;
+    position: relative;
+    overflow: hidden;
+
+    @media screen and (max-width: 1300px) {
+        font-size: 0.75rem;
+    }
+
+    &::before {
+        @include shine-hover();
+    }
+
+    &:hover::before {
+        -webkit-animation: shine .75s;
+        animation: shine .75s;
+    }
+}
+
+.btn-default {
+    background:$primaryGreen;
+    color: $white;
+
+    &:hover {
+        background:$primaryGreenHover;
+        color: $white;
+    }
+}
+.btnDivider{
+    width: 20px;
+    height: auto;
+    display: inline-block;
+    @media screen and (max-width: 767px) {        
+        width: 10px;
+    }
+}
+.btn-primary,.btn.btn-primary,.btn-default,.btn.btn-default {
+    background: $black;
+    text-transform: uppercase;
+    font-family: $fontMedium;
+    padding: 10px 15px;
+    min-width: 165px;
+    line-height: unset;
+    
+    &:not(:disabled):not(.disabled).active,
+    &:not(:disabled):not(.disabled):active,
+    &:hover,
+    &:active,
+    &:focus {
+        background: $primaryBrown;
+        color: $white;
+    }
+    // @media screen and (max-width: 992px) {
+    @media screen and (max-width: 1024px) {        
+        padding: 8px 15px;
+        min-width: 135px;
+    }
+    @media screen and (max-width:767px){
+        width: 100%;
+    }
+}
+
+.btn-downloaddine{
+    width: 100% !important;
+    padding: 5px 0px !important;
+    background: $black !important;
+    // background: $primaryPink !important;
+    @media screen and (min-width: 768px) and (max-width: 1024px) {
+        font-size: 0.67rem;
+    }
+    img{
+        width: 30px;
+        margin-right: 10px;
+        @media screen and (min-width: 768px) and (max-width: 1024px) {
+            width: 24px;
+            margin-right: 2px;
+        }    
+    }    
+}

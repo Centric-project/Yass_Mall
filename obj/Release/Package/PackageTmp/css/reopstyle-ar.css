@@ -1,0 +1,29 @@
+.parking-content {
+    position: absolute;
+    bottom: 20px;
+    right: 20px !important;
+    color: #fff;
+    text-align: right !important;
+    z-index: 1;
+    margin-bottom: 35px;
+    width: 100%;
+}
+.video-icon {
+    position: absolute;
+    left: 6% !important;
+    right: auto !important;
+    bottom: -45px;
+}
+
+/* 767 mobile start */
+@media (max-width: 767px) {
+    .parking-content {
+        right: 5px;
+        left: auto !important;
+        text-align: right;
+    }
+    ul.nav.nav-pills.opening-tabs {
+        padding: 0;
+    }
+}
+/* 767 mobile end */

@@ -1,0 +1,51 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage
+@{
+    Layout = "master.cshtml";
+
+    var lang = System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+
+    var collectionList = CurrentPage.Children();
+}
+
+@* the fun starts here *@
+<div class="page-content">
+    <div class="container">
+        <div class="title">
+            <div class="breadcrumb">
+                <ul>
+                    <li><a href="@Umbraco.GetDictionaryValue("logoHref")">@Umbraco.GetDictionaryValue("home")</a></li>
+                    <li><a href="@Umbraco.GetDictionaryValue("offersHref")">@Umbraco.GetDictionaryValue("offers")</a></li>
+                    <li><a href="@Model.Content.Parent.Url">@Model.Content.Parent.Value("Title")</a></li>
+                    <li><a href="javascript:;">@Model.Value("brandName")</a></li>
+                </ul>
+            </div>
+            <h4>@Model.Value("brandCollectionHeader")</h4>
+            <h3>@Model.Value("collectionDetailHeader")</h3>
+        </div>
+
+        <div class="content">
+            <div class="row">
+                @foreach (var item in Model.Children.ToList())
+                {
+                    <div class="col-sm-6 col-md-4">
+                        <div class="thumbnail-offer">
+                            <div class="zoom box-shadow">
+                                <div class="to-image">
+                                    <img style="margin-bottom:10px;" src="@item.Value("CollectionThumbImage")" />
+                                </div>
+                                <div style="height:200px">
+                                    <p class="related-tags"><strong>@Model.Name</strong></p>
+                                    <p class="related-tags">@item.Value("SmallDetails")</p>
+                                    <p class="related-tags">@item.Value("Price")</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+            </div>
+
+        </div>
+
+    </div>
+</div>

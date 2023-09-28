@@ -1,0 +1,182 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>YasMall - Huna Survey</title>
+    <link rel="stylesheet" href="/assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/assets/css/fontawesome.min.css" />
+    <link rel="stylesheet" href="/css/slick.css" />
+    <link rel="stylesheet" href="/css/aos.css" />
+    <!--Custom Stylesheets-->
+    <link rel="stylesheet" href="/css/main.min.css" />
+    <link rel="icon" href="/img/fav.png" type="image/png" />
+    <script src="/scripts/jquery-3.6.0.min.js"></script>
+    <script src="/scripts/jquery.validate.min.js"></script>
+    <script src="/scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script src="/scripts/bootstrap.min.js"></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <!--<meta http-equiv="X-FRAME-OPTIONS" content="ALLOW-FROM" />-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+</head>
+<body>
+    <header class="hunaSurvey-header">
+        <div class="d-flex justify-content-space-between">
+            <div class="logo-left">
+                @{
+                    var logo_link = HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority) + Umbraco.GetDictionaryValue("logoHref");
+                }
+                <a href="@logo_link"><img src="/img/yas_logo.svg" class="img-fluid" alt="YAS Mall" /></a>
+            </div>
+            <div class="logo-right">
+                <a href="@logo_link"><img src="/img/aldar.svg" class="img-fluid" alt="YAS Mall" /></a>
+            </div>
+        </div>
+    </header>
+    <!--End Inner Page Wrapper-->
+    <div class="page-content">
+        <div class="hunaSurveyHeadOne" id="form">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form">
+                            @Umbraco.RenderMacro("renderUmbracoForm", new { FormGuid = "85bf3a8b-538c-42b7-854c-93c1dc7719b6", FormTheme = "bootstrap3-horizontal", ExcludeScripts = "0" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- page-content -->
+    <script>
+        $(function () {
+            $("#63d5c634-02dc-4c75-a1e7-33a65fd8143a").parent().parent().hide();
+            $("#1549d4d9-90e5-4589-a5a8-e4ea6e41a9f1").parent().parent().hide();
+            $("#bd539d2b-70ed-471a-f8de-1e97bf6730b3").parent().parent().hide();
+
+            $("textarea").attr("placeholder", "Please enter here...");
+
+            if ($(".form-control h2").text() === "Enter the Survey") {
+                $("input[name='next']").val("Start Survey");
+            }
+
+            if ($('.checkboxlist').length) {
+                $("input[name='next']").attr('disabled', true);
+            }
+            else {
+                $("input[name='next']").removeAttr('disabled');
+            }
+
+            $(".checkboxlist input[type='checkbox']").each(function () {
+                $(this).next("label").addBack().wrapAll("<div class='checkbox-wrapper'></div>");
+            });
+
+            const html = "<div class='btn-style'>  </div>";
+            const elments = $(".hunaSurveyHeadOne div.form-control.radio label");
+            $(elments).each(function (indx, el) {
+                $(el).append(html)
+            });
+
+            $("input[checked='checked']").parent().addClass("radio-active");
+
+            $("input").change(function () {
+                if ($(this).is(":checked")) {
+                    $(this).parent().addClass("radio-active");
+                }
+                $("input").not(":checked").parent().removeClass("radio-active");
+            });
+
+            $("#btnSubmit").click(function (e) {
+                if ($("#49d1875f-e009-4e61-d492-cd37e19a9401").val() != "" && $('#4be1359c-92bf-4f54-9efb-6ad8ae86ace1').children("option:selected").val() != "") {
+                    gtmTrackEvent_LeasingFormClick($(this), $("#49d1875f-e009-4e61-d492-cd37e19a9401").val(), $('#4be1359c-92bf-4f54-9efb-6ad8ae86ace1').children("option:selected").val());
+                }
+            });
+            $('#922f39f1-eea9-45f1-a43a-d3d4eb04d576').change(function () {
+                const radioGroup = $("#922f39f1-eea9-45f1-a43a-d3d4eb04d576");
+                const value = radioGroup.find('input[name="922f39f1-eea9-45f1-a43a-d3d4eb04d576"]:checked').val();
+                const element = $("#1549d4d9-90e5-4589-a5a8-e4ea6e41a9f1").parent().parent();
+                if (value == 'Yes') {
+                    $(element).show();
+                    $('#1549d4d9-90e5-4589-a5a8-e4ea6e41a9f1').attr("required", true);
+                } else if (value == 'No') {
+                    $(element).hide();
+                    $('#1549d4d9-90e5-4589-a5a8-e4ea6e41a9f1').removeAttr("required");
+                }
+            });
+            $('#1fb95e47-8f0a-4f73-9ca2-24e4dcaddfd4').change(function () {
+                const radioGroup = $("#1fb95e47-8f0a-4f73-9ca2-24e4dcaddfd4");
+                const value = radioGroup.find('input[name="1fb95e47-8f0a-4f73-9ca2-24e4dcaddfd4"]:checked').val();
+                const element = $("#63d5c634-02dc-4c75-a1e7-33a65fd8143a").parent().parent();
+                if (value == 'Yes') {
+                    $(element).show();
+                    $('#63d5c634-02dc-4c75-a1e7-33a65fd8143a').attr("required", true);
+                } else if (value == 'No') {
+                    $(element).hide();
+                    $('#63d5c634-02dc-4c75-a1e7-33a65fd8143a').removeAttr("required");
+                }
+            });
+            $('#944b6c4a-afad-4d56-f8ab-2d0e38e80559').change(function () {
+                const radioGroup = $("#944b6c4a-afad-4d56-f8ab-2d0e38e80559");
+                const value = radioGroup.find('input[name="944b6c4a-afad-4d56-f8ab-2d0e38e80559"]:checked').val();
+                if (value == 'No') {
+                    $('input[name="FormStep"]').val('8');
+                }
+            });
+
+
+            //const questionFour = '#34fff359-89ec-4805-b585-2f8710d5c183';
+            //$(questionFour).change(function () {
+            //    const radioGroup = $(questionFour);
+            //    const value = radioGroup.find('input[name="34fff359-89ec-4805-b585-2f8710d5c183"]:checked').val();
+            //    const element = $("#bd539d2b-70ed-471a-f8de-1e97bf6730b3").parent().parent();
+            //    if (value == 'Yes') {
+            //        $(element).show();
+            //        $('#bd539d2b-70ed-471a-f8de-1e97bf6730b3 input[type="radio"]').attr('required', 'required');
+            //        $('#bd539d2b-70ed-471a-f8de-1e97bf6730b3').attr("required", true);
+            //    } else if (value == 'No') {
+            //        $(element).removeClass("mandatory").hide();
+            //        $('#bd539d2b-70ed-471a-f8de-1e97bf6730b3').removeAttr("required");
+            //    }
+            //});
+
+            const questionFour = '#34fff359-89ec-4805-b585-2f8710d5c183';
+            $(questionFour).change(function () {
+                const radioGroup = $(questionFour);
+                const value = radioGroup.find('input[name="34fff359-89ec-4805-b585-2f8710d5c183"]:checked').val();
+                const element = $("#bd539d2b-70ed-471a-f8de-1e97bf6730b3").parent().parent();
+                if (value == 'Yes') {
+                    $(element).show();
+                    $("input[name='next']").attr('disabled', true);
+                } else if (value == 'No') {
+                    $(element).hide();
+                    $("input[name='next']").removeAttr('disabled');
+                }
+            });
+            $(document).ready(function () {
+                $('#96e6e588-481d-4cf4-b588-5f5eaebd1f21').attr('required', true);
+            });
+
+            $('#3d6ebca2-a52b-4fd9-8fe0-4b4aab388377').change(function () {
+                var checkboxContainer = $('#3d6ebca2-a52b-4fd9-8fe0-4b4aab388377');
+                var checkboxes = checkboxContainer.find('input[type="checkbox"]');
+                var isChecked = false;
+                checkboxes.each(function () {
+                    if ($(this).is(':checked')) {
+                        isChecked = true;
+                    }
+                });
+                if (!isChecked) {
+                    $('#3d6ebca2-a52b-4fd9-8fe0-4b4aab388377').append('<span id="plsSelectMulti">Please select any value</span>')
+                    $("input[name='next']").attr('disabled', true);
+                } else {
+                    $("input[name='next']").removeAttr('disabled');
+                    $('#plsSelectMulti').remove();
+                }
+            })
+        });
+    </script>
+</body>
+</html>

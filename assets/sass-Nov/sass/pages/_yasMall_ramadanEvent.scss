@@ -1,0 +1,151 @@
+.yass-bg {
+    background-color: $primaryPink;
+}
+
+.yass-desc {
+background-color: $primaryGreen;
+}
+
+
+// .yesMallCard {
+//     background-color:red!important;
+// }
+
+
+.eventBorder {
+    border:1px solid #707070;
+}
+
+.campaign-cards {
+   
+    .card {
+        border:1px solid #707070;
+        border-radius: 0;
+        padding: 0;
+        .card-header {
+            padding: 0;
+
+            .amt-spend{
+                background-size: cover;
+                color :#fff;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 10px;
+                // border:1px solid #707070;
+              
+
+                h4 {
+                    font-family: $fontBold;
+                    font-size: 24px;
+                    font-weight: bold;
+                }
+            }
+
+            .winner {
+                // background-color: #7bcab3;
+                background-size: cover;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 10px;
+                color: #000;
+                // border:1px solid #707070;
+            }
+            h4 {margin-bottom: 0;}
+            p{
+                    font-family: $fontRegular!important;
+                    margin-bottom: 0;
+                    font-size: 20px;
+                    text-align: center;
+
+                span {
+                    display: block;
+                }
+            }
+        }
+    }
+
+     ul {
+          li{
+            font-family: $fontRegular;
+            font-size: 12px;
+            margin-bottom: 5px;
+          }
+     }
+}
+.howTo {
+    margin-top: 60px;
+
+    h3 {
+        font-family: $fontRegular;
+        text-align: center;
+        margin-bottom: 0;
+    }
+}
+
+
+.terms-condition {
+    margin-top: 60px;
+
+    .card {
+        background-color: transparent;
+        border:1px solid #707070;
+        border-radius: 0;
+        padding: 0;
+        .card-header {
+            padding: 0;
+            background: transparent;
+           
+            .amt-spend{
+                // background-color: #ed6757;
+                background-size: cover;
+                display: flex;
+                align-items: center;
+                padding: 10px;
+                border:1px solid #707070;
+              
+
+               
+            }
+
+            .winner {
+                // background-color: #7bcab3;
+                background-size: cover;
+                display: flex;
+                align-items: center;
+                padding: 10px;
+                color: #000;
+                border:1px solid #707070;
+
+            }
+
+            h5 {
+                font-size: 16px;
+                margin-bottom: 0;
+                font-family: $fontRegular;
+            }
+            h4 {margin-bottom: 0;}
+            p{
+                    margin-bottom: 0;
+                    font-size: 20px;
+                    text-align: center;
+
+                span {
+                    display: block;
+                }
+            }
+        }
+
+        .card-body {
+          
+            ul  {
+                 li {
+                     font-family: $fontRegular;
+                     font-size: 12px;
+                     margin-bottom: 5px;
+                 }
+            }
+        }
+    }
+}

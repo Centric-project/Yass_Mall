@@ -1,0 +1,617 @@
+
+.main__huna-about .container {
+    // padding: 0 50px;
+  }
+  
+  [lang=ar] .about-huna .text-left {
+    text-align: right !important;
+  }
+  [lang=ar] .main__huna-work .text-right {
+    text-align: left !important;
+  }
+  [lang=ar] .huna_list ul li span {
+    font-family: "Gotham-Book", sans-serif;
+    font-size: 18px;
+    color: #000;
+    font-weight: 400;
+  }
+  
+  .main-banner .main-slide.slick-slider .slick-dots {
+    display: none;
+  }
+  
+  .main__huna-about {
+    padding: 20px 0px 70px;
+  }
+  .main__huna-about .about-huna {
+    padding-inline: 0px 40px;
+  }
+  .main__huna-about .about-huna img {
+    height: 80px;
+    margin-bottom: 40px;
+  }
+  .main__huna-about .about-huna p {
+    font-family: "Gotham-Book", sans-serif;
+    font-size: 20px;
+    margin-bottom: 30px;
+  }
+  .main__huna-about .about-huna ul {
+    display: flex;
+    gap: 60px;
+    position: relative;
+    margin: 40px 0px 0px;
+  }
+  .main__huna-about .about-huna ul li a {
+    color: transparent;
+    text-decoration: none;
+  }
+  .main__huna-about .about-huna ul li span.icon {
+    border: 1px solid #B6A171;
+    padding: 15px;
+    border-radius: 50px;
+    height: 60px;
+    width: 60px;
+    margin: 0 auto 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .main__huna-about .about-huna ul li span.icon i {
+    color: #B6A171;
+    font-size: 20px;
+  }
+  .main__huna-about .about-huna ul li span {
+    font-family: "Gotham-Book", sans-serif;
+    font-size: 18px;
+    color: #000;
+  }
+  .main__huna-about .about-huna ul li:nth-child(1)::before {
+    position: absolute;
+    content: "";
+    background: #B6A171;
+    height: 100%;
+    width: 1px;
+    left: 46%;
+  }
+  html[lang=ar] .main__huna-about .about-huna ul li:nth-child(1)::before {
+    left: auto;
+    right: 46%;
+  }
+  html[lang=ar] .main__huna-about .about-huna ul li .phone {
+    direction: ltr;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .huna_list {
+    margin: 30px 0 50px;
+  }
+  .huna_list ul {
+    display: flex;
+    gap: 60px;
+    position: relative;
+    margin: 40px 0px 0px;
+  }
+  @media (max-width: 768px) {
+    
+    .huna_list ul {
+      justify-content: space-evenly;
+    }
+  }
+  @media (max-width: 500px) {
+    .huna_list ul {
+      justify-content: space-evenly;
+      flex-direction: column;
+    }
+  }
+  .huna_list ul li a {
+    color: transparent;
+    text-decoration: none;
+  }
+  .huna_list ul li span.icon {
+    border: 1px solid #B6A171;
+    padding: 15px;
+    border-radius: 50px;
+    height: 60px;
+    width: 60px;
+    margin: 0 auto 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .huna_list ul li span.icon i {
+    color: #B6A171;
+    font-size: 20px;
+  }
+  .huna_list ul li span {
+    font-family: "Gotham-Light", sans-serif;
+    font-size: 18px;
+    color: #000;
+    font-weight: 600;
+  }
+  .huna_list ul li:nth-child(1)::before {
+    position: absolute;
+    content: "";
+    background: #B6A171;
+    height: 100%;
+    width: 1px;
+    left: 46%;
+  }
+  @media (max-width: 500px) {
+    .huna_list ul li:nth-child(1)::before {
+      height: 1px;
+      width: 50%;
+      left: 25%;
+      top: 50%;
+    }
+  }
+  html[lang=ar] .huna_list ul li:nth-child(1)::before {
+    left: auto;
+    right: 46%;
+  }
+  html[lang=ar] .huna_list ul li .phone {
+    direction: ltr;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .main__huna-brand {
+    background: rgba(182, 161, 113, 0.1);
+    padding: 40px 0;
+  }
+  .main__huna-brand .brand_content h3 {
+    font-family: "Gotham-Book", sans-serif;
+    font-size: 36px;
+    font-weight: 500;
+  }
+  .main__huna-brand .brand_content p {
+    font-family: "Gotham-Book", sans-serif;
+    font-size: 24px;
+    margin-bottom: 40px;
+  }
+  .main__huna-brand .brand_content span {
+    font-family: "Gotham-Book", sans-serif;
+    font-size: 36px;
+  }
+  .main__huna-brand .card {
+    border: 1px solid #B6A171;
+    margin: 16px 0;
+    text-align: center;
+  }
+  .main__huna-brand .card .card-body {
+    // height: 200px;
+    height: 280px;
+    min-height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .main__huna-brand .card .card-body img {
+    max-width: 60%;
+  }
+  .main__huna-brand .card .card-footer {
+    border-top: 1px solid #B6A171;
+    border-radius: 0;
+    background: transparent;
+    padding: 20px 0px;
+    cursor: pointer;
+  }
+  .main__huna-brand .card .card-footer button {
+    background: transparent;
+    color: #B6A171;
+    border: transparent;
+    font-family: "Gotham-Book", sans-serif;
+    font-size: 21px;
+  }
+  
+  .main__huna-work {
+    padding: 40px 0;
+    background: rgba(182, 161, 113, 0.1);
+  }
+  .main__huna-work .textEnd {
+    text-align: right;
+  }
+  @media screen and (max-width: 991.99px) {
+    .main__huna-work .textEnd {
+      text-align: left;
+    }
+  }
+  
+  html[lang=ar] {
+    .main__huna-work .textEnd {
+      text-align: left;
+    }
+    @media screen and (max-width: 991.99px) {
+      .main__huna-work .textEnd {
+        text-align: right;
+      }
+    }
+  }
+  
+  .main__huna-work .cstmPadd {
+    padding-inline: 80px 0;
+  }
+  
+  .main__huna-brand .card .card-footer button:focus {
+    border: 0;
+    box-shadow: none;
+    outline: none;
+  }
+  
+  .main__huna-work img {
+    margin-bottom: 40px;
+  }
+  .main__huna-work h4 {
+    font-family: "Gotham-Book", sans-serif;
+    font-size: 24px;
+    // font-weight: 600;
+    font-weight: 500;
+    margin-bottom: 40px;
+  }
+  .main__huna-work p {
+    font-family: "Gotham-Book", sans-serif;
+    // font-size: 1vw;
+    font-size: 20px;
+    line-height: 28px;
+  }
+  .main__huna-work p a {
+    font-family: "Gotham-Bold", sans-serif;
+  }
+  
+  .main__luna-carousel {
+    background: #000;
+    padding: 50px 0;
+  }
+  .main__luna-carousel h3 {
+    font-family: "Gotham-Book", sans-serif;
+    font-size: 36px;
+  }
+  .main__luna-carousel p {
+    font-family: "Gotham-Book", sans-serif;
+    font-size: 24px;
+  }
+  .main__luna-carousel .luna-slide {
+    width: 90%;
+    margin: 0 auto;
+  }
+  .main__luna-carousel .luna-slide .slick-current {
+    margin: 0px 20px;
+  }
+  .main__luna-carousel .main {
+    width: 100%;
+    display: block;
+    margin: 40px auto;
+    // padding: 0 40px;
+    padding: 0 0px;
+  }
+  .main__luna-carousel .main .slick-slider {
+    margin: 0 -15px;
+  }
+  html[lang=ar] .main__luna-carousel .main .slick-slider {
+    direction: ltr;
+  }
+  .main__luna-carousel .main .pagination {
+    justify-content: center;
+    position: relative;
+    text-align: center;
+    bottom: -48px;
+    color: #fff;
+  }
+  html[lang=ar] .main__luna-carousel .main .pagination {
+    direction: ltr;
+  }
+  .main__luna-carousel .main .slick-slide {
+    padding: 0;
+    text-align: center;
+    margin-right: 15px;
+    margin-left: 15px;
+    height: 800px;
+    overflow: hidden;
+    border-radius: 15px;
+  }
+  .main__luna-carousel .main .slick-slide img {
+    height: auto;
+  }
+  .main__luna-carousel .main .slick-prev {
+    background: url("/assets/images/huna-left.png") no-repeat;
+    background-size: cover;
+    top: auto;
+    bottom: -72px;
+    left: 50%;
+    margin-left: -60px;
+    z-index: 999;
+    position: absolute;
+    background-size: 25px;
+    border: 0;
+    font-size: 0;
+    height: 25px;
+    width: 25px;
+  }
+  .main__luna-carousel .main .slick-prev::before {
+    visibility: hidden;
+  }
+  .main__luna-carousel .main .slick-next {
+    background: url("/assets/images/huna-right.png") no-repeat;
+    background-size: cover;
+    top: auto;
+    bottom: -72px;
+    right: 50%;
+    margin-right: -60px;
+    z-index: 999;
+    position: absolute;
+    background-size: 25px;
+    border: 0;
+    font-size: 0;
+    height: 25px;
+    width: 25px;
+  }
+  .main__luna-carousel .main .slick-next::before {
+    visibility: hidden;
+  }
+  
+  .main__luna-area {
+    background: rgba(0, 0, 0, 0.04);
+    padding: 40px 0;
+  }
+  .main__luna-area h3 {
+    font-family: "Gothic Medium", sans-serif;
+    font-size: 36px;
+    font-weight: 600;
+  }
+  .main__luna-area p {
+    font-family: "Gotham-Book", sans-serif;
+    font-size: 24px;
+    max-width: 820px;
+    margin: auto;
+  }
+  .main__luna-area img {
+    margin: 40px 0;
+    max-width: 70%;
+  }
+  .main__luna-area .modal .modal-dialog img {
+    max-width: 90%;
+  }
+  
+  .collapsible {
+    cursor: pointer;
+  }
+  
+  .panel {
+    display: none;
+    overflow: hidden;
+    margin-top: 20px;
+    border-top: 1px solid #B6A171;
+    padding: 20px 20px 0px;
+  }
+  .panel p {
+    font-family: "Gotham-Light", sans-serif;
+    font-size: 18px;
+    margin-bottom: 0;
+  }
+  
+  // Huna Slider Start
+  .bgGrey {
+    background: rgba(182,161,113,.1);
+  }
+  .hunsaSliderMid {
+    .hunsaSliderMid-main {
+      display: flex;
+      // flex-wrap: wrap;
+      justify-content: space-evenly;
+      gap: 10px;
+      .hunsaSliderMid-main-items {
+        overflow: hidden;
+        img {
+          width: 100%;
+          border-radius: 5px;
+          height: 100%;
+        }
+        &:nth-child(odd) {
+          width: 25%;
+        }
+        &:nth-child(even) {
+          width: 50%;
+        }
+      }
+    }
+    // .owl-carousel .owl-stage {
+    //   width: 100% !important;
+    //   display: flex;
+    //   .owl-item.active:nth-child(odd) {
+    //     width: 25% !important;
+    //   }
+    //   .owl-item.active:nth-child(even) {
+    //     width: 50% !important;
+    //   }
+    // }
+  }
+  // Huna Slider end
+  
+  
+  
+  @media screen and (max-width: 1600.99px) {
+    .main__luna-carousel .main .slick-slide {
+      height: auto;
+    }
+    .main__luna-carousel .main .slick-slide img {
+      height: auto;
+      width: 100%;
+    }
+    .main__luna-carousel .main .pagination {
+      bottom: -50px;
+    }
+  }
+  @media screen and (max-width: 1366.99px) {
+    .main__luna-carousel .main .slick-slide {
+      height: auto;
+    }
+    .main__luna-carousel .main .slick-slide img {
+      height: auto;
+      width: 100%;
+    }
+  }
+  @media screen and (max-width: 1024.99px) {
+    .main__luna-carousel .main .slick-slide {
+      height: auto;
+    }
+    .main__luna-carousel .main .slick-slide img {
+      height: auto;
+      width: 100%;
+    }
+  }
+  @media screen and (max-width: 992.99px) {
+    [lang=ar] .main__huna-work .text-right {
+      text-align: right !important;
+    }
+    .main__luna-carousel .main .slick-slide {
+      height: auto;
+    }
+    .main__luna-carousel .main .slick-slide img {
+      height: auto;
+      width: 100%;
+    }
+  }
+  @media screen and (max-width: 768.99px) {
+    .hunsaSliderMid {
+      .hunsaSliderMid-main {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-evenly;
+        gap: 10px;
+        width: 100%;
+        max-width: 90%;
+        margin: auto;
+        .hunsaSliderMid-main-items {
+          overflow: hidden;
+          width: 48%;
+  
+          img {
+            width: 100%;
+            border-radius: 5px;
+          }
+          &:nth-child(odd) {
+            width: 48% !important;
+          }
+          &:nth-child(even) {
+            width: 48% !important;
+          }
+        }
+      }
+    }
+    .main__luna-carousel .main {
+      padding: 0 40px;
+    }
+    .main__luna-carousel .main .slick-slide {
+      height: auto;
+    }
+    .main__luna-carousel .main .slick-slide img {
+      height: auto;
+      width: 100%;
+    }
+    .main__luna-area .modal {
+      padding-right: 0px !important;
+    }
+    .main__luna-area .modal .modal-dialog {
+      width: 90% !important;
+      max-width: none !important;
+      text-align: center !important;
+      height: 100% !important;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: auto;
+    }
+    .main__luna-area .modal .modal-dialog img {
+      max-width: 100% !important;
+    }
+  }
+  @media screen and (max-width: 720.99px) {
+    .main__huna-work img {
+      margin-bottom: 20px;
+    }
+    .main__huna-about {
+      margin-bottom: 20px;
+      margin-top: 0;
+      padding: 20px 0px 0px;
+    }
+    .main__huna-about .about-huna p {
+      font-size: 16px;
+    }
+    .main__huna-about .about-huna ul {
+      display: block;
+    }
+    .main__huna-about .about-huna ul li {
+      margin: 30px 0;
+    }
+    .main__huna-about .about-huna ul li:nth-child(1)::before {
+      background: transparent;
+    }
+    .main__huna-brand .card .card-body {
+      height: 100%;
+    }
+    .main__huna-brand p {
+      font-size: 16px;
+    }
+    .main__huna-work p {
+      font-size: 16px;
+    }
+    .main__luna-area img {
+      max-width: 100%;
+      margin: 0px;
+    }
+    .main__luna-area p {
+      font-size: 16px;
+    }
+    .main__luna-carousel .main .slick-slide {
+      height: auto;
+    }
+    .main__luna-carousel .main .slick-slide img {
+      height: auto;
+      width: 100%;
+    }
+    .main__huna-brand .brand_content h3 {
+      font-size: 28px;
+    }
+    .main__huna-brand .brand_content p {
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+  }
+  @media screen and (max-width: 575.99px) {
+    .main__huna-about .about-huna {
+      padding-inline: unset;
+      padding: 0 20px;
+    }
+    .main__huna-work .cstmPadd {
+      padding-inline: unset;
+      padding: 0 20px;
+    }
+    .main__luna-carousel, .main__huna-brand, .main__luna-area, .newsletter-box {
+      padding: 50px 20px;
+    }
+    .main__huna-about .container {
+      padding: 0 20px;
+    }
+  }
+  @media screen and (max-width: 500.99px) {
+    html[lang=ar] .huna_list ul li:nth-child(1)::before {
+      left: 50%;
+      right: auto;
+      transform: translateX(-50%);
+    }
+  }
+  @media screen and (max-width: 414.99px) {
+    .main__luna-carousel .main .slick-slide {
+      height: 140px;
+      height: auto;
+    }
+    .main__luna-carousel .main .slick-slide img {
+      height: auto;
+      width: 100%;
+    }
+  }
+  @media (min-width: 1200.99px) and (max-width: 1920.99px) {
+    .main__huna-about .about-huna p {
+      font-size: 1vw;
+    }
+  }

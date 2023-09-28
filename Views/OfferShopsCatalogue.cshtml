@@ -1,0 +1,150 @@
+﻿@using ContentModels = Umbraco.Web.PublishedModels;
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.OfferDetails>
+@using Umbraco.Web.Mvc;
+@{
+    Layout = "master.cshtml";
+    ViewBag.PageTitle = Model.OfferTitle;
+
+    var lang = System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+
+    // set up pages
+    int page = 0, pageSize = 24;
+    int.TryParse(Request.QueryString["p"], out page);
+
+    //get categories & shops
+    IEnumerable<IPublishedContent> shopsList = Model.Children().Where(x => x.IsVisible());
+    var shops = GetShops(shopsList, page, pageSize);
+
+    // get page count
+    int pageCount = (shops.TotalCount % pageSize != 0) ? (shops.TotalCount / pageSize) + 1 : shops.TotalCount / pageSize; // get page count
+}
+<style type="text/css">
+    .inner-section{
+        padding-bottom: 10px;
+    }
+</style>
+<!--Start Main Banner-->
+@{
+    var offerBannerImg = Model.Value<IPublishedContent>("offerDetailPageBanner");
+    if (offerBannerImg != null)
+    {
+        <section class="main-banner">
+            <div class="container-fluid custom-container-fluid">
+                <div class="main-slide">
+                    <div class="slide">
+                        <img src="@offerBannerImg.Url()" alt="@Model.Value("offerTitle")" class="img-fluid" />
+                    </div>
+                </div>
+            </div>
+        </section>
+    }
+}
+<!--End Main Banner-->
+<!--Start Inner Page Wrapper-->
+<div class="inner-section">
+    <div class="container-fluid custom-container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <!--Start Breadcrumbs-->
+                <nav aria-label="breadcrumb" class="breadcrumb-holder">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="@Umbraco.GetDictionaryValue("LogoHref")">@Umbraco.GetDictionaryValue("Home")</a></li>
+                        <li class="breadcrumb-seprator"><i class="fas fa-angle-right"></i></li>
+                        <li class="breadcrumb-item" aria-current="page"><a href="@Umbraco.GetDictionaryValue("OffersHref")">@Umbraco.GetDictionaryValue("Offers")</a></li>
+                        <li class="breadcrumb-seprator"><i class="fas fa-angle-right"></i></li>
+                        <li class="breadcrumb-item active" aria-current="page">@Model.Value("offerTitle")</li>
+                    </ol>
+                </nav>
+                <!--End Breadcrumbs-->
+                <!--Start Main Title-->
+                <div class="clearfix title-holder">
+                    <h1 class="title innerheading">@Umbraco.GetDictionaryValue("OfferShopsCatMainHead")</h1>
+                </div>
+                <!--End Main Title-->
+            </div>
+        </div>
+    </div>
+</div>
+<!--End Inner Page Wrapper-->
+<!--Start Search Result-->
+<section class="search-result">
+    <div class="container-fluid custom-container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="search-result-container">
+                    <div class="row">
+                        <div class="col-md-12"></div>
+                        @foreach (IPublishedContent shop in shops.Shops)
+                        {
+                            var shopLogo = shop.Value<IPublishedContent>("shopLogo");
+                            <div class="col-md-4">
+                                <div class="os-catbox">
+                                    <div class="brand-box">
+                                        <a href="@shop.Url()">
+                                            <div class="brand-logo">
+                                                <img src="@shopLogo.Url()" alt="@shop.Value("shopTitle")" />
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="prod-name">
+                                        @Html.Raw(shop.Value("shopTitle"))
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        <div class="col-md-12 load-more-box">
+                            @*<a id="loadMore" class="btn btn-primary" href="javascript:void(0);">Load More Brands</a>*@
+                            @if (pageCount > 1)
+                            {
+                                <!-- pagination -->
+                                <div class="row paging">
+                                    <div class="col-md-12">
+                                        <div class="sort-alpha-numb">
+                                            <ul>
+                                                @*if (!string.IsNullOrEmpty(s)) { queryStr = queryStr + "&s=" + s; }*@
+                                                @for (int p = 0; p < pageCount; p++)
+                                                {
+                                                    string queryStr = "?p=" + p;
+                                                    <li class="@(p == page ? "active" : null)"><a href="@queryStr">@(p + 1)</a></li>
+                                                }
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                            }
+                            <!-- Total: @shops.TotalCount, Pages: @pageCount -->
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!--End  Search Result-->
+
+@functions {
+    private dynamic GetShops(IEnumerable<IPublishedContent> shops, int page, int pageSize)
+    {
+        int totalCount = shops.Count();
+
+        shops = shops.OrderBy(x => x.Name);
+        shops = shops.Skip(page * pageSize).Take(pageSize);
+
+        return new
+        {
+            Shops = shops == null ? new List<IPublishedContent>() : shops,
+            TotalCount = totalCount
+        };
+    }
+
+}
+<script type="text/javascript">
+    $(function () {
+        $(".search-result-container .brand-box").slice(0, 24).show();
+    });
+</script>

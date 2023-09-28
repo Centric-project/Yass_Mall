@@ -1,0 +1,133 @@
+﻿@using ContentModels = Umbraco.Web.PublishedModels;
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.ECatalogues>
+@using Umbraco.Web.Mvc;
+@{
+    Layout = "master.cshtml";
+
+
+    // set page title segment
+    ViewBag.PageTitle = Model.Value("catalogueTitle");
+
+    var lang = System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+
+    IEnumerable<IPublishedContent> brandOffers = Model.Children().Where(x => x.IsVisible());
+    int offer_Id = Model.Id;
+
+}
+<style type="text/css">
+    .ym-grid.table thead th {
+        text-align: center;
+    }
+
+    .ym-grid.table td {
+        vertical-align: middle;
+    }
+</style>
+<!--Start Main Banner-->
+@{
+    var catalogueBannerImg = Model.Value<IPublishedContent>("catalogueDetailPageBanner");
+    if (catalogueBannerImg != null)
+    {
+        <section class="main-banner">
+            <div class="container-fluid custom-container-fluid">
+                <div class="main-slide">
+                    <div class="slide">
+                        <img src="@catalogueBannerImg.Url()" alt="@Model.Value("catalogueTitle")" class="img-fluid" />
+                    </div>
+                </div>
+            </div>
+        </section>
+    }
+}
+<!--End Main Banner-->
+<!--Start Inner Page Wrapper-->
+<div class="inner-section">
+    <div class="container-fluid custom-container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <!--Start Breadcrumbs-->
+                <nav aria-label="breadcrumb" class="breadcrumb-holder">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="@Umbraco.GetDictionaryValue("logoHref")">@Umbraco.GetDictionaryValue("home")</a></li>
+                        <li class="breadcrumb-seprator"><i class="fas fa-angle-right"></i></li>
+                        <li class="breadcrumb-item" aria-current="page"><a href="@Umbraco.GetDictionaryValue("offersHref")">@Umbraco.GetDictionaryValue("offers")</a></li>
+                        <li class="breadcrumb-seprator"><i class="fas fa-angle-right"></i></li>
+                        <li class="breadcrumb-item active" aria-current="page">@Model.Value("catalogueTitle")</li>
+                    </ol>
+                </nav>
+                <!--End Breadcrumbs-->
+                <div class="clearfix title-holder">
+                    <h1 class="title">@Model.Value("catalogueTitle")</h1>
+                </div>
+                <div class="filter-box page-content">
+                    <div class="row">
+                        <div class="col-md-12">
+                            @Html.Raw(Model.Value("catalogueBigDetails"))
+                        </div>
+                    </div>
+                </div>
+                <!--Start Offer Table-->
+                <div class="table-responsive">
+                    <table class="table ym-grid">
+                        <thead>
+                            @{
+                                if (offer_Id != 4499 && offer_Id != 4644)
+                                {
+                                    <tr>
+                                        <th>Brands</th>
+                                        <th>Offers</th>
+                                        <th>Valid Untill</th>
+                                        <th>Location</th>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <th>Brands</th>
+                                        <th>Offers</th>
+                                    </tr>
+                                }
+
+                            }
+                        </thead>
+                        <tbody>
+                            @foreach (var bOItem in brandOffers)
+                            {
+                                var brandLogo = bOItem.Value<IPublishedContent>("brandLogo");
+                                if (offer_Id != 4499 && offer_Id != 4644)
+                                {
+                                    <tr>
+                                        <td>
+                                            <img src="@brandLogo.Url()" alt="@bOItem.Value("collectionDetailHeader")">
+                                        </td>
+                                        <td>@Html.Raw(bOItem.Value("collectionDetailHeader"))</td>
+                                        <td>@Html.Raw(bOItem.Value("brandCollectionHeader"))</td>
+                                        <td>@bOItem.Value("brandLocation")</td>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td>@bOItem.Value("brandName")</td>
+                                        <td>@Html.Raw(bOItem.Value("collectionDetailHeader"))</td>
+                                    </tr>
+
+                                    @*<div class="col-sm-6 col-md-4">
+                    <div class="thumbnail-simple zoom">
+                        <a href="@brand.Url"></a>
+                        <div class="ti-image box-shadow" style="background-image:url(@brand.GetPropertyValue(" brandLogo"));">
+                        </div>
+                        <h4 style="text-align:center">@brand.Name</h4>
+                    </div>
+                </div>*@
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <!--End Offer Table-->
+            </div>
+        </div>
+    </div>
+</div>
+<!--End Inner Page Wrapper-->

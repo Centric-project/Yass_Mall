@@ -1,0 +1,352 @@
+﻿@using ContentModels = Umbraco.Web.PublishedModels;
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.Category>
+@using Umbraco.Web.Mvc;
+@using System.Text.RegularExpressions;
+@{
+    Layout = "master.cshtml";
+    var lang = System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+
+    // get qs params
+    string sort =Request.QueryString["sort"]; // sort order
+
+    // set up pages
+    int page = 0, pageSize = 24;
+    int.TryParse(Request.QueryString["p"], out page);
+
+    //get categories & shops
+    IEnumerable<IPublishedContent> shopsList = Model.AncestorOrSelf(1).DescendantsOfType("dineLandingDocType")
+        .FirstOrDefault().Children().Where(x => x.IsVisible() && x.HasValue("dineCategory"));
+
+    var shopCategories = GetShopCategories(shopsList);
+    var shops = GetShops(shopsList, page, pageSize, sort);
+
+    // get page count
+    int pageCount = (shops.TotalCount % pageSize != 0) ? (shops.TotalCount / pageSize) + 1 : shops.TotalCount / pageSize; // get page count
+
+    // set page title segment
+    ViewBag.PageTitle = Model.CategoryTitle;
+
+    // meta fallback
+    ViewBag.MetaDescription = Model.CategoryTitle;
+}
+<!--Start Main Banner-->
+@{
+    var categBannerImg = Model.Value<IPublishedContent>("categoryBannerImg");
+    if (categBannerImg != null)
+    {
+        <section class="main-banner">
+            <div class="container-fluid custom-container-fluid">
+                <div class="main-slide">
+                    <div class="slide">
+                        <img src="@categBannerImg.Url()" alt="@Model.CategoryTitle" class="img-fluid" />
+                    </div>
+                </div>
+            </div>
+        </section>
+    }
+}
+<!--End Main Banner-->
+<!--Start Search Box-->
+<section class="filter-holder">
+    <div class="container-fluid custom-container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <!--Start Breadcrumbs-->
+                <nav aria-label="breadcrumb" class="breadcrumb-holder">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="@Umbraco.GetDictionaryValue("LogoHref")">@Umbraco.GetDictionaryValue("Home")</a></li>
+                        <li class="breadcrumb-seprator"><i class="fas fa-angle-right"></i></li>
+                        <li class="breadcrumb-item" aria-current="page"><a href="@Umbraco.GetDictionaryValue("DineHref")">@Umbraco.GetDictionaryValue("Dine")</a></li>
+                        <li class="breadcrumb-seprator"><i class="fas fa-angle-right"></i></li>
+                        <li class="breadcrumb-item active" aria-current="page">@Model.Value("categoryTitle")</li>
+                    </ol>
+                </nav>
+                <!--End Breadcrumbs-->
+                <div class="filter-box">
+                    <div class="row">
+                        <div class="col-md-5 form-group">
+                            <label for="">@Umbraco.GetDictionaryValue("SearchKeyword")</label>
+                            <input type="text" id="txtSearchData" name="txtSearchData" class="form-control" placeholder="@Umbraco.GetDictionaryValue("Search")" />
+                            <div id="search-div" class="shop-auto-sr" style="display: none;">
+                                <ul id="search-div-ul"></ul>
+                            </div>
+                        </div>
+                        <div class="col-md-4 form-group">
+                            <label for="">@Umbraco.GetDictionaryValue("Category")</label>
+                            <select id="cmbShopCategory" name="cmbShopCategory" class="form-control">
+                                <option value="">@Umbraco.GetDictionaryValue("SelectCategory")</option>
+                                @foreach (var scItem in shopCategories)
+                                {
+                                    if (scItem.ShopCount > 0)
+                                    {
+                                        IPublishedContent shopCateg = scItem.Category;
+                                        <option value="@shopCateg.Url()">@(shopCateg.Value("categoryTitle"))  (<b>@scItem.ShopCount</b>)</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="button" id="btnSearch" name="btnSearch" class="btn btn-primary" value="@Umbraco.GetDictionaryValue("SearchBrand")" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--End Search Box-->
+<!--Start Search Result-->
+<section class="search-result">
+    <div class="container-fluid custom-container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="search-result-container">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="result-detail">
+                                @if (lang == "ar")
+                                {
+                                    @("نتيجة البحث : " + shops.TotalCount + " العثور على العلامات التجارية")
+                                }
+                                @if (lang == "en")
+                                {
+                                    @("Search Result : " + shops.TotalCount + " Brands Found")
+                                }
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="sort-box">
+                                <label for="cmbSortData">@Umbraco.GetDictionaryValue("SearchOrder")</label>
+                                <select id="cmbSortData" name="cmbSortData" class="form-control">
+                                    <option @(sort == "asc" ? "selected" : "") value="asc">@Umbraco.GetDictionaryValue("AlphabetAtoZ")</option>
+                                    <option @(sort == "desc" ? "selected" : "") value="desc">@Umbraco.GetDictionaryValue("AlphabetZtoA")</option>
+                                </select>
+                            </div>
+                        </div>
+                        @foreach (IPublishedContent shop in shops.Shops)
+                        {
+                            var shopLogo = shop.Value<IPublishedContent>("shopLogo");
+                            <div class="col-md-3">
+                                <div class="brand-box">
+                                    <a href="@shop.Url()">
+                                        <div class="prod-name">
+                                            @Html.Raw(shop.Value("shopTitle"))
+                                        </div>
+                                        <div class="brand-logo">
+                                            <img src="@shopLogo.Url()" alt="@shop.Value("shopTitle")" />
+                                        </div>
+                                        @{
+                                            string salesTitle = shop.Value<string>("salesTitle");
+                                            if (!string.IsNullOrWhiteSpace(salesTitle))
+                                            {
+                                                if (System.DateTime.Now >= Convert.ToDateTime(shop.Value("salesStartDate")) &&
+                                                    System.DateTime.Now <= Convert.ToDateTime(shop.Value("salesEndDate")))
+                                                {
+                                                    <div class="sale-cont">
+                                                        <strong>SALE</strong>
+                                                        @salesTitle
+                                                    </div>
+                                                }
+                                                else { salesTitle = ""; }
+                                            }
+                                            if (string.IsNullOrEmpty(salesTitle))
+                                            {
+                                                string floorLoc = shop.Value<string>("floorName");
+                                                if (!string.IsNullOrWhiteSpace(floorLoc))
+                                                {
+                                                    <div class="sale-cont">
+                                                        <strong>@Umbraco.GetDictionaryValue("Location")</strong>
+                                                        @floorLoc
+                                                    </div>
+                                                }
+                                            }
+                                        }
+                                    </a>
+                                </div>
+                            </div>
+                        }
+                        <div class="col-md-12 load-more-box">
+                            @*<a id="loadMore" class="btn btn-primary" href="javascript:void(0);">Load More Brands</a>*@
+                            @if (pageCount > 1)
+                            {
+                                <!-- pagination -->
+                                <div class="row paging">
+                                    <div class="col-md-12">
+                                        <div class="sort-alpha-numb">
+                                            <ul>
+                                                @*if (!string.IsNullOrEmpty(s)) { queryStr = queryStr + "&s=" + s; }*@
+                                                @for (int p = 0; p < pageCount; p++)
+                                                {
+                                                    string queryStr = "?p=" + p;
+                                                    if (!string.IsNullOrEmpty(sort)) { queryStr = queryStr + "&sort=" + sort; }
+                                                    <li class="@(p == page ? "active" : null)"><a href="@queryStr">@(p + 1)</a></li>
+                                                }
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            <!-- Total: @shops.TotalCount, Pages: @pageCount -->
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--End  Search Result-->
+<!--Start Featured Box-->
+@{
+    var featured = Model.AncestorOrSelf(1).DescendantsOfType("featuredLandingDocType").FirstOrDefault();//Model.Content.Site().FirstChild("featuredLandingDocType");
+    if (featured != null)
+    {
+        <section class="box-holder featured-holder lg-box">
+            <!--Start Heading-->
+            <div class="heading-holder">
+                <h2 class="sub-heading">@featured.Value("featuredMainTitle")</h2>
+            </div>
+            <!--End Heading-->
+            <!--Start Feature Slider-->
+            <div class="container-fluid custom-container-fluid">
+                <div class="row">
+                    <div class="col-md-12" data-aos="fade-up">
+                        <div class="custom-slider feature-slider">
+                            @{
+                                IEnumerable<IPublishedContent> featItems = featured.Children().Where(x => x.IsVisible());
+                                foreach (var fItem in featItems)
+                                {
+                                    IEnumerable<IPublishedContent> shopCats = new List<IPublishedContent>();
+                                    var fShopCats = fItem.Value<IEnumerable<dynamic>>("shopCategory");
+                                    if (fShopCats != null)
+                                    {
+                                        shopCats = Model.AncestorOrSelf(1).DescendantsOfType("shopCategory").FirstOrDefault() /*Model.Content.Site().FirstChild("shopCategory")*/.Children()
+                                            .Where(x => x.IsVisible() && fShopCats.Any(sc => sc.Id == x.Id))
+                                            .OrderBy(x => x.Name);
+                                    }
+                                    IEnumerable<IPublishedContent> dineCats = new List<IPublishedContent>();
+                                    var fDineCats = fItem.Value<IEnumerable<dynamic>>("dineCategory");
+                                    if (fDineCats != null)
+                                    {
+                                        dineCats = Model.AncestorOrSelf(1).DescendantsOfType("dineCategory").FirstOrDefault()/* Model.Content.Site().FirstChild("dineCategory")*/.Children()
+                                            .Where(x => x.IsVisible() && fDineCats.Any(sc => sc.Id == x.Id))
+                                            .OrderBy(x => x.Name);
+                                    }
+
+                                    var thumbImage = fItem.Value<IPublishedContent>("thumbImage");
+                                    if (thumbImage != null)
+                                    {
+                                        var fPageLink = fItem.Value<IPublishedContent>("shopPageLink");
+                                        var fPageLinkURL = fPageLink == null ? fItem.Url() : fPageLink.Url();
+
+                                        <div class="slide">
+                                            <div class="feature-box">
+                                                <a href="@fPageLinkURL">
+                                                    <figure>
+                                                        <img src="@thumbImage.Url()" alt="@fItem.Value("shopTitle")" class="img-fluid" />
+                                                    </figure>
+                                                    <ul class="list-unstyled red-btn">
+                                                        @foreach (var dcItem in dineCats)
+                                                        {
+                                                            <li class="feature-cat">@dcItem.Value("categoryTitle")</li>
+                                                        }
+                                                        @foreach (var scItem in shopCats)
+                                                        {
+                                                            <li class="feature-cat">@scItem.Value("categoryTitle")</li>
+                                                        }
+                                                        <li class="feature-title">@fItem.Value("shopTitle")</li>
+                                                        <li class="feature-location">@fItem.Value("floorName")</li>
+                                                    </ul>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--End Feature Slider-->
+        </section>
+    }
+}
+<!--End Featured Box-->
+@functions {
+    private dynamic GetShops(IEnumerable<IPublishedContent> shops, int page, int pageSize, string sort)
+    {
+        var currCategId = Model.Id; //To Filter Shops By Category Id
+        shops = shops.Where(x => x.Value<IEnumerable<dynamic>>("dineCategory").Any(sc => sc.Id == currCategId));
+        int totalCount = shops.Count();
+
+        if (string.IsNullOrEmpty(sort)) { sort = ""; }
+        if (sort.ToLower() == "desc")
+        {
+            shops = shops.OrderByDescending(x => x.Name);
+        }
+        else
+        {
+            shops = shops.OrderBy(x => x.Name);
+        }
+        shops = shops.Skip(page * pageSize).Take(pageSize);
+
+        return new
+        {
+            Shops = shops == null ? new List<IPublishedContent>() : shops,
+            TotalCount = totalCount
+        };
+    }
+
+    private IEnumerable<dynamic> GetShopCategories(IEnumerable<IPublishedContent> shops)
+    {
+        IEnumerable<IPublishedContent> categories = Model.AncestorOrSelf(1).DescendantsOfType("dineCategory")
+           .FirstOrDefault().Children().Where(x => x.IsVisible()).OrderBy(x => x.Name);
+
+        return categories.Select(x => new
+        {
+            Category = x,
+            ShopCount = shops.Where(s => s.Value<IEnumerable<dynamic>>("dineCategory").Any(sc => sc.Id == x.Id))
+            .Count()
+        });
+    }
+
+    private static bool isInAtoZ(string str)
+    {
+        return Regex.IsMatch(str, @"^[a-zA-Z]+$");
+    }
+    private static bool isInt(string str)
+    {
+        int numValue;
+        return int.TryParse(str, out numValue);
+    }
+}
+@{
+    var shopsLstKV = shopsList.Select(shop => new
+    {
+        Value = shop.Value("shopTitle"),
+        Key = shop.Url
+    });
+    <script type="text/javascript">
+        var innerPgSearchData = @Html.Raw(Json.Encode(shopsLstKV));
+    </script>
+}
+<script type="text/javascript">
+    $(function () {
+        $(".search-result-container .brand-box").slice(0, 24).show();
+
+        $("#btnSearch").click(function (e) {
+            var selCateg = $("#cmbShopCategory").val();
+            if (selCateg != "") {
+                window.location.href = selCateg;
+            }
+        });
+
+        $("#cmbSortData").change(function () {
+            const parsedUrl = new URL(window.location.href);
+            parsedUrl.searchParams.set('sort', this.value);
+            window.location.href = parsedUrl.href;
+        });
+    });
+</script>
+@* the fun starts here *@
+

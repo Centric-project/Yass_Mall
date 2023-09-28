@@ -1,0 +1,429 @@
+﻿@using ContentModels = Umbraco.Web.PublishedModels;
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.HunaLandingPage>
+@using ClientDependency.Core.Mvc
+
+@{
+	Layout = "Master.cshtml";
+}
+<style>
+.main__luna-carousel {
+  background: #000;
+  padding: 50px 0;
+}
+.main__luna-carousel h3 {
+  font-family: "Gotham-Book", sans-serif;
+  font-size: 36px;
+}
+.main__luna-carousel p {
+  font-family: "Gotham-Book", sans-serif;
+  font-size: 24px;
+}
+.main__luna-carousel .luna-slide {
+  width: 90%;
+  margin: 0 auto;
+}
+.main__luna-carousel .luna-slide .slick-current {
+  margin: 0px 20px;
+}
+.main__luna-carousel .main {
+  width: 100%;
+  display: block;
+  margin: 40px auto;
+  padding: 0 0px;
+}
+.main__luna-carousel .main .slick-slider {
+  margin: 0 -15px;
+}
+html[lang=ar] .main__luna-carousel .main .slick-slider {
+  direction: ltr;
+}
+.main__luna-carousel .main .pagination {
+  justify-content: center;
+  position: relative;
+  text-align: center;
+  bottom: -48px;
+  color: #fff;
+}
+html[lang=ar] .main__luna-carousel .main .pagination {
+  direction: ltr;
+}
+.main__luna-carousel .main .slick-slide {
+  padding: 0;
+  text-align: center;
+  margin-right: 15px;
+  margin-left: 15px;
+  height: 800px;
+  overflow: hidden;
+  border-radius: 15px;
+}
+.main__luna-carousel .main .slick-slide img {
+  height: auto;
+}
+.main__luna-carousel .main .slick-prev {
+  background: url("/media/uwudybuk/huna-left.png") no-repeat;
+  background-size: cover;
+  top: auto;
+  bottom: -72px;
+  left: 50%;
+  margin-left: -60px;
+  z-index: 999;
+  position: absolute;
+  background-size: 25px;
+  border: 0;
+  font-size: 0;
+  height: 25px;
+  width: 25px;
+}
+.main__luna-carousel .main .slick-prev::before {
+  visibility: hidden;
+}
+.main__luna-carousel .main .slick-next {
+  background: url("/media/dgobthla/huna-right.png") no-repeat;
+  background-size: cover;
+  top: auto;
+  bottom: -72px;
+  right: 50%;
+  margin-right: -60px;
+  z-index: 999;
+  position: absolute;
+  background-size: 25px;
+  border: 0;
+  font-size: 0;
+  height: 25px;
+  width: 25px;
+}
+.main__luna-carousel .main .slick-next::before {
+  visibility: hidden;
+}
+</style>
+<!--Start Main Banner-->
+@{
+    var hunaBanner = Model.Value<IPublishedContent>("hunaBanner");
+    if (hunaBanner != null)
+    {
+        <section class="main-banner">
+            <div class="container-fluid custom-container-fluid">
+                <div class="main-slide">
+                    <div class="slide">
+                        <img src="@hunaBanner.Url()" class="img-fluid" />
+                    </div>
+                </div>
+            </div>
+        </section>
+    }
+}
+<!--End Main Banner-->
+<section class="main__huna-about">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-8 col-lg-8 col-md-12 col-sm-12 col-12">
+                <div class="about-huna">
+                    <div class="text-left">
+                        @{
+                            var hunaLogo = Model.Value<IPublishedContent>("hunaLogo");
+                            if (hunaLogo != null)
+                            {
+
+                                <img src="@hunaLogo.Url()" class="fullCoverImg">
+                            }
+                        }
+                        @*@{
+                                var hunaLogo = Model.Content.GetVortoValue<IPublishedContent>("hunaLogo");
+                                if (hunaLogo != null)
+                                {
+                                    <img src="@hunaLogo.Url" class="img-fluid" />
+                                }
+                            }*@
+                    </div>
+                    <div class="text-left">
+                        @*  @Html.Raw(Model.Content.GetVortoValue("hunaDescription"))*@
+                        @Html.Raw(Model.Value("hunaDescription"))
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 text-center">
+                @*@{
+                        var hunaImg = Model.Content.GetVortoValue<IPublishedContent>("hunaImage");
+                        if (hunaImg != null)
+                        {
+                            <img src="@hunaImg.Url" class="img-fluid" />
+                        }
+                    }*@
+                @{
+                    var hunaImg = Model.Value<IPublishedContent>("hunaImage");
+                    if (hunaImg != null)
+                    {
+
+                        <img src="@hunaImg.Url()" class="fullCoverImg">
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</section>
+<section class="main__huna-work">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 text-center">
+                @*@{
+                        var hunaWorkImg = Model.Content.GetVortoValue<IPublishedContent>("hunaWorkImage");
+                        if (hunaWorkImg != null)
+                        {
+                            <img src="@hunaWorkImg.Url" class="img-fluid" />
+                        }
+                    }*@
+                @{
+                    var hunaWorkImg = Model.Value<IPublishedContent>("hunaWorkImage");
+                    if (hunaWorkImg != null)
+                    {
+
+                        <img src="@hunaWorkImg.Url()" class="fullCoverImg">
+                    }
+                }
+            </div>
+            <div class="col-xl-8 col-lg-8 col-md-12 col-sm-12 col-12">
+                <div class="">
+                    @*@{
+                            var hunaWorkLogo = Model.Content.GetVortoValue<IPublishedContent>("hunaWorkLogo");
+                            if (hunaWorkLogo != null)
+                            {
+                                <img src="@hunaWorkLogo.Url" class="img-fluid" />
+                            }
+                        }*@
+                    @{
+                        var hunaWorkLogo = Model.Value<IPublishedContent>("hunaWorkLogo");
+                        if (hunaWorkLogo != null)
+                        {
+
+                            <img src="@hunaWorkLogo.Url()" class="fullCoverImg">
+                        }
+                    }
+                @*    @Html.Raw(Model.Content.GetVortoValue("aboutHunaDescription"))*@
+                     @Html.Raw(Model.Value("aboutHunaDescription"))
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="huna_list d-md-flex justify-content-center">
+    <ul class="list-unstyled text-center">
+        <li>
+            <span class="icon">
+                <i class="fas fa-phone"></i>
+            </span>
+            <span class="phone">@*@Model.Content.GetVortoValue("hunaContactNo")*@
+            @Html.Raw(Model.Value("hunaContactNo"))
+            </span>
+        </li>
+        <li>
+            <a href="#lunaArea">
+                <span class="icon">
+                    <i class="fas fa-map-marker-alt"></i>
+                </span>
+                <span>@Umbraco.GetDictionaryValue("checkLocationMap")</span>
+            </a>
+        </li>
+    </ul>
+</div>
+<section class="main__luna-carousel">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="text-center text-white">
+                    @*   @Html.Raw(Model.Content.GetVortoValue("sliderHeading"))*@
+                    @Html.Raw(Model.Value("sliderHeading"))
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <div class="main">
+            <div class="slider">
+                @{
+                    var Slideritems = Model.Value<IEnumerable<IPublishedContent>>("sliderImage");
+                
+                    if (Slideritems != null && Slideritems.Any())
+                    {
+                        foreach (var slideritem in Slideritems)
+                        {
+                            <div>
+                                <img src="@slideritem.Url()" class="fullCoverImg" alt="@slideritem.Name" />
+                            </div>
+                        }
+                    }
+                }
+            </div>
+            <div class="pagination"></div>
+        </div>
+    </div>
+</section>
+<section class="main__huna-brand">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="brand_content text-center">
+                    @*   @Html.Raw(Model.Content.GetVortoValue("hunaCardsHeading"))*@
+                @*    @Html.Raw(Model.Value("sliderHeading"))*@
+                  <p> 
+                  <span>@Umbraco.GetDictionaryValue("BrandsAtHuna")</span>
+                  </p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            @foreach (ContentModels.HunaChild card in Model.AncestorOrSelf(1).DescendantsOfType("hunaChild"))
+            {
+                var childCardLogo = card.Value<IPublishedContent>("hunaChildLogo");
+                if (childCardLogo != null)
+                {
+                    <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+                        <a href="@card.RedirectToPage" class="link gtm-track-viewall-event">
+                            <div class="card">
+                                <div class="card-body">
+                                    <img src="@childCardLogo.Url()" class="img-fluid" />
+                                </div>
+                                <div class="card-footer">
+                                    <button type="button" class="collapsible">@card.HunaChildTitle</button>
+                                    <div class="panel">
+                                        <p>
+                                            @Html.Raw(card.HunaChildDescription)
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                }
+            }
+            @*   @{ var hunaChildCards = Model.Content.Children; if (hunaChildCards != null)
+                {
+                    foreach (IPublishedContent Card in hunaChildCards)
+                    {
+                        var ChildCardLogo = Card.GetVortoValue<IPublishedContent>("hunaChildLogo"); if (ChildCardLogo != null)
+                        {
+                            <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <img src="@ChildCardLogo.Url" class="img-fluid" />
+                                    </div>
+                                    <div class="card-footer">
+                                        <button type="button" class="collapsible">@Card.GetVortoValue("hunaChildTitle")</button>
+                                        <div class="panel">
+                                            <p>
+                                                @Html.Raw(Card.GetVortoValue("hunaChildDescription"))
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                } }*@
+        </div>
+    </div>
+</section>
+<section class="main__luna-area" id="lunaArea">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="text-center">
+                    @*@Html.Raw(Model.Content.GetVortoValue("hunaLocationDetail"))*@
+                    @Html.Raw(Model.Value("hunaLocationDetail"))
+                    <a class="map-img" data-toggle="modal" data-target="#zoomModal">
+                        @*@{
+                                var hunaLocationMap = Model.Content.GetVortoValue<IPublishedContent>("hunaLocationMap");
+                                if (hunaLocationMap != null)
+                                {
+                                    <img src="@hunaLocationMap.Url" class="img-fluid" />
+                                }
+                            }*@
+
+                        @{
+                            var hunaLocationMap = Model.Value<IPublishedContent>("hunaLocationMap");
+                            if (hunaLocationMap != null)
+                            {
+
+                                <img src="@hunaLocationMap.Url()" class="fullCoverImg">
+                            }
+                        }
+                    </a>
+                    <div class="modal fade modal-fullscreen-xl" id="zoomModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                <div class="modal-body">
+
+                                    @*<img src="@hunaLocationMap.Url" class="img-fluid" />*@
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js"></script>
+<script>
+                                $(document).ready(function () {
+                                    const $st = $('.pagination');
+                                    const $slickEl = $('.slider');
+                                    $slickEl.on('init reInit afterChange', function (event, slick, currentSlide, nextSlide) {
+                                        const i = (currentSlide ? currentSlide : 0) + 1;
+                                        $st.text(i + ' of ' + slick.slideCount);
+                                    });
+                                    $slickEl.slick({
+                                        centerMode: true,
+                                        centerPadding: '200px',
+                                        slidesToShow: 1,
+                                        focusOnSelect: true,
+                                        dots: false,
+                                        infinite: false,
+                                        responsive: [
+                                            {
+                                                breakpoint: 768,
+                                                settings: {
+
+                                                    centerMode: true,
+                                                    centerPadding: '0px',
+                                                    slidesToShow: 1
+                                                }
+                                            },
+                                            {
+                                                breakpoint: 480,
+                                                settings: {
+                                                    centerMode: false,
+                                                    centerPadding: '0px',
+                                                    slidesToShow: 1
+                                                }
+                                            }
+                                        ]
+                                    });
+
+                                });
+
+                                @*$(document).ready(function () {
+                                    let faqs = $(".panel");
+                                    $(".collapsible").click(function () {
+                                        if ($(this).hasClass("active")) {
+                                            $(this).next().slideUp(500);
+                                            $(this).removeClass("active");
+                                            return false;
+                                        } else {
+                                            faqs.slideUp(500);
+                                            faqs.prev().removeClass("active");
+                                            $(this).next().slideDown(400);
+                                            $(this).addClass("active");
+                                            return false;
+                                        }
+                                    });
+                                });*@
+</script>

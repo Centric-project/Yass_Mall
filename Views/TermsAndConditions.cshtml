@@ -1,0 +1,61 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage
+@{
+    Layout = "Master.cshtml";
+    ViewBag.MetaTitle = @Model.Value("metaTitle");
+    ViewBag.MetaDescription = @Model.Value("metaDescription");
+    ViewBag.MetaKeyword = @Model.Value("metaKeyword");
+
+    var lang = System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+
+    // set page title segment
+    ViewBag.PageTitle = Model.Value("titleTAndC");
+}
+<!--Start Main Banner-->
+@{
+    var mrBannerImg = Model.Value<IPublishedContent>("tandcMainBanner");
+    if (mrBannerImg != null)
+    {
+        <section class="main-banner">
+            <div class="container-fluid custom-container-fluid">
+                <div class="main-slide">
+                    <div class="slide">
+                        <img src="@mrBannerImg.Url()" alt="@Model.Value("titleTAndC")" class="img-fluid" />
+                    </div>
+                </div>
+            </div>
+        </section>
+    }
+}
+<!--End Main Banner-->
+<!--Start Inner Page Wrapper-->
+<div class="inner-section">
+    <div class="container-fluid custom-container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <!--Start Breadcrumbs-->
+                <nav aria-label="breadcrumb" class="breadcrumb-holder">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="@Umbraco.GetDictionaryValue("logoHref")">@Umbraco.GetDictionaryValue("home")</a></li>
+                        <li class="breadcrumb-seprator"><i class="fas fa-angle-right"></i></li>
+                        <li class="breadcrumb-item active" aria-current="page">@Model.Value("titleTAndC")</li>
+                    </ol>
+                </nav>
+                <!--End Breadcrumbs-->
+                <!--Start Main Title-->
+                <div class="clearfix title-holder">
+                    <h1 class="title">@Model.Value("titleTAndC")</h1>
+                </div>
+                <!--End Main Title-->
+                <div class="filter-box page-content">
+                    <div class="row">
+                        <div class="col-md-12">
+                            @Html.Raw(Model.Value("bigDetails"))
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--End Inner Page Wrapper-->
+@* the fun starts here *@

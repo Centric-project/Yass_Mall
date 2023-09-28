@@ -1,0 +1,942 @@
+﻿@using ContentModels = Umbraco.Web.PublishedModels;
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.Home>
+@using ClientDependency.Core.Mvc
+@{
+    Layout = "master.cshtml";
+    //var backgroundImage = Model.HeroBackgroundImage != null ? Model.HeroBackgroundImage.Url : String.Empty;
+
+    //Html.RequiresCss("~/css/modal.css");
+    Html.RequiresCss("~/css/reopstyle.css");
+    //var homepage = Model.AncestorOrSelf<Home>();
+    var lang = System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+    var upcomingEvent = Model.AncestorOrSelf(1).DescendantsOfType("eventDetails").OrderByDescending(x => x.Value<DateTime?>("eventEndDate"))
+        .FirstOrDefault(x => x.IsVisible() && (x.Value<DateTime?>("eventEndDate") >= DateTime.Now.Date));
+
+    if (lang == "ar")
+    {
+        Html.RequiresCss("~/css/reopstyle-ar.css");
+    }
+}
+<style type="text/css">
+
+    #surveyModal .modal-dialog .survey-wrap {
+        background-color: #FACDC8 !important;
+    }
+    @@media screen and (max-width: 767px){
+        .whatsNew-slider .whatsNew-box .whatsNew-content-box .whatsNew-holder span.span-content {
+            height: 340px;
+        }
+         .whatsNew-slider .whatsNew-box .whatsNew-content-box .whatsNew-holder .btn-primary {
+            position: absolute;
+         }
+         
+    }
+    .whatsNew-slider .slick-slide img{
+    width: 100%;
+    }
+    .whatsnew-btn{
+        text-align: center;
+    }
+    .timeModal {wha
+        max-width: 80%;
+        border-radius: 0;
+        top: 5%;
+        margin: 0 auto;
+    }
+
+
+    #timingModal .modal-dialog .modal-content button.close {
+        position: absolute;
+        right: 0;
+        top: -24px;
+        background-color: #fff;
+        opacity: 2;
+        width: 30px;
+    }
+     .btn-primary, .btn.btn-primary, .btn-default, .btn.btn-default {
+    background: #000;
+    text-transform: uppercase;
+    font-family: "Gotham-Medium", sans-serif;
+    padding: 10px 20px;
+    min-width: auto;
+    line-height: unset;
+    color: #fff;
+         
+     }
+         .main-banner .slide img, .main-banner .slide video {
+    height: auto;
+} 
+
+.download__card .choice__box {
+    background-color: #000;
+    display:flex;
+    align-items: center;
+    color: #fff;
+}
+.download__card .choice__box p {
+    margin-bottom: 0px;
+}
+.download__card .clickDown {
+    width: 200px;
+}
+.download__card .gtm-track-app-event img {
+    width: 155px;
+}
+.download__card .scan-icon img {
+    max-width: 150px;
+}
+.clickDown, .clickQr {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    height: 200px;
+    text-align: center;
+}
+.download__card h4 {
+    font-size: 18px;
+    font-family: "Gotham-Medium";
+    margin: 15px 0;
+}
+.download__card {
+    border: 3px solid #707070;
+    border-radius: 10px !important;
+    margin: 0 0 40px;
+    width: 75%;
+}
+@@media screen and (max-width: 1024px) {
+.download__card {
+    margin: auto;
+    margin-bottom: 30px;
+    max-width: 100%;
+    width: 100%;
+}
+}
+@@media screen and (max-width: 992.99px) {
+.download__card .card-body .d-flex.justify-content-around.align-items-center {
+    flex-direction: column;
+    gap: 15px;
+}
+.download__card .card-body {
+    padding: 0 0 30px;
+}
+.clickDown, .clickQr {
+    height: auto;
+}
+.download__card .choice__box {
+    margin: 20px 0;
+}
+}
+@@media screen and (max-width: 768x) {
+.download__card {
+    margin: auto;
+    margin-bottom: 30px;
+    max-width: 360px;
+    width: 100%;
+}
+}
+@@media (max-width: 400px) {
+.download__card .scan-icon {
+    margin: 0 5px;
+}
+}
+
+
+@@media screen and (max-width: 1300px) and (min-width: 768px)  {
+    .whatsNew-slider .whatsNew-box .whatsNew-content-box .whatsNew-holder span.span-content{
+        height: auto;   
+    }
+    .whatsNew-slider .slick-slide img{
+        height: 100%;
+    }
+    .whatsNew-slider .whatsNew-box .whatsNewVideo-holder {
+        height: 100%;
+    }
+}
+</style>
+<!--Start Main Banner-->
+<section class="main-banner">
+    <div class="container-fluid custom-container-fluid">
+        <div class="main-slide gtm-mainsec" data-section="main-slider">
+            @{
+                var bannerItems = Model.AncestorOrSelf(1).DescendantsOfType("homeSlider")
+                    .OrderBy(x => x.Value<int>("sortOrder")).ToList();
+                int currIndex = 0;
+                foreach (ContentModels.HomeSlider hSlide in bannerItems)
+                {
+                    DateTime currDate = DateTime.Today;
+                    var campaignDate = hSlide.Value<DateTime>("bannerEndDate");
+                    if (campaignDate.Date >= currDate.Date)
+                    {
+                        currIndex++;
+                        if (hSlide.SliderVideo != null && !string.IsNullOrEmpty(hSlide.SliderVideo.Url))
+                        {
+                            <div class="slide video-slide">
+                                <div class="clearfix sliderVideo-holder">
+                                    <video id="slider_video" class="tv_video hide-for-small-only" name="@hSlide.ButtonText-VideoPlay"
+                                           poster="@hSlide.SliderImage.Url()" controls="controls" loop muted>
+                                        <source src="@hSlide.SliderVideo.Url()" type="video/mp4" />
+                                        Your browser does not support the video tag.
+                                    </video>
+                                </div>
+                                @if (!hSlide.ShowLinkText)
+                                {
+                                    <div class="caption">
+                                        <h3>@hSlide.SliderHeading</h3>
+                                        <a href="@hSlide.ButtonLink" class="btn btn-primary  gtm-track-more-event" name="@hSlide-WatchVideos">@hSlide.ButtonText</a>
+                                    </div>
+                                }
+                            </div>
+                        }
+                        else if (hSlide.SliderImage != null && !string.IsNullOrEmpty(hSlide.SliderImage.Url))
+                        {
+                            <div class="slide">
+                                <a href="@hSlide.ButtonLink.Url">
+                                    <img src="@hSlide.SliderImage.Url()" class="img-fluid" alt="@hSlide.SliderHeading" />
+                                </a>
+                                <div class="caption" style="display: none">
+                                    <h3>@hSlide.SliderHeading</h3>
+                                    @if (!hSlide.ShowLinkText)
+                                    {
+                                        <a href="@hSlide.ButtonLink" class="btn btn-primary gtm-track-button-event" name="@hSlide.Value("ButtonText", "en-US")">@hSlide.ButtonText</a>
+                                    }
+                                </div>
+                            </div>
+                        }
+
+                    }
+                }
+
+                if (currIndex == 0)
+                {
+                    currIndex++;
+                    var videoBanner = Model.Value<IPublishedContent>("defaultVideoBanner");
+                    <div class="slide video-slide">
+                        <div class="clearfix sliderVideo-holder">
+                            <video id="slider_video" class="tv_video hide-for-small-only"
+                                   controls="controls" autoplay loop muted>
+                                <source src="@videoBanner.Url()" type="video/mp4" />
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</section>
+<!--End Main Banner-->
+<!--Start Ultimate Experince-->
+<section class="box-holder">
+    <!--Start Heading-->
+    <div class="heading-holder">
+        <h3 class="heading-border">@Umbraco.GetDictionaryValue("UltimateExperienceHeading")</h3>
+    </div>
+    <!--End Heading-->
+    <div class="container-fluid custom-container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="ultimate-listing gtm-mainsec" data-section="ultimate-listing">
+                    @{
+                        var shopUE = Model.AncestorOrSelf(1).DescendantsOfType("shopsLandingDocType").FirstOrDefault();//Model.Content.Site().FirstChild("shop"); //ShopLanding
+                        var shopUEImg = shopUE.Value<IPublishedContent>("UEImage");
+                        var shopUEImgURL = shopUEImg == null ? "" : shopUEImg.Url();
+
+                        var shopUETitle = shopUE.Value("UETitle");
+
+                        var shopUELink = shopUE.Value<IPublishedContent>("UELink");
+                        var shopUELinkURL = shopUELink == null ? "" : shopUELink.Url();
+
+                        var shopUEBtnText = shopUE.Value("UELinkText");
+
+                        <div class="ultimate-holder" data-aos="fade-up">
+                            <figure>
+                                <img src="@shopUEImgURL" class="img-fluid" alt="@shopUETitle" />
+                                <div class="clearfix info-holder">
+                                    <div class="title">@shopUETitle</div>
+                                    <a href="@shopUELinkURL" class="link gtm-track-tile-event" name="@shopUETitle-tile"><span>@shopUEBtnText</span></a>
+                                </div>
+                            </figure>
+                        </div>
+
+
+                        var dineUE = Model.AncestorOrSelf(1).DescendantsOfType("dineLandingDocType").FirstOrDefault(); //DineLanding
+                        var dineUEImg = dineUE.Value<IPublishedContent>("UEImage");
+                        var dineUEImgURL = dineUEImg == null ? "" : dineUEImg.Url();
+
+                        var dineUETitle = dineUE.Value("UETitle");
+
+                        var dineUELink = dineUE.Value<IPublishedContent>("UELink");
+                        var dineUELinkURL = dineUELink == null ? "" : dineUELink.Url();
+
+                        var dineUEBtnText = dineUE.Value("UELinkText");
+
+                        <div class="ultimate-holder" data-aos="fade-down">
+                            <figure>
+                                <img src="@dineUEImgURL" class="img-fluid" alt="@dineUETitle" />
+                                <div class="clearfix info-holder">
+                                    <div class="title">@dineUETitle</div>
+                                    <a href="@dineUELinkURL" class="link gtm-track-tile-event" name="@dineUETitle-tile"><span>@dineUEBtnText</span></a>
+                                </div>
+                            </figure>
+                        </div>
+
+
+                        var entUE = Model.AncestorOrSelf(1).DescendantsOfType("entertainLandingDocType").FirstOrDefault();//Model.Content.Site().FirstChild("entertainLandingDocType");
+                        var entUEImg = entUE.Value<IPublishedContent>("UEImage");
+                        var entUEImgURL = entUEImg == null ? "" : entUEImg.Url();
+
+                        var entUETitle = entUE.Value("UETitle");
+
+                        var entUELink = entUE.Value<IPublishedContent>("UELink");
+                        var entUELinkURL = entUELink == null ? "" : entUELink.Url();
+
+                        var entUEBtnText = entUE.Value("UELinkText");
+
+                        <div class="ultimate-holder" data-aos="fade-up">
+                            <figure>
+                                <img src="@entUEImgURL" class="img-fluid" alt="@entUETitle" />
+                                <div class="clearfix info-holder">
+                                    <div class="title">@entUETitle</div>
+                                    <a href="@entUELinkURL" class="link gtm-track-tile-event" name="@entUETitle-tile"><span>@entUEBtnText</span></a>
+                                </div>
+                            </figure>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--End Ultimate Experince-->
+<!--Start Info Strips-->
+@{
+    string mallWeekDayTime = System.DateTime.Now.DayOfWeek.ToString();
+    var contactUsDocType = Model.AncestorOrSelf(1).DescendantsOfType("contactUs").FirstOrDefault();
+    if (contactUsDocType != null)
+    {
+        mallWeekDayTime = contactUsDocType.Value(mallWeekDayTime + "Timing").ToString();
+    }
+}
+<section class="box-holder infostrips-holder">
+    <div class="container-fluid custom-container-fluid">
+        <div class="row">
+            <div class="col-lg-4 col-md-12">
+                <div class="is-item hours" data-aos="@(lang == "ar" ? "fade-left" : "fade-right")" data-aos-offset="100">
+                    <a href="@Umbraco.GetDictionaryValue("ContactUsHref")" class="link gtm-track-viewall-event" name="Opening Hours-View All Hours"></a>
+                    <div class="is-content">
+                        <div class="is-title">@Umbraco.GetDictionaryValue("OpeningHours")</div>
+                        <div class="is-info" id="openHours">@mallWeekDayTime</div>
+                        <div class="is-cta">@Umbraco.GetDictionaryValue("ViewAllHours")</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-12" data-aos="@(lang == "ar" ? "fade-left" : "fade-right")" data-aos-offset="200">
+                <div class="is-item location">
+                    <a href="@Umbraco.GetDictionaryValue("ContactUsHref")#map-location" class="link gtm-track-viewall-event" name="Getting Here-View Our Location"></a>
+                    <div class="is-content">
+                        <div class="is-title">@Umbraco.GetDictionaryValue("GettingHere")</div>
+                        <div class="is-info">@Umbraco.GetDictionaryValue("YasIslandAbuDhabiUAE")</div>
+                        <div class="is-cta">@Umbraco.GetDictionaryValue("ViewOurLocation")</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-12" data-aos="@(lang == "ar" ? "fade-left" : "fade-right")" data-aos-offset="300">
+                <div class="is-item campaign">
+                    <a href="@(upcomingEvent != null ? upcomingEvent.Url : "/en/events?t=past")" class="link gtm-track-viewall-event" name="What's On-@(upcomingEvent != null ? "FindOutMore" : "ViewPastEvents")"></a>
+                    <div class="is-content">
+                        <div class="is-title">@Umbraco.GetDictionaryValue("WhatsOn")</div>
+                        <div class="is-info">@(upcomingEvent != null ? upcomingEvent.Value("eventTitle") : Umbraco.GetDictionaryValue("NoUpcomingEvents"))</div>
+                        <div class="is-cta">@Umbraco.GetDictionaryValue(upcomingEvent != null ? "FindOutMore" : "ViewPastEvents")</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--End Info Strips-->
+<!--Start Green Pass Regulations Box-->
+@{
+    var objGreenPass = Model.AncestorOrSelf(1).DescendantsOfType("greenPassRegDoc").FirstOrDefault();
+    if (objGreenPass != null)
+    {
+        var gpassHomePageImg = objGreenPass.Value<IPublishedContent>("gpHPVideoPoster");
+        var gpassVideo1 = objGreenPass.Value<IPublishedContent>("gpHPVideo");
+
+        if (gpassHomePageImg != null && gpassVideo1 != null)
+        {
+            <section class="box-holder dp-box akyasi-holder">
+                <!--Start Heading-->
+                <div class="heading-holder">
+                    <h2 class="sub-heading">@objGreenPass.Value("gpMainTitle")</h2>
+                </div>
+                <!--End Heading-->
+                <!--Start Green Pass Video-->
+                <div class="container-fluid custom-container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="video-holder gtm-mainsec" data-section="mypark-video">
+                                <div class="row">
+                                    <div class="col-lg-8 col-md-12 video-holder">
+                                        <div class="video-box" data-aos="fade-in" data-aos-duration="1500">
+                                            <video controls id="mypark_video" class="tv_video hide-for-small-only" name="@objGreenPass.Name-VideoPlay" poster="@gpassHomePageImg.Url()">
+                                                <source src="@gpassVideo1.Url()" type="video/mp4">
+                                                Your browser does not support the video tag.
+                                            </video>
+                                            <div class="play-bt" name="@objGreenPass.Name-VideoPlay"></div>
+                                            <div class="pause-bt" style="display:none;"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-12 video-content" data-aos="@(lang == "ar" ? "fade-right" : "fade-left")" data-aos-duration="1200" style="display:flex; align-items: center;">
+                                        <span>
+                                            <span style="text-align: justify; font-size: 0.9rem;">@Html.Raw(objGreenPass.Value("gpHPSmallInfo"))</span>
+                                            <a href="@objGreenPass.Url()" class="btn btn-primary gtm-track-more-event" name="@objGreenPass.Name-KnowMore">@Umbraco.GetDictionaryValue("knowMore")</a>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--End Green Pass Video-->
+            </section>
+        }
+    }
+}
+<!--End Green Pass Regulations Box-->
+<!--Start MyPark Service Box-->
+@{
+    var wsfyList = Model.AncestorOrSelf(1).DescendantsOfType("weShopForYouDoc");
+
+    var objMyPark = wsfyList.Where(x => x.Id == 2450).FirstOrDefault(); //Get The MyPark Service Content By Id
+    if (objMyPark != null)
+    {
+        var myparkMainTitle = objMyPark.Value("wsfyTitle");
+        var myparkSmallInfo = objMyPark.Value("wsfySmallInfoHP");
+        var myparkHomePageImg = objMyPark.Value<IPublishedContent>("wsfyHomePageImg");
+        var myparkVideo1 = objMyPark.Value<IPublishedContent>("wsfyVideo1");
+
+        if (myparkHomePageImg != null && myparkVideo1 != null)
+        {
+            <section class="box-holder dp-box akyasi-holder">
+                <!--Start Heading-->
+                <div class="heading-holder">
+                    <h2 class="sub-heading">@myparkMainTitle</h2>
+                </div>
+                <!--End Heading-->
+                <!--Start MyPark Video-->
+                <div class="container-fluid custom-container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="video-holder gtm-mainsec" data-section="mypark-video">
+                                <div class="row">
+                                    <div class="col-lg-8 col-md-12 video-holder">
+                                        <div class="video-box" data-aos="fade-in" data-aos-duration="1500">
+                                            <video controls id="mypark_video" class="tv_video hide-for-small-only" name="@objMyPark.Name-VideoPlay" poster="@myparkHomePageImg.Url()">
+                                                <source src="@myparkVideo1.Url()" type="video/mp4">
+                                                Your browser does not support the video tag.
+                                            </video>
+                                            <div class="play-bt" name="@objMyPark.Name-VideoPlay"></div>
+                                            <div class="pause-bt" style="display:none;"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-12 video-content" data-aos="@(lang == "ar" ? "fade-right" : "fade-left")" data-aos-duration="1200" style="display:flex; align-items: center;">
+                                        <span>
+                                            <span style="text-align: justify; font-size: 0.9rem;">@Html.Raw(myparkSmallInfo)</span>
+                                            <a href="@objMyPark.Url()" class="btn btn-primary gtm-track-more-event" name="@objMyPark.Name-KnowMore">@Umbraco.GetDictionaryValue("KnowMore")</a>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--End MyPark Video-->
+            </section>
+        }
+    }
+}
+<!--End MyPark Service Box-->
+<!--Start  Whats New-->
+
+@{
+    var whatsNew = Model.AncestorOrSelf(1).DescendantsOfType("whatsNewSlider").FirstOrDefault();
+    //var darnaRewards = mallReDevList.Where(x => x.Id == 1870).FirstOrDefault(); //Get The Darna Rewards Content By Id
+
+    if (whatsNew != null)
+    {
+        <section class="box-holder lp-box  whatsNew-holder">
+            <!--Start Heading-->
+            <div class="heading-holder">
+                <h2 class="sub-heading">@Umbraco.GetDictionaryValue("WhatsNew")</h2>
+            </div>
+            <!--End Heading-->
+            <!--Start Event Slider-->
+            <div class="container-fluid custom-container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="custom-slider whatsNew-slider gtm-mainsec" data-section="whatsnew-video" data-aos="fade-up" data-aos-duration="1500">
+                            @{
+                                IEnumerable<IPublishedContent> whatsNewItem = whatsNew.Children().Where(x => x.IsVisible());
+                                foreach (var whatsNewItems in whatsNewItem)
+                                {
+                                    <div class="slide">
+                                        <div class="whatsNew-box">
+                                            <div class="row">
+                                                <div class="col-lg-8 col-md-8 pr-none main-event">
+                                                    <div class="clearfix whatsNewVideo-holder">
+                                                        @{
+                                                            var whatsNewVideo = whatsNewItems.Value<IPublishedContent>("video");
+                                                            var whatsNewImg = whatsNewItems.Value<IPublishedContent>("thumbImage");
+                                                            if (whatsNewVideo != null)
+                                                            {
+                                                                if (whatsNewImg != null)
+                                                                {
+                                                                    <video id="darna_video" class="tv_video hide-for-small-only" controls="controls"
+                                                                           poster="@whatsNewImg.Url()">
+                                                                        <source src="@whatsNewVideo.Url()" type="video/mp4" />
+                                                                        Your browser does not support the video tag.
+                                                                    </video>
+                                                                    <div class="play-bt"></div>
+                                                                    <div class="pause-bt" style="display:none;"></div>
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                if (whatsNewImg != null)
+                                                                {
+                                                                    <img src="@whatsNewImg.Url()" class="img-fluid">
+                                                                }
+                                                            }
+                                                        }
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4 col-md-4 pl-none whatsNew-content-box" data-aos="fade-down" data-aos-duration="1500">
+                                                    <div class="clearfix whatsNew-holder">
+                                                        <span class="span-content">
+                                                            <h4>@whatsNewItems.Value("whatsNewTitle")</h4>
+                                                            @Html.Raw(whatsNewItems.Value("whatsNewDetails"))
+                                                        </span>
+                                                        @{
+                                                            var wNPageLink = whatsNewItems.Value<IPublishedContent>("redirectToPage");
+                                                            var wNPageLinkURL = wNPageLink == null ? "" : wNPageLink.Url();
+                                                            if (wNPageLinkURL != "")
+                                                            {
+                                                                <a href="@wNPageLinkURL" class="btn btn-primary">@whatsNewItems.Value("buttonText")</a>
+                                                            }
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--End Event Slider-->
+        </section>
+    }
+}
+<!--End Whats New-->
+@*<!--Start Mall-Redevlopment-->
+@{
+    IPublishedContent mallReDevMain = Model.AncestorOrSelf(1).DescendantsOfType("mallRedevMainDocType").FirstOrDefault();
+    IEnumerable<IPublishedContent> mrInnerPages = mallReDevMain.Children.Where(x => x.IsDocumentType("mallRedevItemDocType"));
+    if (mallReDevMain != null && mrInnerPages != null)
+    {
+        var foodCourt = mrInnerPages.Where(x => x.Id == 2177).FirstOrDefault();
+        if (foodCourt != null)
+        {
+            <section class="aldar-development">
+                <div class="container gtm-mainsec" data-section="mall-redevelopment">
+                    <h2><b>@mallReDevMain.Value("mrMainTitle")</b></h2>
+                    <div class="row no-gutters">
+                        @{
+                            if (foodCourt != null)
+                            {
+                                var mrBThmbImg = foodCourt.Value<IPublishedContent>("mrItemBigThumbImg");
+                                if (mrBThmbImg != null)
+                                {
+                                    <div class="col-md-3" data-aos="fade-right" data-aos-duration="1500">
+                                        <a href="@Umbraco.GetDictionaryValue("MallRedevelopmentHRef")" class="gtm-track-tile-event" name="@foodCourt.Value("mrItemTitle")-tile">
+                                            <img src="@mrBThmbImg.Url()" class="img-fluid w-100 h-100" alt="@foodCourt.Value("mrItemTitle")" />
+                                        </a>
+                                    </div>
+                                }
+                                var mrSThmbImg = foodCourt.Value<IPublishedContent>("mrItemSmallThumbImg");
+                                if (mrSThmbImg != null)
+                                {
+                                    <div class="col-md-3" data-aos="fade-down" data-aos-duration="1500">
+                                        <a href="@Umbraco.GetDictionaryValue("MallRedevelopmentHRef")" class="gtm-track-tile-event" name="@foodCourt.Value("mrItemTitle")-tile">
+                                            <div class="pink-dark">
+                                                <h3>@foodCourt.Value("mrItemTitle")</h3>
+                                                @Html.Raw(foodCourt.Value("mrItemDescription"))
+                                            </div>
+                                            <img src="@mrSThmbImg.Url()" class="img-fluid w-100 pos-img hidden-xs" alt="@foodCourt.Value("mrItemTitle")" />
+                                        </a>
+                                    </div>
+                                }
+                            }
+
+                            var townSquare = mrInnerPages.Where(x => x.Id == 2180).FirstOrDefault();
+                            if (townSquare != null)
+                            {
+                                var mrBThmbImg = townSquare.Value<IPublishedContent>("mrItemBigThumbImg");
+                                if (mrBThmbImg != null)
+                                {
+                                    <div class="col-md-3" data-aos="flip-right">
+                                        <a href="@Umbraco.GetDictionaryValue("MallRedevelopmentHRef")" class="gtm-track-tile-event" name="@townSquare.Value("mrItemTitle")-tile">
+                                            <img src="@mrBThmbImg.Url()" class="img-fluid w-100 h-100" alt="@townSquare.Value("mrItemTitle")" />
+                                        </a>
+                                    </div>
+                                }
+                                var mrSThmbImg = townSquare.Value<IPublishedContent>("mrItemSmallThumbImg");
+                                if (mrSThmbImg != null)
+                                {
+                                    <div class="col-md-3" data-aos="fade-left" data-aos-duration="1500">
+                                        <a href="@Umbraco.GetDictionaryValue("MallRedevelopmentHRef")" class="gtm-track-tile-event" name="@townSquare.Value("mrItemTitle")-tile">
+                                            <div class="blue-dark">
+                                                <h3>@townSquare.Value("mrItemTitle")</h3>
+                                                @Html.Raw(townSquare.Value("mrItemDescription"))
+                                            </div>
+                                            <img src="@mrSThmbImg.Url()" class="img-fluid w-100 pos-img hidden-xs" alt="@townSquare.Value("mrItemTitle")" />
+                                        </a>
+                                    </div>
+                                }
+                            }
+
+                            var italianBoul = mrInnerPages.Where(x => x.Id == 2183).FirstOrDefault();
+                            if (italianBoul != null)
+                            {
+                                var mrBThmbImg = italianBoul.Value<IPublishedContent>("mrItemBigThumbImg");
+                                if (mrBThmbImg != null)
+                                {
+                                    <div class="col-md-9" data-aos="fade-up" data-aos-duration="1500">
+                                        <a href="@Umbraco.GetDictionaryValue("MallRedevelopmentHRef")" class="gtm-track-tile-event" name="@italianBoul.Value("mrItemTitle")-tile">
+                                            <img src="@mrBThmbImg.Url()" class="img-fluid w-100 hidden-xs" alt="@italianBoul.Value("mrItemTitle")" />
+                                            <img src="@mrBThmbImg.Url()" class="img-fluid w-100 hidden-desk" alt="@italianBoul.Value("mrItemTitle")" />
+                                        </a>
+                                    </div>
+                                }
+                                var mrSThmbImg = italianBoul.Value<IPublishedContent>("mrItemSmallThumbImg");
+                                if (mrSThmbImg != null)
+                                {
+                                    <div class="col-md-3" data-aos="fade-left" data-aos-duration="1500">
+                                        <a href="@Umbraco.GetDictionaryValue("MallRedevelopmentHRef")" class="gtm-track-tile-event" name="@italianBoul.Value("mrItemTitle")-tile">
+                                            <div class="blue-light">
+                                                <h3>@italianBoul.Value("mrItemTitle")</h3>
+                                                @Html.Raw(italianBoul.Value("mrItemDescription"))
+                                            </div>
+                                            <img src="@mrSThmbImg.Url()" class="img-fluid w-100 pos-img hidden-xs" alt="@italianBoul.Value("mrItemTitle")" />
+                                        </a>
+                                    </div>
+                                }
+                            }
+                        }
+                    </div>
+                </div>
+            </section>
+        }
+    }
+}
+<!--End Mall-Redevlopment-->*@
+@{
+    var wsfy = Model.AncestorOrSelf(1).DescendantsOfType("WeShopForYouDoc").FirstOrDefault();//Model.Content.Site().FirstChild("WeShopForYouDoc");
+    var wsfyHomePageImg = wsfy.Value<IPublishedContent>("wsfyHomePageImg");
+    var wsfyVideo1 = wsfy.Value<IPublishedContent>("wsfyVideo1");
+    if (wsfyHomePageImg != null && wsfyVideo1 != null)
+    {
+        <!--Start AKYASI Box-->
+        <section class="box-holder dp-box akyasi-holder">
+            <!--Start Heading-->
+            <div class="heading-holder">
+                <h2 class="sub-heading">@wsfy.Value("wsfyTitle")</h2>
+            </div>
+            <!--End Heading-->
+            <!--Start Akyasi Video-->
+            <div class="container-fluid custom-container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="video-holder gtm-mainsec" data-section="weshopforyou-video">
+                            <div class="row">
+                                <div class="col-lg-8 col-md-12 video-holder">
+                                    <div class="video-box" data-aos="fade-in" data-aos-duration="1500">
+                                    @*    <video controls id="akyasi_video" class="tv_video hide-for-small-only" name="@wsfy.Name-VideoPlay" poster="@wsfyHomePageImg.Url()">
+                                            <source src="@wsfyVideo1.Url()" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                        </video>*@
+                                        <img src="@wsfyVideo1.Url()" class="tv_video hide-for-small-only img-fluid">
+                                        <div name="@wsfy.Name-VideoPlay"></div>
+                                        <div style="display:none;"></div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-md-12 video-content" data-aos="@(lang == "ar" ? "fade-right" : "fade-left")" data-aos-duration="1200">
+                                  @*  <figure><img src="/assets/images/akyasi-logo.jpg" alt="" class="img-fluid" /></figure>*@
+                                    @Html.Raw(wsfy.Value("wsfySmallInfoHP"))
+                                    <a href="@Umbraco.GetDictionaryValue("WeShopForYouHref")" class="btn btn-primary gtm-track-more-event" name="@wsfy.Name-KnowMore">@Umbraco.GetDictionaryValue("KnowMore")</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--End Akyasi Video-->
+        </section>
+        <!--End AKYASI Box-->
+    }
+}
+<!--Start Featured Box-->
+@{
+    var featured = Model.AncestorOrSelf(1).DescendantsOfType("featuredLandingDocType").FirstOrDefault();//Model.Content.Site().FirstChild("featuredLandingDocType");
+    if (featured != null)
+    {
+        <section class="box-holder featured-holder lg-box">
+            <!--Start Heading-->
+            <div class="heading-holder">
+                <h2 class="sub-heading">@featured.Value("featuredMainTitle")</h2>
+            </div>
+            <!--End Heading-->
+            <!--Start Feature Slider-->
+            <div class="container-fluid custom-container-fluid">
+                <div class="row">
+                    <div class="col-md-12" data-aos="fade-up">
+                        <div class="custom-slider feature-slider">
+                            @{
+                                IEnumerable<IPublishedContent> featItems = featured.Children().Where(x => x.IsVisible());
+                                foreach (var fItem in featItems)
+                                {
+                                    IEnumerable<IPublishedContent> shopCats = new List<IPublishedContent>();
+                                    var fShopCats = fItem.Value<IEnumerable<dynamic>>("shopCategory");
+                                    if (fShopCats != null)
+                                    {
+                                        shopCats = Model.AncestorOrSelf(1).DescendantsOfType("shopCategory").FirstOrDefault() /*Model.Content.Site().FirstChild("shopCategory")*/.Children()
+                                            .Where(x => x.IsVisible() && fShopCats.Any(sc => sc.Id == x.Id))
+                                            .OrderBy(x => x.Name);
+                                    }
+                                    IEnumerable<IPublishedContent> dineCats = new List<IPublishedContent>();
+                                    var fDineCats = fItem.Value<IEnumerable<dynamic>>("dineCategory");
+                                    if (fDineCats != null)
+                                    {
+                                        dineCats = Model.AncestorOrSelf(1).DescendantsOfType("dineCategory").FirstOrDefault()/* Model.Content.Site().FirstChild("dineCategory")*/.Children()
+                                            .Where(x => x.IsVisible() && fDineCats.Any(sc => sc.Id == x.Id))
+                                            .OrderBy(x => x.Name);
+                                    }
+
+                                    var thumbImage = fItem.Value<IPublishedContent>("thumbImage");
+                                    if (thumbImage != null)
+                                    {
+                                        var fPageLink = fItem.Value<IPublishedContent>("shopPageLink");
+                                        var fPageLinkURL = fPageLink == null ? fItem.Url() : fPageLink.Url();
+
+                                        <div class="slide">
+                                            <div class="feature-box">
+                                                <a href="@fPageLinkURL">
+                                                    <figure>
+                                                        <img src="@thumbImage.Url()" alt="@fItem.Value("shopTitle")" class="img-fluid" />
+                                                    </figure>
+                                                    <ul class="list-unstyled red-btn">
+                                                        @foreach (var dcItem in dineCats)
+                                                        {
+                                                            <li class="feature-cat">@dcItem.Value("categoryTitle")</li>
+                                                        }
+                                                        @foreach (var scItem in shopCats)
+                                                        {
+                                                            <li class="feature-cat">@scItem.Value("categoryTitle")</li>
+                                                        }
+                                                        <li class="feature-title">@fItem.Value("shopTitle")</li>
+                                                        <li class="feature-location">@fItem.Value("floorName")</li>
+                                                    </ul>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--End Feature Slider-->
+        </section>
+    }
+}
+<!--End Featured Box-->
+<!--Start Retail Destination-->
+@{
+    var secBackImg = Model.Value<IPublishedContent>("aboutUsSecondaryImage");
+    if (secBackImg != null)
+    {
+        <section class="retaildes-holder d-flex align-items-center justify-content-center" style="background: url('/media/k5mmujcr/home-destimation-v2.jpg') no-repeat center bottom">
+            @Html.Raw(Model.Value("aboutYasMall"))
+        </section>
+    }
+}
+<!--End Retail Destination-->
+<!--Start Feed Wrapper-->
+<section class="box-holder lp-box feed-holder">
+    <div class="container-fluid custom-container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <!--Start Heading-->
+                <div class="heading-holder">
+                    <h2 class="sub-heading">&#64;YASMALLAD</h2>
+                    @Html.Raw(Model.Value("instagramIntro"))
+                </div>
+                <!--End Heading-->
+                <!--Start Feed Wrapper-->
+                <div id="feed-wrapper" data-aos="fade-up" data-aos-anchor-placement="top-center" style="direction: ltr !important">
+                    <div id="curator-feed"></div>
+                </div>
+                <!--End Feed Wrapper-->
+            </div>
+        </div>
+    </div>
+</section>
+<!--End Feed Wrapper-->
+<!--Start Survey Modal -->
+<div class="modal fade" id="surveyModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <button type="button" id="btnSurveyClose" class="close" data-dismiss="modal" aria-label="Close" onclick="CloseSurvey();">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <div class="modal-body">
+                <div class="survey-wrap">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-4 survey-img">
+                            <img class="img-fluid" src="/assets/images/survey-donut.png" alt="Survey" />
+                        </div>
+                        @if (lang == "ar")
+                        {
+                            <div class="col-lg-6 col-md-8 survey-cont">
+                                <h1>بدون كلام معسول</h1>
+                                <h4>شارك رأيك بصراحة وأخبرنا عن تجربتك في تصفّح موقعنا الإلكتروني!</h4>
+                                <a class="btn btn-default gtm-track-more-outbound-event" name="Take our Survey" href="https://aldar.eu.qualtrics.com/jfe/form/SV_79Wm9qcviS6o2cl">شارك في الاستبيان</a>
+                                <a class="link-btn gtm-track-button-event" name="Skip for Now - Survey" id="btnSkipSurvey" href="javascript:CloseSurvey();">تخطى في الوقت الحالي</a>
+                            </div>
+                        }
+                        @if (lang == "en")
+                        {
+                            <div class="col-lg-6 col-md-8 survey-cont">
+                                <h1>Don't Sugarcoat Anything</h1>
+                                <h4>Give us your honest feedback about your browsing experience!</h4>
+                                <a class="btn btn-default gtm-track-more-outbound-event" name="Take our Survey" href="https://aldar.eu.qualtrics.com/jfe/form/SV_79Wm9qcviS6o2cl">Take our Survey</a>
+                                <a class="link-btn gtm-track-button-event" name="Skip for Now - Survey" id="btnSkipSurvey" href="javascript:CloseSurvey();">Skip for Now</a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--End Survey Modal -->
+@{
+    int msTime = 10000;
+    if (!string.IsNullOrEmpty(Model.HomeSliderTime.ToString()))
+    {
+        msTime = Model.HomeSliderTime;
+    }
+}
+<script type="text/javascript">
+    var _mainSlideTime = @msTime;
+    /* curator-fed */
+    (function () {
+        var i, e, d = document, s = "script"; i = d.createElement("script"); i.async = 1;
+        i.src = "https://cdn.curator.io/published/16d1ae27-a3ca-4021-b091-59658282bbcd.js";
+        e = d.getElementsByTagName(s)[0]; e.parentNode.insertBefore(i, e);
+    })();
+
+
+    $(document).ready(function () {
+
+        @*@if (lang == "ar") {
+            <text>var monthNames = [
+            "يناير", "فبراير", "مارس",
+            "أبريل/إبريل", "مايو", "يونيو/يونيه", "يوليو/يوليه",
+            "أغسطس", "سبتمبر", "أكتوبر",
+                "نوفمبر", "ديسمبر"];</text>
+        } else {
+            <text>var monthNames = [
+                "January", "February", "March",
+                "April", "May", "June", "July",
+                "August", "September", "October",
+                    "November", "December"];</text>
+        }
+        $.ajax({
+            type: "GET",
+            //url: "/Umbraco/Api/Custom/GetToday?lang=(lang)",
+            url: "https://maps.googleapis.com/maps/api/place/details/json?place_id=ChIJDwOafn1FXj4RGAdtSOLgiek&key=AIzaSyDSp-OPbkE5Sho0KN_2emZBny7cL7S_bZE",
+            success: function (response) {
+                console.log("GetToday Response", response);
+                var lang = "@lang";
+                var dt = new Date(response.Date);
+                var monthDayFragment = monthNames[dt.getMonth()] + " " + dt.getDate();
+                var text = monthDayFragment + " @(Umbraco.GetDictionaryValue("Closed"))";
+                if (response.Open) {
+                    if (lang === "ar")
+                        text = dt.getDate() + " " + monthNames[dt.getMonth()] + "<br />" + response.Open + " - " + response.Close;
+                    else
+                        text = monthNames[dt.getMonth()] + " " + dt.getDate() + " " + response.Open + " - " + response.Close;
+                }
+                $("#openHours").html("9 AM - 12 AM");
+
+                /* Vijay 22Apr2012 temp disabled    $("#openHours").html(text);  */
+            },
+            error: function () {
+                $("#openHours").text("@(Umbraco.GetDictionaryValue("UnableToRetrieve"))");
+            }
+        });*@
+
+        $.ajax({
+            url: "/Umbraco/Api/Custom/GETCookie?cookieName=gdpr_notice",
+            type: "GET",
+            dataType: 'JSON',
+            success: function (response) {
+                if (response.RespCode <= 0) {
+                    $('#gdpr-popup').removeClass('hidden-gdpr');
+                }
+            },
+            error: function (response) {
+                console.log(response.RespMessage);
+                $('#gdpr-popup').removeClass('hidden-gdpr');
+            }
+        });
+
+        $('#btn-gdpr-accept, #btn-gdpr-decline').on('click', function () {
+            $.ajax({
+                url: "/Umbraco/Api/Custom/POSTCreateCookie",
+                type: "POST",
+                dataType: 'JSON',
+                data: { cookieName: "gdpr_notice", cookieValue: "1", expiryDays: 365 },
+                success: function (response) {
+                    if (response.RespCode > 0) {
+                        $('#gdpr-popup').addClass('hidden-gdpr');
+                    }
+                },
+                error: function (response) {
+                    console.log(response.RespMessage);
+                    $('#gdpr-popup').removeClass('hidden-gdpr');
+                }
+            });
+        });
+
+        @*setTimeout(function () {
+            $('body').toggleClass('modal-open');
+            $('#surveyModal').toggleClass('show');
+            $('#surveyModal').show('fade');
+        }, 120000);*@
+
+        if ($("#slider_video")) {
+            $("#slider_video").get(0).play();
+        }
+    });
+
+    function CloseSurvey() {
+        $('body').removeClass('modal-open');
+        $('#surveyModal').removeClass('show');
+        $('#surveyModal').hide('fade');
+    }
+</script>

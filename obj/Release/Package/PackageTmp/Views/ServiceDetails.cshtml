@@ -1,0 +1,70 @@
+﻿@using ContentModels = Umbraco.Web.PublishedModels;
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.Services>
+@using Umbraco.Web.Mvc;
+@{
+    Layout = "master.cshtml";
+    ViewBag.MetaTitle = Model.ServicesTitle;
+    ViewBag.MetaDescription = Model.SeoMetaDescription;
+    ViewBag.MetaKeyword = Model.Keywords;
+
+    // set page title segment
+    ViewBag.PageTitle = Model.Value("servicesTitle");
+
+    // get parent for breadcrumb
+    var parent = Model.AncestorOrSelf("servicesLandingDocType");/*Model.Content.Parent*/
+}
+
+<style type="text/css">
+    .page-content .content .video-thumb {
+        display: block;
+    }
+
+    .page-content h1.title {
+        width: 100%;
+    }
+</style>
+<!--Start Main Banner-->
+@{
+    var serviceBannerImg = Model.Value<IPublishedContent>("detailPageBanner");
+    if (serviceBannerImg != null)
+    {
+        <section class="main-banner">
+            <div class="container-fluid custom-container-fluid">
+                <div class="main-slide">
+                    <div class="slide">
+                        <img src="@serviceBannerImg.Url()" alt="@Model.Value("servicesTitle")" class="img-fluid" />
+                    </div>
+                </div>
+            </div>
+        </section>
+    }
+}
+
+<!--End Main Banner-->
+<!--Start Search Box-->
+<section class="filter-holder">
+    <div class="container-fluid custom-container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <!--Start Breadcrumbs-->
+                <nav aria-label="breadcrumb" class="breadcrumb-holder">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="@Umbraco.GetDictionaryValue("LogoHref")">@Umbraco.GetDictionaryValue("Home")</a></li>
+                        <li class="breadcrumb-seprator"><i class="fas fa-angle-right"></i></li>
+                        <li class="breadcrumb-item"><a href="@parent.Url()">@parent.Value("servicesMainTitle")</a></li>
+                        <li class="breadcrumb-seprator"><i class="fas fa-angle-right"></i></li>
+                        <li class="breadcrumb-item active" aria-current="page">@Model.Value("servicesTitle")</li>
+                    </ol>
+                </nav>
+                <!--End Breadcrumbs-->
+                <div class="filter-box page-content">
+                    <div class="row">
+                        <h1 class="title">@Model.Value("servicesTitle")</h1>
+                        @Html.Raw(Model.Value("description"))
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--End Search Box-->

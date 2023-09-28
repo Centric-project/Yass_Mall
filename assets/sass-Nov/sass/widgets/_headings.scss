@@ -1,0 +1,46 @@
+.heading-holder {
+    text-align: center;
+}
+
+.heading-border,
+.sub-heading {
+    text-transform: uppercase;
+    color:  $black !important;
+}
+
+.heading-border {
+    font-size:36px;
+    color: $heading;
+    padding-bottom: 25px;
+    margin-bottom: 25px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-bottom: 1px solid #707070;
+    display: inline-block;
+    vertical-align: top;
+    font-family: "Gotham-Bold",sans-serif;
+    @media screen and (max-width: 767px) {
+        font-size: 1.125rem;
+        padding-bottom: 15px;
+        margin-bottom: 15px;
+    }
+
+}
+
+.sub-heading {
+    font-size:36px;
+    font-family: $fontBold;
+    color: $primaryGreen;
+    padding-bottom: 30px;
+
+    @media screen and (max-width: 767px) {
+        font-size: 1.25rem;
+        padding-bottom: 10px;
+    }
+
+}
+h1, h2, h3, h4{
+    @include direction('ar') {
+        line-height: unset !important;
+    }
+}

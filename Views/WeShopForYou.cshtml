@@ -1,0 +1,379 @@
+﻿@using ContentModels = Umbraco.Web.PublishedModels;
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.WeShopForYouDoc>
+@using ClientDependency.Core.Mvc
+@{
+    var lang = System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+    Layout = "master.cshtml";
+
+    // set page title segment
+    ViewBag.PageTitle = Model.WsfyTitle;
+
+    // meta fallback
+    ViewBag.MetaDescription = Model.WsfySmallDetails;
+
+    Html.RequiresCss("~/css/video-js.css");
+}
+<!--Start Main Banner-->
+@{
+    var wsfyBannerImg = Model.Value<IPublishedContent>("wsfyBanner");
+    if (wsfyBannerImg != null)
+    {
+        <section class="main-banner">
+            <div class="container-fluid custom-container-fluid">
+                <div class="main-slide">
+                    <div class="slide">
+                        <img src="@wsfyBannerImg.Url" alt="@Model.Value("wsfyTitle")" class="img-fluid" />
+                    </div>
+                </div>
+            </div>
+        </section>
+    }
+}
+
+<style>
+
+.abouttab-holder{
+    padding: 0 0px 0px;
+}
+.aboutinfo-bottom{
+    display: none;
+}
+video {
+    width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+    margin-bottom: -10px;
+}
+    .video__card {
+    border: 12px solid #000;
+    border-radius: 0;
+    overflow: hidden;
+    width: 100% !important;
+    max-width: 500px;
+    border-radius: 10px;
+}
+.download__card .card-header {
+    background-color: rgba(0,0,0,0);
+    font-size: 20px;
+    border-bottom: 3px solid #707070;
+    padding: 0.25rem 1.25rem;
+    font-family: "Gotham-Medium";
+}
+.download__card {
+    border: 3px solid #707070 !important;
+    border-radius: 10px !important;
+    margin: 0 0 40px;
+    width: 75%;
+}
+
+</style>
+<!--End Main Banner-->
+<!--Start Inner Page Wrapper-->
+<div class="inner-section">
+    <div class="container-fluid custom-container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <!--Start Breadcrumbs-->
+                <nav aria-label="breadcrumb" class="breadcrumb-holder">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="@Umbraco.GetDictionaryValue("LogoHref")">@Umbraco.GetDictionaryValue("Home")</a></li>
+                        <li class="breadcrumb-seprator"><i class="fas fa-angle-right"></i></li>
+                        <li class="breadcrumb-item active" aria-current="page">@Model.Value("wsfyTitle")</li>
+                    </ol>
+                </nav>
+                <!--End Breadcrumbs-->
+                <!--Start Main Title-->
+                <div class="clearfix title-holder d-none">
+                    <h1 class="title">@Model.Value("wsfyTitle")</h1>
+                </div>
+                <!--End Main Title-->
+                <!--Start Akyasi Tabs-->
+                <section class="akyasi-holder">
+                    <!--Start Tabs Holder-->
+                    <div class="akyasi-tabs-holder custom-tabs">
+                        <!--Start Custom Tabs Title-->
+                     @*   <ul class="nav nav-tabs" id="wsfyTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link active" id="tab-one">@(lang == "ar" ? "عن أكياسي" : "About Akyasi")</a>
+                            </li>r
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link" id="tab-two">@(lang == "ar" ? "الأسئلة الشائعة عن أكياسي" : "Akyasi FAQs")</a>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link" id="tab-three">@(lang == "ar" ? "الشروط والأحكام" : "Terms & Conditions")</a>
+                            </li>
+                        </ul>*@
+                        <!--End Custom Tabs Title-->
+                        <div class="tab-content" id="wsfyTabContent">
+                            <div class="tab-pane fade show active" id="div-one" role="tabpanel" aria-labelledby="tab-one">
+                                <div class="row">
+                                    <div class="col-lg-8">
+                                <div class="clearfix abouttab-holder">
+                                    <div class="akyasiBox">
+                                        @Html.Raw(Model.Value("wsfySmallDetails"))
+                                    </div>
+                                    <div class="card download__card">
+                                        <div class="card-header text-center">@Umbraco.GetDictionaryValue("DownloadAkyasiApp")</div>
+
+                                        <div class="card-body">
+                                          
+
+                                            <div class="d-flex justify-content-around align-items-center">
+                                                <div class="clickQr">
+                                                    <div>
+                                                        <h4>@Umbraco.GetDictionaryValue("ScanQR")</h4>
+                                                    </div>
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <div class="scan-icon">
+                                                            <img src="/media/4dpj2ze2/apple.png" class="img-fluid"alt="">
+                                                        </div>
+
+                                                        <div class="scan-icon">
+                                                            <img src="/media/2i2p2kly/android.png" class="img-fluid"alt="">
+                                                        </div>
+                                                    </div>
+                                                    
+                                                </div>
+                                                <div class="choice__box p-3 rounded-circle d-flex justify-content-center align-items-center">
+                                                    <p>OR</p>
+                                                </div>
+                                                <div class="clickDown">
+                                                    <div>
+                                                        <h4>@Umbraco.GetDictionaryValue("ClickToDownload")</h4>
+                                                    </div>
+                                                    <br>
+                                                    <div class="justify-content-around align-items-center">
+                                                        <div>
+                                                            <a href="https://apps.apple.com/us/app/akyasi/id1255497943" class="gtm-track-app-event" name="App Store" rel="noopener noreferrer" target="_blank">
+                                                                <img src="/assets/images/icon-appstore.png" alt="">
+                                                            </a>
+                                                        </div>
+                                                         <br>
+                                                        <div>
+                                                            <a href="https://play.google.com/store/apps/details?id=com.akyasi.user&amp;hl=en&amp;pli=1" class="gtm-track-app-event" name="Google Play" rel="noopener noreferrer" target="_blank">
+                                                                <img src="/assets/images/icon-googleplay.png" alt="">
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="clearfix videobox-holder d-none">
+                                        <div class="row videos-tab">
+                                            <div class="col-lg-4 col-md-6 order-md-12 tab-navigation">
+                                                <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                                                    <a class="nav-link active" id="video-tab-01" href="#video-01"
+                                                       role="tab" aria-controls="video-01" aria-selected="true">
+                                                        <figure class="tabvdo-img">
+                                                            @{
+                                                                var wsfyVideoFBImg1 = Model.Value<IPublishedContent>("wsfyVideo1FallbackImg");
+                                                                if (wsfyVideoFBImg1 != null)
+                                                                {
+                                                                    <img src="@wsfyVideoFBImg1.Url()" alt="@Model.Value("wsfyTitle")" class="img-fluid" />
+                                                                }
+                                                            }
+                                                        </figure>
+                                                        <div class="tabvdo-holder">
+                                                            <div class="tabvdo-content">
+                                                                @Html.Raw(Model.Value("wsfyVideo1Info"))
+                                                                <span class="tabvdo-play">
+                                                                    <i class="fas fa-play-circle"></i>
+                                                                    <strong>@(lang == "ar" ? "شاهدوا الآن!" : "Watch Now!")</strong>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </a>
+                                                    <a class="nav-link" id="video-tab-02" href="#video-02"
+                                                       role="tab" aria-controls="video-02" aria-selected="false">
+                                                        <figure class="tabvdo-img">
+                                                            @{
+                                                                var wsfyVideoFBImg2 = Model.Value<IPublishedContent>("wsfyVideo2FallbackImg");
+                                                                if (wsfyVideoFBImg2 != null)
+                                                                {
+                                                                    <img src="@wsfyVideoFBImg2.Url()" alt="@Model.Value("wsfyTitle")" class="img-fluid" />
+                                                                }
+                                                            }
+                                                        </figure>
+                                                        <div class="tabvdo-holder">
+                                                            <div class="tabvdo-content">
+                                                                @Html.Raw(Model.Value("wsfyVideo2Info"))
+                                                                <span class="tabvdo-play">
+                                                                    <i class="fas fa-play-circle"></i>
+                                                                    <strong>@(lang == "ar" ? "شاهدوا الآن!" : "Watch Now!")</strong>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-8 col-md-6  order-md-1 tab-player gtm-mainsec" data-section="weshopforyou-video">
+                                                <div class="tab-content" id="v-pills-tabContent">
+                                                    <div class="tab-pane fade show active" id="video-01" role="tabpanel" aria-labelledby="video-tab-01">
+                                                        @{
+                                                            var wsfyVideoPoster = Model.Value<IPublishedContent>("wsfyVideoPoster");
+                                                            var wsfyVideo1 = Model.Value<IPublishedContent>("wsfyVideo1");
+                                                            if (wsfyVideoPoster != null && wsfyVideo1 != null)
+                                                            {
+                                                                <video id="myvideo-1" class="video-js" name="@Model.Name-VideoPlay" controls preload="auto" width="890" height="500"
+                                                                       poster="@wsfyVideoPoster.Url()" data-setup="{}">
+                                                                    <source src="@wsfyVideo1.Url()" type="video/mp4" />
+                                                                    <p class="vjs-no-js">
+                                                                        To view this video please enable JavaScript, and consider upgrading to a web browser that
+                                                                        <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+                                                                    </p>
+                                                                </video>
+                                                            }
+                                                        }
+                                                    </div>
+                                                    <div class="tab-pane fade" id="video-02" role="tabpanel" aria-labelledby="video-tab-02">
+                                                        @{
+                                                            var wsfyVideo2 = Model.Value<IPublishedContent>("wsfyVideo2");
+                                                            if (wsfyVideoPoster != null && wsfyVideo2 != null)
+                                                            {
+                                                                <video id="myvideo-2" class="video-js" name="@Model.Name-VideoPlay" controls preload="auto" width="890" height="500"
+                                                                       poster="@wsfyVideo2.Url()" data-setup="{}">
+                                                                    <source src="@wsfyVideo2.Url()" type="video/mp4" />
+                                                                    <p class="vjs-no-js">
+                                                                        To view this video please enable JavaScript, and consider upgrading to a web browser that
+                                                                        <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+                                                                    </p>
+                                                                </video>
+                                                            }
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+
+
+
+                                
+                                
+                                
+                                
+                               </div>
+                                </div>
+                                     <div class="col-12 col-lg-4">
+                                      <div class="card video__card w-50 m-auto mt-5">
+                                           <video width="" height="700" controls="" autoplay="" loop="">
+                                            <source src="/media/ck3evfjb/aldar-yas-mall-akyasi-idea-1-v08_1.mp4" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                            </video>
+
+                            
+                            
+                            
+                            
+                            <!--Start Terms And Conditons-->
+                            <div class="tab-pane fade d-none" id="div-three" role="tabpanel" aria-labelledby="tab-three">
+                                @if (lang == "ar")
+                                {
+                                    <ol class="ordered-list">
+                                        <li>
+                                            سيتم ضم المتاجر التي تبيع العناصر أدناه في خدمة "التسوق من أجلك"
+                                            <ul class="seprator-list">
+                                                <li>الصيدليات</li>
+                                                <li>منتجات كارفور الغير الغذائية </li>
+                                                <li>جميع المحلات في ياس مول باستثناء المطاعم</li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            المحتويات الغير مشمولة بخدمة "التسوق من أجلك" هي:
+                                            <ul class="seprator-list">
+                                                <li>أثاث المنزل</li>
+                                                <li>المجوهرات</li>
+                                                <li>الطعام والمطاعم</li>
+                                                <li>المحتويات الكبيرة القابلة للكسر</li>
+                                                <li>المحتويات التي لا تتسع داخل كيس أكياسي 22 × 31 سم</li>
+                                                <li>لا يضمن المنتجات الصيدلانية أو أي منتج يجب الاحتفاظ به مبردًا تحت درجات حرارة معينة</li>
+                                                <li>لا يضمن المنتجات الصيدلانية التي تحتاج إلى وصفات طبية</li>
+                                            </ul>
+                                        </li>
+                                        <li>هذه الخدمة متاحة فقط للمقيمين في أبو ظبي ويتم توصيل المشتريات فقط داخل مدينة أبوظبي</li>
+                                        <li>الحد الأدنى للشراء 30 درهم</li>
+                                        <li>يجب دفع المال قبل الشراء الفعلي من قبل أكياسي و ياس مول</li>
+                                        <li>يمكن إجراء عملية الدفع على الرابط الذي نرسله بمجرد اكتمال قائمة التسوق والموافقة على المشتريات</li>
+                                        <li>التواصل عبر منصة WhatsApp فقط لضمان الأمن وتجنب أي أخطاء ومع فريق اكياسي فقط. لا يسمح بإجراء مكالمات هاتفية</li>
+                                        <li>يتحمل العملاء المسؤولية الكاملة عن سلعهم، ولن تتحمل أكياسي أي مسؤولية عن أي أضرار للعناصر بعد تسليمها</li>
+                                        <li>يجب على العملاء التحقق من سلعهم من خلال صورة واضحة وصحيحة</li>
+                                        <li>سيكون التسليم خلال 48 ساعة كحد أقصى من تأكيد الدفع</li>
+                                        <li>يرجى التأكد من استلام جميع العناصر عند وصول التسليم وإبلاغ مندوب التسليم في حالة وجود أي عناصر مفقودة.</li>
+                                        <li>الحد الأقصى لعدد المشتريات التي سيتم شراؤها في وقت واحد هو 10 </li>
+                                        <li>
+                                            سياسة الاسترداد والتبديل. بناءا على قرارات دائرة التنمية الاقتصلدية في ابو ظبي, لا يسمح باستبدال او استرداد الاغراض خلال هذه الفترة حتى اشعار آخر.
+                                            <ol class="subordered-list">
+                                                <li>لا يمكن إرجاع المنتجات.</li>
+                                                <li> لا يمكن إرجاع أو استبدال المنتجات الصيدلانية</li>
+                                            </ol>
+                                        </li>
+                                    </ol>
+                                }
+                                @if (lang == "en")
+                                {
+                                    <ol class="ordered-list">
+                                        <li>
+                                            Shops that sell the items below will be included in WE SHOP FOR YOU service.
+                                            <ul class="seprator-list">
+                                                <li>Pharmacies</li>
+                                                <li>Carrefour non-food products</li>
+                                                <li>If an item is available online in a Carrefour it doesn’t mean that it is available in Carrefour Yas Mall</li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            Items & shops that are not included in We Shop For You are:
+                                            <ul class="seprator-list">
+                                                <li>Furniture</li>
+                                                <li>Jewelry</li>
+                                                <li>Food and Restaurants</li>
+                                                <li>Breakable-big items</li>
+                                                <li>Items that do not fit into AKYASI bag 22x31 cm</li>
+                                                <li>Pharmaceutical products or any product that needs to be kept refrigerated under certain temperatures are not included</li>
+                                                <li>Pharmaceutical products that needs prescriptions are not included</li>
+                                            </ul>
+                                        </li>
+                                        <li>This Service is only available for Abu Dhabi residence and only to be delivered within Abu Dhabi city.</li>
+                                        <li>A minimum purchase amount should be 30 AED.</li>
+                                        <li>Money must be paid before the actual purchase.</li>
+                                        <li>Payments can be made on a link sent by us once the shopping list is complete and items approved.</li>
+                                        <li>Communication is Via WhatsApp platform only to ensure security and avoid any mistakes and with AKYASI team only. No phone calls allowed.</li>
+                                        <li>Customers are totally responsible of their items, AKYASI will hold no responsibilities over any damages of the items once it’s been delivered</li>
+                                        <li>Customers must verify their items through a clear and proper picture</li>
+                                        <li>Delivery will be maximum within 48 hours from confirming the payment</li>
+                                        <li>Please ensure all items are received upon arrival of the delivery and inform the delivery in case of any missing items</li>
+                                        <li>Maximum number of items to be purchased at one time is 10 items</li>
+                                        <li>
+                                            Return & Exchange policy; The return and exchange policy of the shop applies
+                                            <ol class="subordered-list">
+                                                <li>No refund can be issued.</li>
+                                                <li>Pharmaceutical products cannot be returned or exchanged.</li>
+                                            </ol>
+                                        </li>
+                                    </ol>
+                                }
+                            </div>
+                            <!--End Terms And Conditons-->
+                            
+                            
+                            
+                            
+                            
+                        </div>
+                    </div>
+                    <!--End Tabs Holder-->
+                </section>
+                <!--End Akyasi Tabs-->
+            </div>
+        </div>
+    </div>
+</div>
+<!--End Inner Page Wrapper-->
+<script type="text/javascript" src="~/scripts/video.js"></script>
+<script type="text/javascript" src="~/scripts/akyasi.js"></script>

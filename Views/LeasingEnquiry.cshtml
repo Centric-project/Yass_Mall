@@ -1,0 +1,319 @@
+﻿@inherits UmbracoViewPage<LeasingEnquiryDocType>
+@using ContentModels = Umbraco.Web.PublishedModels;
+@{
+    Layout = "master.cshtml";
+
+    // set page title segment
+    ViewBag.PageTitle = Model.LeMainTitle;
+}
+<style type="text/css">
+    div.inner-section {
+        padding-bottom: 0px
+    }
+
+    div.leasing-form .btn-black {
+        padding: 17px 40px !important;
+        background-color: #000 !important;
+    }
+
+    div.leasing-form .form-group label {
+        color: #45454a !important;
+    }
+    div.inner-section{
+        padding-bottom: 0px
+    }
+    .page-content .leasing-form .form .form-group div.radio {
+        height: auto !important;
+        width: auto !important;
+    }
+    div.perplexfileupload > label, div.perpleximageupload > label {
+        display: block !important;
+    }
+</style>
+<!--Start Main Banner-->
+@{
+    var leasingBannerImg = Model.LeMainBanner;
+    if (leasingBannerImg != null)
+    {
+        <section class="main-banner">
+            <div class="container-fluid custom-container-fluid">
+                <div class="main-slide">
+                    <div class="slide">
+                        <img src="@leasingBannerImg.Url" alt="@Model.LeMainBanner" class="img-fluid" />
+                    </div>
+                </div>
+            </div>
+        </section>
+    }
+}
+<!--End Main Banner-->
+<!--Start Inner Page Wrapper-->
+<div class="inner-section">
+    <div class="container-fluid custom-container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <!--Start Breadcrumbs-->
+                <nav aria-label="breadcrumb" class="breadcrumb-holder">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="@Umbraco.GetDictionaryValue("HomeHref")">@Umbraco.GetDictionaryValue("Home")</a></li>
+                        <li class="breadcrumb-seprator"><i class="fas fa-angle-right"></i></li>
+                        <li class="breadcrumb-item active" aria-current="page">@Model.LeMainTitle</li>
+                    </ol>
+                </nav>
+                <!--End Breadcrumbs-->
+                <!--Start Main Title-->
+                @Html.Raw(Model.LeMainDescription)
+                <!--End Main Title-->
+            </div>
+        </div>
+    </div>
+</div>
+<!--End Inner Page Wrapper-->
+<!-- Form Start -->
+<div class="page-content">
+    <div class="leasing-form">
+        <div class="form-background">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-10 col-md-offset-1">
+                        <div class="background-layer"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form">
+                        @Umbraco.RenderMacro("renderUmbracoForm", new { FormGuid = "f5d8b788-6a90-4002-a3a0-886c84ea5a37", FormTheme = "leasingenquiry-formtheme", ExcludeScripts = "1" })
+                        <div class="field-validation-error" id="divErrorXSS" style="display: none;color:red;">Please a provide valid value</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Form End -->
+<script type="text/javascript">
+    //Validation for input fields
+    $('#btnSubmit').click(function () {
+        var brandName = $('#b662b063-4df3-4327-bb0b-83ee2659d9ba').val();
+        var companyName = $('#e9f85005-8f85-4897-b441-82f27835a8c0').val();
+        var countryOrigin = $('#9e2edf5a-af0d-4d73-f966-69bebc415127').val();
+        var estimateAmount = $('#282401d5-8dcf-441b-9960-ab5fffd61361').val();
+        var minSpace = $('#3a1d9334-7b0f-4406-a0f2-bfe36534df2b').val();
+        var maxSpace = $('#d0cddc9f-2cbc-4e09-9164-5d3b1bec8469').val();
+        var prefSpace = $('#b59bd3bf-7b9c-418c-90ca-910a08e7dc53').val();
+        var prefSpace = $('#b59bd3bf-7b9c-418c-90ca-910a08e7dc53').val();
+        var contactPerson = $('#af5ef829-27fd-4ec7-8ea1-cc272c430962').val();
+        var companyNamePerson = $('#9cbc8e81-537d-4170-ff6d-795e31c0ea1c').val();
+        var designation = $('#48640903-fd25-4295-c82c-c7c2193cf4ab').val();
+        var address = $('#d0d3d287-d413-4e43-82f7-d114e9825f26').val();
+        var phone = $('#1d730fee-0dbf-4229-a6e1-b98853d50da4').val();
+        var mobile = $('#0acb1ce0-61eb-45e2-eaa6-c25f95447723').val();
+        //var emailAddress = $('#544f2876-df9a-4d9d-e785-d3f93c8002fd').val();
+        var proposedStore = $('#33633e14-1de5-453f-91e7-5a032c89779d').val();
+        var authorizedSignatory = $('#5be8663a-95fa-4a35-fe98-32cce657a125').val();
+        var storeLocation = $('#302dbb88-e89b-4c57-95b9-e5d42e2d4dd8').val();
+        var comments = $('#ed92121f-9f7f-4d06-ba57-68c74e7a533f').val();
+        var chkNumb = /^((\+[1-9]{1,4}[ \-]*)|(\([0-9]{2,3}\)[ \-]*)|([0-9]{2,4})[ \-]*)*?[0-9]{3,4}?[ \-]*[0-9]{3,4}?$/;
+        var letters = /^[A-Za-z ]+$/;
+        var numbers = /^[0-9]+$/;
+        var commentsExp = /^[a-z0-9 ]+$/i;
+        //var chkEmail = /^([\w-\.]+)@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+        if (brandName) {
+            if (brandName.match(letters)) {
+                $('#b662b063-4df3-4327-bb0b-83ee2659d9ba').css('border-color', '');
+                $('#divErrorXSS').hide();
+            }
+            else {
+                $('#b662b063-4df3-4327-bb0b-83ee2659d9ba').css('border-color', '#45454a');
+                $('#b662b063-4df3-4327-bb0b-83ee2659d9ba').focus();
+                $('#divErrorXSS').show();
+                return false;
+            }
+        }
+        if (companyName) {
+            if (companyName.match(letters)) {
+                $('#e9f85005-8f85-4897-b441-82f27835a8c0').css('border-color', '');
+                $('#divErrorXSS').hide();
+            }
+            else {
+                $('#e9f85005-8f85-4897-b441-82f27835a8c0').css('border-color', '#45454a');
+                $('#e9f85005-8f85-4897-b441-82f27835a8c0').focus();
+                $('#divErrorXSS').show();
+                return false;
+            }
+        }
+        if (countryOrigin) {
+            if (countryOrigin.match(letters)) {
+                $('#9e2edf5a-af0d-4d73-f966-69bebc415127').css('border-color', '');
+                $('#divErrorXSS').hide();
+            }
+            else {
+                $('#9e2edf5a-af0d-4d73-f966-69bebc415127').css('border-color', '#45454a');
+                $('#9e2edf5a-af0d-4d73-f966-69bebc415127').focus();
+                $('#divErrorXSS').show();
+                return false;
+            }
+        }
+        if (estimateAmount) {
+            if (estimateAmount.match(numbers)) {
+                $('#282401d5-8dcf-441b-9960-ab5fffd61361').css('border-color', '');
+            }
+            else {
+                $('#282401d5-8dcf-441b-9960-ab5fffd61361').css('border-color', '#45454a');
+                $('#282401d5-8dcf-441b-9960-ab5fffd61361').focus();
+                return false;
+            }
+        }
+        if (minSpace) {
+            if (minSpace.match(numbers)) {
+                $('#3a1d9334-7b0f-4406-a0f2-bfe36534df2b').css('border-color', '');
+            }
+            else {
+                $('#3a1d9334-7b0f-4406-a0f2-bfe36534df2b').css('border-color', '#45454a');
+                $('#3a1d9334-7b0f-4406-a0f2-bfe36534df2b').focus();
+                return false;
+            }
+        }
+        if (maxSpace) {
+            if (maxSpace.match(numbers)) {
+                $('#d0cddc9f-2cbc-4e09-9164-5d3b1bec8469').css('border-color', '');
+            }
+            else {
+                $('#d0cddc9f-2cbc-4e09-9164-5d3b1bec8469').css('border-color', '#45454a');
+                $('#d0cddc9f-2cbc-4e09-9164-5d3b1bec8469').focus();
+                return false;
+            }
+        }
+        if (prefSpace) {
+            if (prefSpace.match(numbers)) {
+                $('#b59bd3bf-7b9c-418c-90ca-910a08e7dc53').css('border-color', '');
+            }
+            else {
+                $('#b59bd3bf-7b9c-418c-90ca-910a08e7dc53').css('border-color', '#45454a');
+                $('#b59bd3bf-7b9c-418c-90ca-910a08e7dc53').focus();
+                return false;
+            }
+        }
+        if (contactPerson) {
+            if (contactPerson.match(letters)) {
+                $('#af5ef829-27fd-4ec7-8ea1-cc272c430962').css('border-color', '');
+                $('#divErrorXSS').hide();
+            }
+            else {
+                $('#af5ef829-27fd-4ec7-8ea1-cc272c430962').css('border-color', '#45454a');
+                $('#af5ef829-27fd-4ec7-8ea1-cc272c430962').focus();
+                $('#divErrorXSS').show();
+                return false;
+            }
+        }
+        if (companyNamePerson) {
+            if (companyNamePerson.match(letters)) {
+                $('#9cbc8e81-537d-4170-ff6d-795e31c0ea1c').css('border-color', '');
+                $('#divErrorXSS').hide();
+            }
+            else {
+                $('#9cbc8e81-537d-4170-ff6d-795e31c0ea1c').css('border-color', '#45454a');
+                $('#9cbc8e81-537d-4170-ff6d-795e31c0ea1c').focus();
+                $('#divErrorXSS').show();
+                return false;
+            }
+        }
+        if (designation) {
+            if (designation.match(letters)) {
+                $('#48640903-fd25-4295-c82c-c7c2193cf4ab').css('border-color', '');
+                $('#divErrorXSS').hide();
+            }
+            else {
+                $('#48640903-fd25-4295-c82c-c7c2193cf4ab').css('border-color', '#45454a');
+                $('#48640903-fd25-4295-c82c-c7c2193cf4ab').focus();
+                $('#divErrorXSS').show();
+                return false;
+            }
+        }
+        if (address) {
+            if (address.match(commentsExp)) {
+                $('#d0d3d287-d413-4e43-82f7-d114e9825f26').css('border-color', '');
+                $('#divErrorXSS').hide();
+            }
+            else {
+                $('#d0d3d287-d413-4e43-82f7-d114e9825f26').css('border-color', '#45454a');
+                $('#d0d3d287-d413-4e43-82f7-d114e9825f26').focus();
+                $('#divErrorXSS').show();
+                return false;
+            }
+        }
+        if (phone) {
+            if (phone.match(chkNumb)) {
+                $('#1d730fee-0dbf-4229-a6e1-b98853d50da4').css('border-color', '');
+            }
+            else {
+                $('#1d730fee-0dbf-4229-a6e1-b98853d50da4').css('border-color', '#45454a');
+                $('#1d730fee-0dbf-4229-a6e1-b98853d50da4').focus();
+                return false;
+            }
+        }
+        if (mobile) {
+            if (mobile.match(chkNumb)) {
+                $('#0acb1ce0-61eb-45e2-eaa6-c25f95447723').css('border-color', '');
+            }
+            else {
+                $('#0acb1ce0-61eb-45e2-eaa6-c25f95447723').css('border-color', '#45454a');
+                $('#0acb1ce0-61eb-45e2-eaa6-c25f95447723').focus();
+                return false;
+            }
+        }
+        //if (emailAddress.match(chkEmail)) {
+        //    $('#544f2876-df9a-4d9d-e785-d3f93c8002fd').css('border-color', '');
+        //}
+        //else {
+        //    $('#544f2876-df9a-4d9d-e785-d3f93c8002fd').css('border-color', '#45454a');
+        //    $('#544f2876-df9a-4d9d-e785-d3f93c8002fd').focus();
+        //    return false;
+        //}
+        if (proposedStore) {
+            if (proposedStore.match(letters)) {
+                $('#33633e14-1de5-453f-91e7-5a032c89779d').css('border-color', '');
+            }
+            else {
+                $('#33633e14-1de5-453f-91e7-5a032c89779d').css('border-color', '#45454a');
+                $('#33633e14-1de5-453f-91e7-5a032c89779d').focus();
+                return false;
+            }
+        }
+        if (authorizedSignatory) {
+            if (authorizedSignatory.match(letters)) {
+                $('#5be8663a-95fa-4a35-fe98-32cce657a125').css('border-color', '');
+            }
+            else {
+                $('#5be8663a-95fa-4a35-fe98-32cce657a125').css('border-color', '#45454a');
+                $('#5be8663a-95fa-4a35-fe98-32cce657a125').focus();
+                return false;
+            }
+        }
+        if (storeLocation) {
+            if (storeLocation.match(commentsExp)) {
+                $('#302dbb88-e89b-4c57-95b9-e5d42e2d4dd8').css('border-color', '');
+            }
+            else {
+                $('#302dbb88-e89b-4c57-95b9-e5d42e2d4dd8').css('border-color', '#45454a');
+                $('#302dbb88-e89b-4c57-95b9-e5d42e2d4dd8').focus();
+                return false;
+            }
+
+        }
+        if (comments) {
+            if (comments.match(commentsExp)) {
+                $('#ed92121f-9f7f-4d06-ba57-68c74e7a533f').css('border-color', '');
+            }
+            else {
+                $('#ed92121f-9f7f-4d06-ba57-68c74e7a533f').css('border-color', '#45454a');
+                $('#ed92121f-9f7f-4d06-ba57-68c74e7a533f').focus();
+                return false;
+            }
+        }
+    });
+
+</script>

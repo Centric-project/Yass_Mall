@@ -1,0 +1,141 @@
+﻿@using ContentModels = Umbraco.Web.PublishedModels;
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.DarnaRewardsDocType>
+@using Umbraco.Web.Mvc;
+@{
+    Layout = "master.cshtml";
+    var lang = System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+
+    ViewBag.MetaTitle = Model.DarnaMainTitle;
+    ViewBag.MetaDescription = Model.DarnaDescription;
+    ViewBag.MetaKeyword = Model.Keywords;
+
+    // set page title segment
+    ViewBag.PageTitle = Model.DarnaMainTitle;
+}
+<!--Start Main Banner-->
+@{
+    var mrBannerImg = Model.Value<IPublishedContent>("darnaMainBanner");
+    if (mrBannerImg != null)
+    {
+        <section class="main-banner">
+            <div class="container-fluid custom-container-fluid">
+                <div class="main-slide">
+                    <div class="slide">
+                        <img src="@mrBannerImg.Url()" alt="@Model.Value("darnaMainTitle")" class="img-fluid" />
+                    </div>
+                </div>
+            </div>
+        </section>
+    }
+}
+<!--End Main Banner-->
+<!--Start Inner Page Wrapper-->
+<div class="inner-section darna-section">
+    <div class="container-fluid custom-container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <!--Start Breadcrumbs-->
+                <nav aria-label="breadcrumb" class="breadcrumb-holder">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="@Umbraco.GetDictionaryValue("LogoHref")">@Umbraco.GetDictionaryValue("Home")</a></li>
+                        <li class="breadcrumb-seprator"><i class="fas fa-angle-right"></i></li>
+                        <li class="breadcrumb-item active" aria-current="page">@Model.Value("darnaMainTitle")</li>
+                    </ol>
+                </nav>
+                <!--End Breadcrumbs-->
+                <div class="filter-box page-content rd-smInfo">
+                    <div class="row">
+                        @Html.Raw(Model.Value("darnaDescription"))
+                    </div>
+                </div>
+                <!--Start Content wrap-->
+                <section class="content-wrap">
+                    <div class="container">
+                        <div class="row">
+                            <!--Start Section One-->
+                            <div class="col-md-6">
+                                <div class="row">
+                                    @{
+                                        var mrSecOneVideoImg = Model.Value<IPublishedContent>("darnaSecOneVideoImg");
+                                        if (mrSecOneVideoImg != null)
+                                        {
+                                            string obExt = mrSecOneVideoImg.Value("umbracoExtension").ToString();
+                                            if (obExt.Trim() == "mp4")
+                                            {
+                                                var mrVideoPoster = Model.Value<IPublishedContent>("darnaVideoPoster");
+                                                <video id="ban_video" class="tv_video hide-for-small-only" controls="controls"
+                                                       poster="@mrVideoPoster.Url()">
+                                                    <source src="@mrSecOneVideoImg.Url()" type="video/mp4" />
+                                                    Your browser does not support the video tag.
+                                                </video>
+                                            }
+                                            else
+                                            {
+                                                <img src="@mrSecOneVideoImg.Url()" alt="" />
+                                            }
+                                        }
+                                    }
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="cont-wrap">
+                                    <div class="content-box">
+                                        @Html.Raw(Model.Value("darnaSecOneDescription"))
+                                        <a class="btn btn-primary gtm-track-more-outbound-event" href="http://www.darnarewards.com/" name="Darna Rewards-Know More">@Umbraco.GetDictionaryValue("knowMore")</a>
+                                        <ul class="list-unstyled darna-share">
+                                            <li>
+                                                <a href="https://www.facebook.com/darnarewards/" class="gtm-track-header-social-icons" target="_blank" title="Facebook" name="Darna Rewards-Facebook">
+                                                    <i class="fab fa-facebook-f" aria-hidden="true"></i>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="https://twitter.com/darnarewards/" class="gtm-track-header-social-icons" target="_blank" title="Twitter" name="Darna Rewards-Twitter">
+                                                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="https://www.instagram.com/darnarewards/" class="gtm-track-header-social-icons" target="_blank" title="Instagram" name="Darna Rewards-Instagram">
+                                                    <i class="fab fa-instagram" aria-hidden="true"></i>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!--Journey Steps-->
+                <section class="journey-box">
+                    <div class="container">
+                        <div class="row">
+                            @Html.Raw(Model.Value("darnaStepsHTML"))
+                        </div>
+                    </div>
+                </section>
+                <!--Journey Steps-->
+            </div>
+        </div>
+    </div>
+    <!--Start App Box-->
+    <section class="app-box" style="padding: 60px 0;">
+        <div class="container darna-app-box">
+            <div class="row">
+                <div class="col-md-7">
+                    <h2>@Model.Value("darnaAppStore")</h2>
+                </div>
+                <div class="col-md-5 app-store">
+                    <a href="https://apps.apple.com/us/app/id1526935352" class="gtm-track-app-event" name="App Store">
+                        <img src="/assets/images/icon-appstore.png" style="margin-right: 10px" alt="" />
+                    </a>
+                    <a href="https://play.google.com/store/apps/details?id=com.aldar.darna" class="gtm-track-app-event" name="Google Play">
+                        <img src="/assets/images/icon-googleplay.png" alt="" />
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--End App Box-->
+</div>
+@* the fun starts here *@
+

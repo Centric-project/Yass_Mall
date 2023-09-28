@@ -1,0 +1,99 @@
+﻿@using ContentModels = Umbraco.Web.PublishedModels;
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.MediaCenter>
+@using Umbraco.Web.Mvc;
+@{
+    Layout = "master.cshtml";
+    var lang = System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+
+    var selection = Model.Root().Children().Where(x => x.IsVisible())
+        .Where(x => x.IsDocumentType("newsLandingDocType") || x.IsDocumentType("blogLandingDocType"));
+
+    // set page title segment
+    ViewBag.PageTitle = Model.MediaMainTitle;
+}
+
+<!--Start Main Banner-->
+@{
+    var mediaBannerImg = Model.Value<IPublishedContent>("medaiMainBanner");
+    if (mediaBannerImg != null)
+    {
+        <section class="main-banner">
+            <div class="container-fluid custom-container-fluid">
+                <div class="main-slide">
+                    <div class="slide">
+                        <img src="@mediaBannerImg.Url()" alt="@Model.MediaMainTitle" class="img-fluid" />
+                    </div>
+                </div>
+            </div>
+        </section>
+    }
+}
+<!--End Main Banner-->
+<!--Start Inner Page Wrapper-->
+<div class="inner-section">
+    <div class="container-fluid custom-container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <!--Start Breadcrumbs-->
+                <nav aria-label="breadcrumb" class="breadcrumb-holder">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="@Umbraco.GetDictionaryValue("LogoHref")">@Umbraco.GetDictionaryValue("Home")</a></li>
+                        <li class="breadcrumb-seprator"><i class="fas fa-angle-right"></i></li>
+                        <li class="breadcrumb-item active" aria-current="page">@Model.MediaMainTitle</li>
+                    </ol>
+                </nav>
+                <!--End Breadcrumbs-->
+                <!--Start Main Title-->
+                <div class="clearfix title-holder">
+                    <h1 class="title">@Model.MediaMainTitle</h1>
+                </div>
+                <!--End Main Title-->
+                <div class="content">
+                    <div class="row">
+                        @foreach (var item in selection)
+                        {
+                            if (item.Name == "News" || item.Name == "Blogs")
+                            {
+                                var itemHomeBoxImg = item.Value<IPublishedContent>("homePageBoxImage");
+                                if (itemHomeBoxImg != null)
+                                {
+                                    <div class="col-md-6">
+                                        <div class="thumbnail-simple">
+                                            <a href="@item.Url()" class="gtm-track-tile-event" name="@item.Name-tile"></a>
+                                            <div class="ti-image" style="background-image:url(@itemHomeBoxImg.Url())"></div>
+                                            <h2 style="text-align: center;">
+                                                @item.Name
+                                                @if (lang == "ar")
+                                                {
+                                                    <i class="far fa-angle-left"></i>
+                                                }
+                                                else
+                                                {
+                                                    <i class="far fa-angle-right"></i>
+                                                }
+                                            </h2>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        }
+                        @*<div class="col-md-6">
+            foreach (var item in selection)
+            {
+                if (@item.Name == "Blogs")
+                {
+                    <div class="thumbnail-simple">
+                        <a href="@item.Url" class="gtm-track-tile-event" name="@item.GetVortoValue("title")-tile"></a>
+                        <div class="ti-image" style="background-image:url(@item.GetPropertyValue("homePageBoxImage"))"></div>
+                        <h2 style="text-align: center;">@item.GetVortoValue("title") <i class="far fa-angle-right"></i></h2>
+                    </div>
+                }
+            }
+        </div>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--End Inner Page Wrapper-->

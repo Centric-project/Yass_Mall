@@ -1,0 +1,67 @@
+html {
+  font-size: 100%;
+}
+
+body {
+  font-size: 16px;
+  font-family: $fontRegular;
+  -webkit-overflow-scrolling: touch;
+  overflow-x: hidden;
+  border: none;
+
+  @include direction('ar') {
+    direction: rtl;
+    text-align: right;
+  }
+
+}
+
+.wrapper {
+  overflow: hidden;
+  font-size:14px;
+
+  @media screen and (max-width: 1300px) {
+    font-size: 0.75rem;
+  }
+
+  .custom-container-fluid {
+    max-width: 1349px;
+  }
+  .header{
+    .custom-container-fluid {
+      position: relative;
+    }
+  }
+}
+
+ul {
+  padding: 0;
+  margin: 0;
+}
+
+:focus {
+  outline: 0;
+  text-decoration: none;
+}
+
+a:hover,
+a:focus {
+  text-decoration: none;
+}
+
+a,
+button {
+  @include transition (all 0.2s ease-in 0s);
+}
+
+.align-center {
+  @include align-self(center);
+}
+@media (min-width: 1400px){
+  .container{
+    max-width:1366px;
+  }
+  .wrapper{
+    font-size:16px;
+  }
+}

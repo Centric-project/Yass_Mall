@@ -1,0 +1,259 @@
+﻿@using ContentModels = Umbraco.Web.PublishedModels;
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.OfferLandingDocType>
+@using ClientDependency.Core.Mvc;
+@using Umbraco.Web.Mvc;
+@using System.Text;
+@{
+    var lang = System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+    Layout = "master.cshtml";
+    ViewBag.MetaTitle = Model.OfferMainTitle;
+    ViewBag.MetaDescription = Model.SeoMetaDescription;
+    ViewBag.MetaKeyword = Model.Keywords;
+
+    // set page title segment
+    ViewBag.PageTitle = @Umbraco.GetDictionaryValue("Offers");
+
+    // get items
+    var offerItems = GetOffers();
+}
+<style type="text/css">
+    .mainoff-holder a.main-link {
+        display: block;
+        width: 100%;
+        height: 100%;
+    }
+</style>
+<!--Start Main Banner-->
+@{
+    var OfferBanner = Model.Value<IPublishedContent>("offerMainBannerImg");
+    if (OfferBanner != null)
+    {
+        <section class="main-banner">
+            <div class="container-fluid custom-container-fluid">
+                <div class="main-slide">
+                    @{
+                        var obVideo = Model.Value<IPublishedContent>("offerMainBannerVideo");
+                        if (obVideo != null)
+                        {
+                            @*var obExt = OfferBanner.GetProperty("umbracoExtension").Value;
+                                if (obExt == "mp4")*@
+                            <div class="slide video-slide">
+                                <div class="clearfix sliderVideo-holder">
+                                    <video id="slider_video" class="tv_video hide-for-small-only"
+                                           poster="@OfferBanner.Url()" controls="controls" autoplay muted>
+                                        <source src="@obVideo.Url()" type="video/mp4" />
+                                        Your browser does not support the video tag.
+                                    </video>
+                                    @*<div class="play-bt"></div>
+                                        <div class="pause-bt" style="display:none;"></div>*@
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="slide">
+                                <img src="@OfferBanner.Url()" alt="@Model.Value("offerMainTitle")" class="img-fluid" />
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </section>
+    }
+}
+<!--End Main Banner-->
+<!--Start Inner Page Wrapper-->
+<div class="inner-section">
+    <div class="container-fluid custom-container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <!--Start Breadcrumbs-->
+                <nav aria-label="breadcrumb" class="breadcrumb-holder">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a class="gtm-track-button-event" name="btnBreadCrumbsHome" href="@Umbraco.GetDictionaryValue("LogoHref")">@Umbraco.GetDictionaryValue("Home")</a></li>
+                        <li class="breadcrumb-seprator"><i class="fas fa-angle-right"></i></li>
+                        <li class="breadcrumb-item active" aria-current="page">@Umbraco.GetDictionaryValue("Offers")</li>
+                    </ol>
+                </nav>
+                <!--End Breadcrumbs-->
+                <!--Start Main Title-->
+                <div class="clearfix title-holder">
+                    <h1 class="title">@Model.Value("offerMainTitle")</h1>
+                </div>
+                <!--End Main Title-->
+                @Html.Raw(Model.Value("offerMainDescription"))
+                @if (offerItems.Count == 0)
+                {
+                    <div class="filter-box page-content">
+                        <div class="row">
+                            <p class="empty-message">
+                                <b>@Html.Raw(Model.Value("noOfferMessage"))</b>
+                            </p>
+                        </div>
+                    </div>
+                }
+                <!--Start Offers Listing-->
+                @if (offerItems.Count > 0)
+                {
+                    <section class="offers-box">
+                        @{
+                            StringBuilder strDiv = new StringBuilder();
+                            int maxLoop = Convert.ToInt32(Math.Ceiling((double)offerItems.Count / 7)); //Because we need to repeat the design after every 7 records
+                            for (int i = 0; i < maxLoop; i++)
+                            {
+                                int offerInSecCnt = offerItems.Count - (7 * i);
+                                offerInSecCnt = offerInSecCnt > 7 ? 7 : offerInSecCnt; //To Check the Offers in Every Section of 7
+
+                                strDiv.Append(RenderOffersDiv(offerItems, (i * 7), offerInSecCnt));
+                            }
+                            @:@Html.Raw(strDiv.ToString())
+                        }
+                    </section>
+                }
+                <!--End Offers Listing-->
+            </div>
+        </div>
+    </div>
+</div>
+<!--End Inner Page Wrapper-->
+@functions {
+    private List<IPublishedContent> GetOffers()
+    {
+        List<IPublishedContent> offerItems = Model.Children()/*.AncestorOrSelf(1).DescendantsOfType("offer")*/
+            .Where(x => x.IsVisible()).ToList();
+        return offerItems;
+    }
+    private string RenderOffersDiv(List<IPublishedContent> offerItems, int secIndex, int offerInSecCnt)
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.Append("<div class='row'>"); // First Row Open
+        if (offerInSecCnt >= 1) //Render 1st Div
+        {
+            IPublishedContent offerItem = offerItems[secIndex];
+            var prefix = offerItem.ContentType.Alias == "offerDetails" ? "offer" : "catalogue";
+            var offerThumbImage = offerItem.Value<IPublishedContent>(prefix + "ThumbImage");
+            sb.Append("<div class='col-lg-6 col-md-12 pr-none main-offer'><div class='clearfix mainoff-holder'>");
+
+            if (offerThumbImage != null)
+            {
+                sb.Append("<figure><a class='main-link gtm-track-tile-event' href='" + offerItem.Url() + "' name='" + offerItem.Value(prefix + "Title", "en-US") + "-tile'><img src='" + offerThumbImage.Url() + "' alt='"
+                    + offerItem.Value(prefix + "Title") + "' class='img-fluid' /></a></figure>");
+            }
+
+            sb.Append("<div class='offer-box'><h5 class='off-title'>" + offerItem.Value(prefix + "Title") + "</h5>"
+                + offerItem.Value(prefix + "SmallDetails"));
+
+            var offerDate = String.Format("{0:dd MMM}", offerItem.Value(prefix + "StartDate")) + " - "
+                + String.Format("{0:dd MMM}", offerItem.Value(prefix + "EndDate"));
+
+            sb.Append("<div class='clearfix offer-datebox'><span class='offer-date'>" +
+                "<i><img src='/assets/images/icon-timecalendar.svg' alt='" + offerDate + "' class='img-fluid' /></i>" +
+                "<strong>" + offerDate + "</strong></span><a class='offReadMore gtm-track-more-event' href='" + offerItem.Url() + "' name='" + offerItem.Value(prefix + "Title", "en-US") + "-tile'>" + Umbraco.GetDictionaryValue("ReadMore") + "</a></div>");
+            sb.Append("</div></div></div>");
+        }
+        if (offerInSecCnt >= 2) //Render 2nd Div
+        {
+            sb.Append("<div class='col-lg-6 col-md-12 pl-none small-offers'>");
+            sb.Append(Render2ndsDivTemplate(offerItems[secIndex + 1]));
+
+            if (offerInSecCnt >= 3) //Render 3rd Div
+            {
+                sb.Append(Render3rdsDivTemplate(offerItems[secIndex + 2]));
+            }
+
+            sb.Append("</div>");
+        }
+        sb.Append("</div>"); // First Row Close
+
+        if (offerInSecCnt >= 4) //Render 4th Div
+        {
+            sb.Append("<div class='row'>"); // Second Row Open
+
+            sb.Append("<div class='col-lg-6 col-md-12 pr-none small-offers'>"
+                + Render2ndsDivTemplate(offerItems[secIndex + 3]) + "</div>");
+
+            if (offerInSecCnt >= 5) //Render 5th Div
+            {
+                sb.Append("<div class='col-lg-6 col-md-12 pl-none small-offers'>"
+                    + Render2ndsDivTemplate(offerItems[secIndex + 4]) + "</div>");
+            }
+
+            sb.Append("</div>"); // Second Row Close
+        }
+
+        if (offerInSecCnt >= 6) //Render 6th Div
+        {
+            sb.Append("<div class='row'>"); // Third Row Open
+
+            sb.Append("<div class='col-lg-6 col-md-12 pr-none small-offers'>"
+                + Render3rdsDivTemplate(offerItems[secIndex + 5]) + "</div>");
+
+            if (offerInSecCnt >= 7) //Render 7th Div
+            {
+                sb.Append("<div class='col-lg-6 col-md-12 pl-none small-offers'>"
+                    + Render3rdsDivTemplate(offerItems[secIndex + 6]) + "</div>");
+            }
+
+            sb.Append("</div>"); // Third Row Close
+        }
+
+        return sb.ToString();
+    }
+
+    private string Render2ndsDivTemplate(IPublishedContent offerItem)
+    {
+        StringBuilder sb = new StringBuilder();
+        var prefix = offerItem.ContentType.Alias == "offerDetails" ? "offer" : "catalogue";
+        var offerThumbImage = offerItem.Value<IPublishedContent>(prefix + "ThumbImage");
+        sb.Append("<div class='clearfix smalloff-holder'><div class='row'><div class='col-md-6 pr-none'>");
+
+        if (offerThumbImage != null)
+        {
+            sb.Append("<figure><a class='main-link gtm-track-tile-event' href='" + offerItem.Url() + "' name='" + offerItem.Value(prefix + "Title", "en-US") + "-tile'><img src='" + offerThumbImage.Url() + "' alt='" +
+
+                offerItem.Value(prefix + "Title") + "' class='img-fluid' /></a></figure>");
+        }
+
+        sb.Append("</div><div class='col-md-6 pl-none'><div class='offer-box'><h5 class='off-title'>" + offerItem.Value(prefix + "Title") + "</h5>"
+            + offerItem.Value(prefix + "SmallDetails") +
+            "<a class='offReadMore gtm-track-more-event' href='" + offerItem.Url() + "' name='" + offerItem.Value(prefix + "Title", "en-US") + "-tile'>" + Umbraco.GetDictionaryValue("ReadMore") + "</a>");
+
+        var offerDate = String.Format("{0:dd MMM}", offerItem.Value(prefix + "StartDate")) + " - "
+            + String.Format("{0:dd MMM}", offerItem.Value(prefix + "EndDate"));
+
+        sb.Append("<div class='clearfix offer-datebox'><span class='offer-date'>" +
+            "<i><img src='/assets/images/icon-timecalendar.svg' alt='" + offerDate + "' class='img-fluid' /></i>" +
+            "<strong>" + offerDate + "</strong></span></div></div></div></div></div>");
+
+
+        return sb.ToString();
+    }
+    private string Render3rdsDivTemplate(IPublishedContent offerItem)
+    {
+        StringBuilder sb = new StringBuilder();
+        var prefix = offerItem.ContentType.Alias == "offerDetails" ? "offer" : "catalogue";
+        var offerThumbImage = offerItem.Value<IPublishedContent>(prefix + "ThumbImage");
+
+        sb.Append("<div class='clearfix smalloff-holder'><div class='row'><div class='col-md-6 pr-none'>" +
+            "<div class='offer-box'><h5 class='off-title'>" + offerItem.Value(prefix + "Title") + "</h5>"
+            + offerItem.Value(prefix + "SmallDetails") +
+            "<a class='offReadMore gtm-track-more-event' href='" + offerItem.Url() + "' name='" + offerItem.Value(prefix + "Title", "en-US") + "-tile''>" + @Umbraco.GetDictionaryValue("ReadMore") + "</a>");
+
+        var offerDate = String.Format("{0:dd MMM}", offerItem.Value(prefix + "StartDate")) + " - "
+            + String.Format("{0:dd MMM}", offerItem.Value(prefix + "EndDate"));
+
+        sb.Append("<div class='clearfix offer-datebox'><span class='offer-date'>" +
+            "<i><img src='/assets/images/icon-timecalendar.svg' alt='" + offerDate + "' class='img-fluid' /></i>" +
+            "<strong>" + offerDate + "</strong></span></div></div></div><div class='col-md-6 pl-none'>");
+
+        if (offerThumbImage != null)
+        {
+            sb.Append("<figure><a class='main-link gtm-track-tile-event' href='" + offerItem.Url() + "' name='" + offerItem.Value(prefix + "Title", "en-US") + "-tile''><img src='" + offerThumbImage.Url() + "' alt='"
+                + offerItem.Value(prefix + "Title") + "' class='img-fluid' /></a></figure>");
+        }
+        sb.Append("</div></div></div>");
+
+        return sb.ToString();
+    }
+
+}

@@ -1,0 +1,227 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage
+@using ContentModels = Umbraco.Web.PublishedModels;
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.YasIslandListChild>
+@using Umbraco.Web.Mvc;
+@using System.Text.RegularExpressions;
+@{
+    Layout = "master.cshtml";
+
+}
+
+<!--Start Main Banner-->
+@{
+    var YIslandChildBannerImg = Model.Value<IPublishedContent>("yIslandChildBanner");
+    if (YIslandChildBannerImg != null)
+    {
+        <section class="main-banner">
+            <div class="container-fluid custom-container-fluid">
+                <div class="main-slide">
+                    <div class="slide">
+                        <img src="@YIslandChildBannerImg.Url()" alt="@Model.YasIslandChildTitle" class="img-fluid" />
+                    </div>
+                </div>
+            </div>
+        </section>
+    }
+}
+<!--End Main Banner-->
+<!--Start Product Details-->
+<section class="product-details">
+    <div class="container-fluid custom-container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <!--Start Breadcrumbs-->
+                <nav aria-label="breadcrumb" class="breadcrumb-holder">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="@Umbraco.GetDictionaryValue("logoHref")">@Umbraco.GetDictionaryValue("home")</a></li>
+                        <li class="breadcrumb-seprator"><i class="fas fa-angle-right"></i></li>
+                        <li class="breadcrumb-item"><a href="@Umbraco.GetDictionaryValue("yasislandHref")">@Umbraco.GetDictionaryValue("yasisland")</a></li>
+                        <li class="breadcrumb-seprator"><i class="fas fa-angle-right"></i></li>
+                        <li class="breadcrumb-item"><a href="@Model.Parent.Url">@Model.Parent.Value("yIslandLstTitle")</a></li>
+                        <li class="breadcrumb-seprator"><i class="fas fa-angle-right"></i></li>
+                        <li class="breadcrumb-item active" aria-current="page">@Model.Value("yasIslandChildTitle")</li>
+                    </ol>
+                </nav>
+                <!--End Breadcrumbs-->
+                <div class="product-box">
+                    <div class="row">
+                        <div class="col-lg-3 col-md-4">
+                            <div class="brand-holder">
+                                @{
+                                    var YIslandChildLogo = Model.Value<IPublishedContent>("yIslandChildLogo");
+                                    if (YIslandChildLogo != null)
+                                    {
+                                        <img src="@YIslandChildLogo.Url()" alt="@Model.Value("yasIslandChildTitle")" />
+                                    }
+                                }
+                            </div>
+                            <div class="share-box">
+                                <ul>
+                                    <li>
+                                        <a href="javascript:void:(0);" data-text="@Model.Value("yasIslandChildTitle")" data-url="" data-type="facebook" name="@Model.Name-Facebook">
+                                            <img src="/assets/images/facebook.png" alt="Facebook" />
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void:(0);" data-text="@Model.Value("yasIslandChildTitle")" data-url="" data-type="twitter" name="@Model.Name-Twitter">
+                                            <img src="/assets/images/twitter.png" alt="Twitter" />
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-5">
+                            <div class="prod-details">
+                                <h2 class="prod-title">@Model.Value("yasIslandChildTitle")</h2>
+                                <p class="description">
+                                    @Html.Raw(Model.Value("yIslnadChildBigDetails"))
+                                </p>
+                                <p class="contact">
+                                    @*<h5>Phone Number:</h5><strong>02 6120870</strong>*@
+                                    @Html.Raw(Model.Value("yIslandChildContactUs"))
+                                </p>
+                                <p class="timing">
+                                    @*<h5>Timing:</h5>*@
+                                    @Html.Raw(Model.Value("yIslandChildOpeningTimes"))
+                                </p>
+                                <p class="Location:">
+                                    @{
+                                        string floorLoc = Model.Value<string>("yIslandChildFloorName");
+                                        if (!string.IsNullOrWhiteSpace(floorLoc))
+                                        {
+                                            <h5>@Umbraco.GetDictionaryValue("Location"):</h5>
+                                            @floorLoc;
+                                        }
+                                    }
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-lg-5 col-md-3">
+                            @if (Model.HasValue("yIslandChildLocationMap"))
+                            {
+                                <a class="map-img" data-toggle="modal" data-target="#zoomModal">
+                                    @{
+                                        var yIslandChildLocationMapImg = Model.Value<IPublishedContent>("yIslandChildLocationMap");
+                                        {
+                                            <img src="@yIslandChildLocationMapImg.Url()" alt="@(Model.Value("yasIslandChildTitle")) - Map" />
+                                        }
+                                    }
+                                </a>
+                                <!-- Modal -->
+                                <div class="modal fade" id="zoomModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                            <div class="modal-body">
+                                                @if (Model.HasValue("yIslandChildLocationMapBigImage"))
+                                                {
+                                                    var yIslandChildLocationMapBigImg = Model.Value<IPublishedContent>("yIslandChildLocationMapBigImage");
+                                                    {
+                                                        <img src="@yIslandChildLocationMapBigImg.Url()" alt="@(Model.Value("yasIslandChildTitle")) - Map" />
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    < img src = "@yIslandChildLocationMapImg.Url()" alt = "@(Model.Value("yasIslandChildTitle")) - Map" />
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <p>Location map is not available.</p>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--End Product Details-->
+
+<div class="page-content">
+    <div class="container">
+        <div class="content">
+            <!-- Movies Carousel -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="trailers">
+                        @{
+                            IPublishedContent currentNode = Umbraco.Content(Model.Id);
+                            var selection1 = Model.Children().Where(x => x.IsVisible());
+                        }
+                        @if (selection1.Any())
+                        {
+                            <div class="swiper-container">
+                                <div class="swiper-wrapper">
+
+                                    @foreach (var item in selection1)
+                                    {
+                                        if (Convert.ToDateTime(@item.Value("finishDate")) >= DateTime.Now.Date)
+                                        {
+                                            var i = 0;
+                                            if (@item.Name != "")
+                                            {
+                                                <div class="swiper-slide swiper-slide-active" style="width: 360px; margin-right: 30px;">
+                                                    <div class="trailer-thumbnail">
+                                                        <img src="@item.Value("image")">
+                                                        <div class="hover">
+                                                            <div class="text">
+                                                                <h2>@item.Value("title")</h2>
+                                                                <p>
+                                                                    <b>Release Date: </b>@(Model.Value<DateTime>("releaseDate").ToString("dd MM yyyy")) <br>
+                                                                    <b>Lanague: </b>@item.Value("language")
+                                                                </p>
+                                                                <a href="@item.Value("trailerLink")" target="_blank" class="btn btn-primary">
+                                                                    Watch Trailer
+                                                                    <span class="icon"></span>
+                                                                </a>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                i++;
+                                            }
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        }
+
+
+
+                        @foreach (var item in selection1)
+                        {
+                            if (Convert.ToDateTime(@item.Value("finishDate")) >= DateTime.Now.Date)
+                            {
+                                var i = 0;
+                                if (i > 3)
+                                {
+                                    <div class="swiper-button-next">
+                                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 477.175 477.175" style="enable-background:new 0 0 477.175 477.175;" xml:space="preserve">
+                                        <g><path d="M360.731,229.075l-225.1-225.1c-5.3-5.3-13.8-5.3-19.1,0s-5.3,13.8,0,19.1l215.5,215.5l-215.5,215.5   c-5.3,5.3-5.3,13.8,0,19.1c2.6,2.6,6.1,4,9.5,4c3.4,0,6.9-1.3,9.5-4l225.1-225.1C365.931,242.875,365.931,234.275,360.731,229.075z" /></g>
+                                </svg>
+                                    </div>
+                                    <div class="swiper-button-prev">
+                                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 477.175 477.175" style="enable-background:new 0 0 477.175 477.175;" xml:space="preserve">
+                                        <g><path d="M145.188,238.575l215.5-215.5c5.3-5.3,5.3-13.8,0-19.1s-13.8-5.3-19.1,0l-225.1,225.1c-5.3,5.3-5.3,13.8,0,19.1l225.1,225   c2.6,2.6,6.1,4,9.5,4s6.9-1.3,9.5-4c5.3-5.3,5.3-13.8,0-19.1L145.188,238.575z" /> </g>
+                                </svg>
+                                    </div>
+                                }
+                            }
+
+                        }
+                    </div>
+                    <!-- Movies Carousel -->
+                </div>
+            </div>
+        </div>
+        <!-- Content -->
+    </div> <!-- container -->
+</div> <!-- page-content -->

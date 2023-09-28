@@ -1,0 +1,232 @@
+﻿@using ContentModels = Umbraco.Web.PublishedModels;
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.EtihadGuestDocType>
+@using Umbraco.Web.Mvc;
+@{
+    Layout = "master.cshtml";
+    var lang = System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+
+    ViewBag.MetaTitle = Model.EtihadMainTitle;
+    ViewBag.MetaDescription = Model.SeoMetaDescription;
+    ViewBag.MetaKeyword = Model.Keywords;
+
+    // set page title segment
+    ViewBag.PageTitle = Model.EtihadMainTitle;
+}
+@*<style type="text/css">
+    div section.content-wrap {
+        padding: 40px 0;
+    }
+</style>*@
+<!--Start Main Banner-->
+<section class="main-banner">
+    <div class="container-fluid custom-container-fluid">
+        <div class="main-slide">
+            @{
+                var egBannerImg = Model.Value<IPublishedContent>(lang == "ar" ? "bannerImage" : "bannerImage");
+                if (egBannerImg != null)
+                {
+                    <div class="slide">
+                        <img src="@egBannerImg.Url()" alt="@Model.Value("etihadMainTitle")" class="img-fluid" />
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</section>
+<!--End Main Banner-->
+                <!--Start Breadcrumbs-->
+                <nav aria-label="breadcrumb" class="breadcrumb-holder">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="@Umbraco.GetDictionaryValue("LogoHref")">@Umbraco.GetDictionaryValue("Home")</a></li>
+                        <li class="breadcrumb-seprator"><i class="fas fa-angle-right"></i></li>
+                        <li class="breadcrumb-item active" aria-current="page">@Model.Value("etihadMainTitle")</li>
+                    </ol>
+                </nav>
+                <!--End Breadcrumbs-->
+                             <!--Explore Etihad App-->
+    <section class="app-box">
+        <div class="container">
+            <h2><b>@Model.Value("exploreEtihadTitle")</b></h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="row">
+                        @{
+                            var egExploreEtihadImg = Model.Value<IPublishedContent>("exploreEtihadImage");
+                            if (egExploreEtihadImg != null)
+                            {
+                                <img src="@egExploreEtihadImg.Url()" alt="" />
+                            }
+                        }
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="app-content">
+                        <img class="etihad-logo" src="/assets/images/etihad-logo-appsection.png" alt="@Model.Value("exploreEtihadTitle")" />
+                        @Html.Raw(Model.Value("exploreEtihadDetailes"))
+                        <a href="https://apple.co/2AyrtVU">
+                            <img src="/assets/images/icon-appstore.png" alt="" />
+                        </a>
+                        <a href="https://bit.ly/3fk5C3a">
+                            <img src="/assets/images/icon-googleplay.png" alt="" />
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--Explore Etihad App-->
+<!--Start Inner Page Wrapper-->
+<div class="inner-section">
+    <div class="container-fluid custom-container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+
+
+         <section class="content-wrap">
+                    <div class="container">
+                        <div class="row">
+                            <!--Winning Partnership-->
+                            <div class="col-md-6">
+                                <div class="row">
+                                    @{
+                                        var egVideoPoster = Model.Value<IPublishedContent>("egEtihadVideoPoster");
+                                        var egRewardVideo = Model.Value<IPublishedContent>(lang == "ar" ? "egRewardVideo" : "egRewardVideo");
+                                        if (egVideoPoster != null && egRewardVideo != null)
+                                        {
+                                            <video id="ban_video" class="tv_video hide-for-small-only" controls="controls"
+                                                   poster="@egVideoPoster.Url()">
+                                                <source src="@egRewardVideo.Url()" type="video/mp4" />
+                                                Your browser does not support the video tag.
+                                            </video>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="cont-wrap">
+                                    <div class="content-box">
+                                        @Html.Raw(Model.Value("winningPartnership"))
+                                        @*<a class="know-more" href="javascript:void(0)">Know More</a>*@
+                                    </div>
+                                </div>
+                            </div>
+                            <!--Winning Partnership-->
+                            <!--Buy and fly-->
+                            <div class="col-md-6">
+                                <div class="cont-wrap">
+                                    <div class="content-box">
+                                        @Html.Raw(Model.Value("buyAndFly"))
+                                        @*<a class="know-more" href="javascript:void(0)">Know More</a>*@
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    @{
+                                        var egBuyAndFlyImg = Model.Value<IPublishedContent>("buyAndFlyImage");
+                                        if (egBuyAndFlyImg != null)
+                                        {
+                                            <img src="@egBuyAndFlyImg.Url()" alt="" />
+                                        }
+                                    }
+                                </div>
+                            </div>
+                            <!--Buy and Fly-->
+                            <!--Big Deal-->
+                            <div class="col-md-6">
+                                <div class="row">
+                                    @{
+                                        var egBigDealImg = Model.Value<IPublishedContent>("bigDealImage");
+                                        if (egBigDealImg != null)
+                                        {
+                                            <img src="@egBigDealImg.Url()" alt="" />
+                                        }
+                                    }
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="cont-wrap">
+                                    <div class="content-box">
+                                        @Html.Raw(Model.Value("bigDeal"))
+                                    </div>
+                                </div>
+                            </div>
+                            <!--Big Deal-->
+                            <!--Guest Tiers & Benefits-->
+                            <div class="col-md-6">
+                                <div class="cont-wrap">
+                                    <div class="content-box">
+                                        @Html.Raw(Model.Value("tiersBenefits"))
+                                        @*<a class="know-more" href="javascript:void(0)">Know More</a>*@
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    @{
+                                        var egTiersAndBenefitsImg = Model.Value<IPublishedContent>("tiersBenefitsImage");
+                                        if (egTiersAndBenefitsImg != null)
+                                        {
+                                            <img src="@egTiersAndBenefitsImg.Url()" alt="" />
+                                        }
+                                    }
+                                </div>
+                            </div>
+                            <!--Guest Tiers & Benefits-->
+                        </div>
+                    </div>
+                </section>
+                <!--Journey Steps-->
+                <section class="journey-box">
+                    <div class="container">
+                        <div class="row">
+                            @Html.Raw(Model.Value("journeySteps"))
+                        </div>
+                    </div>
+                </section>
+                <!--Journey Steps-->
+            </div>
+        </div>
+    </div>
+         
+         
+
+    
+    
+    
+    
+    
+    <!--Explore Etihad App-->
+  @*  <section class="app-box">
+        <div class="container">
+            <h2><b>@Model.Value("exploreEtihadTitle")</b></h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="row">
+                        @{
+                            var egExploreEtihadImg = Model.Value<IPublishedContent>("exploreEtihadImage");
+                            if (egExploreEtihadImg != null)
+                            {
+                                <img src="@egExploreEtihadImg.Url()" alt="" />
+                            }
+                        }
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="app-content">
+                        <img class="etihad-logo" src="/assets/images/etihad-logo-appsection.png" alt="@Model.Value("exploreEtihadTitle")" />
+                        @Html.Raw(Model.Value("exploreEtihadDetailes"))
+                        <a href="https://apple.co/2AyrtVU">
+                            <img src="/assets/images/icon-appstore.png" alt="" />
+                        </a>
+                        <a href="https://bit.ly/3fk5C3a">
+                            <img src="/assets/images/icon-googleplay.png" alt="" />
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>*@
+    <!--Explore Etihad App-->
+</div>
+<!--End Inner Page Wrapper-->

@@ -1,0 +1,1092 @@
+﻿@using Umbraco.Core.PropertyEditors
+@using ClientDependency.Core.Mvc
+@inherits UmbracoViewPage
+@{
+    Layout = null;
+
+    var currLang = System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+
+    // datalayer vars
+    var path = Request.Url.PathAndQuery.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+    var gtmCategory = path.Length > 1 ? path[1] : null;
+    var gtmSubCategory = path.Length > 2 ? path[2] : null;
+
+    // Get basic design settings from the Master
+    var master = (Master)Model.Root();
+
+    Html.RequiresCss("~/assets/css/bootstrap.min.css");
+    Html.RequiresCss("~/assets/css/fontawesome.min.css");
+    Html.RequiresCss("~/css/slick.css");
+    Html.RequiresCss("~/css/aos.css");
+    Html.RequiresCss("~/css/main.min.css");
+
+
+    Html.RequiresJs("~/scripts/jquery-3.5.1.min.js");
+    //Html.RequiresJs("~/scripts/jquery-3.6.0.min.js");
+    Html.RequiresJs("~/scripts/bootstrap.min.js");
+    Html.RequiresJs("~/scripts/jquery.validate.min.js");
+    Html.RequiresJs("~/scripts/jquery.validate.unobtrusive.min.js");
+    Html.RequiresJs("~/scripts/jquery-ui.min.js");
+    Html.RequiresJs("~/scripts/popper.min.js");
+    Html.RequiresJs("~/scripts/slick.min.js");
+    Html.RequiresJs("~/scripts/aos.js");
+    Html.RequiresJs("~/scripts/custom.js");
+}
+<!doctype html>
+<html lang="@currLang">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>@Model.Name - @master.SiteName</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+    @*<link rel="stylesheet" href="@Url.Content("~/css/umbraco-starterkit-style.css")" />*@
+    @RenderSection("Header", required: false)
+    @Html.RenderCssHere()
+
+    <!-- Google Tag Manager -->
+    <script type="text/javascript">
+        (function (w, d, s, l, i) {
+            w[l] = w[l] || []; w[l].push({
+                'gtm.start':
+                    new Date().getTime(), event: 'gtm.js'
+            }); var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                    'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-M4RCLQ8');
+    </script>
+    <!-- End Google Tag Manager -->
+
+    <link rel="icon" type="image/png" href="/assets/images/favicon.png" />
+    <link rel="apple-touch-icon" sizes="192x192" href="/assets/images/favicon.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/images/favicon.png" />
+</head>
+<body class="frontpage">
+    <!-- Google Tag Manager (noscript) -->
+    <noscript>
+        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M4RCLQ8" height="0" width="0" style="display:none;visibility:hidden"></iframe>
+    </noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    <div id="loading-div">
+        <img id="loading-image" src="/assets/images/loader-ripple.svg" alt="Loading...">
+    </div>
+    <div class="wrapper">
+        <!--Start Header-->
+        <header class="header">
+            <div class="container-fluid custom-container-fluid">
+                <div class="row">
+                    <!--Start Logo Section-->
+                    <section class="col-md-12 col-lg-2 logo-section">
+                        <figure class="logo-holder">
+                            <a href="@Umbraco.GetDictionaryValue("LogoHref")" class="gtm-track-header-nav-click" name="YasMAll Logo-Click">
+                                @{
+                                    var siteLogo = master.SiteLogo;
+                                    if (siteLogo != null)
+                                    {
+                                        <img src="@siteLogo.Url" class="img-fluid" alt="YAS Mall Logo" />
+                                    }
+                                }
+                            </a>
+                        </figure>
+                        <button class="navbar-toggler" type="button" data-toggle="collapse"
+                                data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false"
+                                aria-label="Toggle navigation">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </button>
+                        <ul class="list-unstyled mob-options">
+                            <li class="search">
+                                <i class="fa fa-search" aria-hidden="true"></i>
+                                <div class="searchbox">
+                                    <input type="text" name="topSearchMainMob" id="topSearchMainMob" placeholder="@Umbraco.GetDictionaryValue("Search")" class="form-control" autocomplete="off">
+                                    <div id="SearchMainMobDiv" class="search-popup">
+                                        <h4>@Umbraco.GetDictionaryValue("QuickLinks")</h4>
+                                        <ul id="topSearchMainMobUL"></ul>
+                                    </div>
+                                </div>
+                            </li>
+                           @{
+                                var newLang = "";
+                                var newLink = "";
+                                var url = HttpContext.Current.Request.Url.ToString();
+                                if (url.Contains("/en/") || url.Contains("/ar/"))
+                                {
+                                    newLang = currLang == "en" ? "ar" : "en";
+                                    newLink = HttpContext.Current.Request.Url.ToString().Replace("/" + currLang + "/", "/" + newLang + "/");
+                                }
+                                else{
+                                    newLink = HttpContext.Current.Request.Url.ToString().Replace(":1097", ":1097/en/home");
+                                    Response.Redirect(newLink);
+                                }
+                            }
+                            <li class="lang"><a href="@newLink" hreflang="@newLang" class="gtm-track-language-toggle" name="LanguageToggle">@Umbraco.GetDictionaryValue("Navigation")</a></li>
+                        </ul>
+                    </section>
+                    <!--End Logo Section-->
+                    <!--Start Link Section-->
+                    <section class="collapse navbar-collapse col-md-12 col-lg-10 header-links" id="navbarCollapse">
+                        <!--Start Top Links-->
+                        <nav class="clearfix top-links">
+                            <!--Start Left Links-->
+                            <ul class="list-unstyled left-links">
+                                <li class="title">@Umbraco.GetDictionaryValue("FollowUs")</li>
+                                <li>
+                                    <a href="@Umbraco.GetDictionaryValue("FacebookLink")" class="gtm-track-header-social-icons" name="Facebook" title="Facebook">
+                                        <i class="fab fa-facebook-f" aria-hidden="true"></i>
+                                    </a>
+                                </li>
+                                @*<li>
+                                    <a href="@Umbraco.GetDictionaryValue("TwitterLink")" class="gtm-track-header-social-icons" name="Twitter" title="Twitter">
+                                        <i class="fab fa-twitter" aria-hidden="true"></i>
+                                    </a>
+                                </li>*@
+                                <li>
+                                    <a href="@Umbraco.GetDictionaryValue("InstagramLink")" class="gtm-track-header-social-icons" name="Instagram" title="Instagram">
+                                        <i class="fab fa-instagram" aria-hidden="true"></i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="@Umbraco.GetDictionaryValue("YouTubelink")" class="gtm-track-header-social-icons" name="Youtube" title="Youtube">
+                                        <i class="fab fa-youtube"></i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="@Umbraco.GetDictionaryValue("TripAdvisor")" class="gtm-track-header-social-icons" name="Tripadvisor" title="Tripadvisor">
+                                        <i class="fab fa-tripadvisor"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                            <!--End Left Links-->
+                            <!--Start Right Links-->
+                            <ul class="list-unstyled right-links">
+                                <li class="lang"><a href="@newLink" class="gtm-track-language-toggle" hreflang="@newLang">@Umbraco.GetDictionaryValue("Navigation")</a></li>
+                                @*<li>
+                                    <a href="@Umbraco.GetDictionaryValue("ContactUsHref")" class="gtm-track-header-nav-click" name="OpenClose-Click">
+                                        <img src="/assets/images/icon-calendar.png" />
+                                        <span>@Umbraco.GetDictionaryValue("OpenNow")</span>
+                                    </a>
+                                </li>*@
+                                <li>
+                                    <a href="@Umbraco.GetDictionaryValue("ContactUsHref")#map-location" class="gtm-track-header-nav-click" name="LocateUs-Click">
+                                        <img src="/assets/images/header-icon/locat_us.png" />
+                                        <span>@Umbraco.GetDictionaryValue("LocateUs")</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="@Umbraco.GetDictionaryValue("ContactUsHref")" class="gtm-track-header-nav-click" name="ContactUs-Click">
+                                        <img src="/assets/images/header-icon/email.png" />
+                                        <span>@Umbraco.GetDictionaryValue("ContactUs")</span>
+                                    </a>
+                                </li>
+                            </ul>
+                            <!--End Right Links-->
+                        </nav>
+                        <!--End Top Links-->
+                        <!--Start Bottom Links-->
+                        <section class="clearfix bottom-links">
+                            <!--Start Main Links-->
+                            <nav class=" main-links">
+                                <ul class="list-unstyled">
+                                    <li class="top-main-link">
+                                        <a href="@Umbraco.GetDictionaryValue("ShopHref")" class="dropdown-toggle gtm-track-header-nav-click" name="Shop">@Umbraco.GetDictionaryValue("Shop")</a>
+                                        <div class="category-dropdown">
+                                            <h2 class="sub-heading">@Umbraco.GetDictionaryValue("ShopCategories")</h2>
+                                            <div class="category-cont">
+                                                <div class="category-row">
+                                                    <div class="left-col">
+                                                        <ul class="list-unstyled">
+                                                            @{
+                                                                IEnumerable<IPublishedContent> shopList = Model.AncestorOrSelf(1).DescendantsOfType("shopsLandingDocType").FirstOrDefault()
+                                                                    .Children().Where(e => e.IsVisible() && e.HasValue("shopCategory"));
+
+                                                                IEnumerable<IPublishedContent> shopCategInHead = Model.AncestorOrSelf(1).DescendantsOfType("shopCategory")
+                                                                    .FirstOrDefault().Children().Where(e => e.IsVisible());
+
+                                                                IEnumerable<dynamic> shopCategList = shopCategInHead.Select(x => new
+                                                                {
+                                                                    Category = x,
+                                                                    ShopCount = shopList.Where(s => s.Value<IEnumerable<dynamic>>("shopCategory").Any(sc => sc.Id == x.Id)).Count()
+                                                                });
+                                                                shopCategList = shopCategList.OrderByDescending(x => x.ShopCount).OrderBy(x => ((IPublishedContent)x.Category).Value("categoryTitle"));
+
+                                                                int scIndex = 0;
+                                                                foreach (var scItem in shopCategList)
+                                                                {
+                                                                    if (scItem.ShopCount > 0 && scIndex <= 20)
+                                                                    {
+                                                                        IPublishedContent shopCateg = scItem.Category;
+                                                                        <li><a href="@shopCateg.Url" class="gtm-track-header-nav-option-click" name="@shopCateg.Value("categoryTitle", "en-US")">@shopCateg.Value("categoryTitle")</a></li>
+                                                                        scIndex = scIndex + 1;
+                                                                    }
+                                                                }
+
+                                                            }
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <div class="buttons">
+                                                    <a href="@Umbraco.GetDictionaryValue("ShopHref")" class="btn btn-primary gtm-track-viewall-event" name="menus-shop-viewallcategories">@Umbraco.GetDictionaryValue("ViewAllCategories")</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="top-main-link">
+                                        <a href="@Umbraco.GetDictionaryValue("DineHref")" class="dropdown-toggle gtm-track-header-nav-click" name="Dine">@Umbraco.GetDictionaryValue("Dine")</a>
+                                        <div class="category-dropdown">
+                                            <h2 class="sub-heading">@Umbraco.GetDictionaryValue("DineCategories")</h2>
+                                            <div class="category-cont">
+                                                <div class="category-row">
+                                                    <div class="left-col">
+                                                        <ul class="list-unstyled">
+                                                            @{
+                                                                IEnumerable<IPublishedContent> dineList = Model.AncestorOrSelf(1).DescendantsOfType("dineLandingDocType").FirstOrDefault()
+                                                                    .Children().Where(e => e.IsVisible() && e.HasValue("dineCategory"));
+
+                                                                IEnumerable<IPublishedContent> dineCategInHead = Model.AncestorOrSelf(1).DescendantsOfType("dineCategory")
+                                                                    .FirstOrDefault().Children().Where(e => e.IsVisible());
+
+                                                                IEnumerable<dynamic> dineCategList = dineCategInHead.Select(x => new
+                                                                {
+                                                                    Category = x,
+                                                                    DineCount = dineList.Where(s => s.Value<IEnumerable<dynamic>>("dineCategory").Any(sc => sc.Id == x.Id)).Count()
+                                                                });
+                                                                dineCategList = dineCategList.OrderByDescending(x => x.DineCount).OrderBy(x => ((IPublishedContent)x.Category).Value("categoryTitle"));
+
+                                                                int dcIndex = 0;
+                                                                foreach (var dcItem in dineCategList)
+                                                                {
+                                                                    if (dcItem.DineCount > 0 && dcIndex <= 20)
+                                                                    {
+                                                                        IPublishedContent dineCateg = dcItem.Category;
+                                                                        <li><a href="@dineCateg.Url" class="gtm-track-header-nav-option-click" name="@dineCateg.Value("categoryTitle", "en-US")">@dineCateg.Value("categoryTitle")</a></li>
+                                                                        dcIndex = dcIndex + 1;
+                                                                    }
+                                                                }
+
+                                                            }
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <div class="buttons">
+                                                    <a href="@Umbraco.GetDictionaryValue("DineHref")" class="btn btn-primary gtm-track-viewall-event" name="menus-dine-viewallcategories">@Umbraco.GetDictionaryValue("ViewAllCategories")</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="top-main-link">
+                                        <a href="@Umbraco.GetDictionaryValue("EntertainmentHref")" class="dropdown-toggle gtm-track-header-nav-click" name="Entertainment">@Umbraco.GetDictionaryValue("Entertainment")</a>
+                                        <div class="category-dropdown">
+                                            <h2 class="sub-heading">@Umbraco.GetDictionaryValue("Attractions")</h2>
+                                            <div class="category-cont">
+                                                <div class="category-row">
+                                                    <div class="left-col">
+                                                        <ul class="list-unstyled">
+                                                            @{
+                                                                IEnumerable<IPublishedContent> entertainInHeader = Model.AncestorOrSelf(1).DescendantsOfType("entertainLandingDocType")
+                                                                    .FirstOrDefault().Children().Where(x => x.IsVisible()).OrderBy(x => x.Name);
+                                                                foreach (var entTtem in entertainInHeader)
+                                                                {
+                                                                    <li><a href="@entTtem.Url" class="gtm-track-header-nav-option-click" name="@entTtem.Value("entertainmentTitle", "en-US")">@entTtem.Value("entertainmentTitle")</a></li>
+                                                                }
+                                                            }
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <div class="buttons">
+                                                    <a href="@Umbraco.GetDictionaryValue("EntertainmentHref")" class="btn btn-primary gtm-track-viewall-event" name="menus-entertainment-viewallcategories">@Umbraco.GetDictionaryValue("ViewAllAttractions")</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="top-main-link"><a href="@Umbraco.GetDictionaryValue("EventsHref")" class="gtm-track-header-nav-click" name="Event">@Umbraco.GetDictionaryValue("Events")</a></li>
+                                    <li class="top-main-link"><a href="@Umbraco.GetDictionaryValue("OffersHref")" class="gtm-track-header-nav-click" name="Offers">@Umbraco.GetDictionaryValue("Offers")</a></li>
+                                    @*small-dropdown Ahmer Removed this class to make the dropdown in rectangle*@
+                                    <li class="top-main-link">
+                                        <a href="@Umbraco.GetDictionaryValue("rewardsHref")" class="dropdown-toggle gtm-track-header-nav-click">@Umbraco.GetDictionaryValue("Rewards")</a>
+                                        <div class="category-dropdown">
+                                            <ul class="list-unstyled">
+                                                <li><a href="@Umbraco.GetDictionaryValue("DarnadHref")" class="gtm-track-header-nav-option-click" name="Darna">@Umbraco.GetDictionaryValue("Darna")</a></li>
+                                                <li><a href="@Umbraco.GetDictionaryValue("EtihadHref")" class="gtm-track-header-nav-option-click" name="GiftCard">@Umbraco.GetDictionaryValue("Etihad")</a></li>
+                                                <li><a href="@Umbraco.GetDictionaryValue("GiftCardHref")" class="gtm-track-header-nav-option-click" name="Etihad">@Umbraco.GetDictionaryValue("GiftCard")</a></li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                    <li class="top-main-link">
+                                        <a href="@Umbraco.GetDictionaryValue("ServicesHref")" class="dropdown-toggle gtm-track-header-nav-click" name="Services">@Umbraco.GetDictionaryValue("Services")</a>
+                                        <div class="category-dropdown">
+                                            <h2 class="sub-heading">@Umbraco.GetDictionaryValue("Services")</h2>
+                                            <div class="category-cont">
+                                                <div class="category-row">
+                                                    <div class="left-col">
+                                                        <ul class="list-unstyled">
+                                                            @{
+                                                                IEnumerable<IPublishedContent> servInHeader = Model.AncestorOrSelf(1).DescendantsOfType("servicesLandingDocType")
+                                                                    .FirstOrDefault().Children().Where(x => x.IsVisible() || x.IsDocumentType("servicesContent")).OrderBy(x => x.Name);
+                                                                foreach (var sTtem in servInHeader)
+                                                                {
+                                                                    var itemURL = sTtem.Url;
+                                                                    switch (sTtem.Id)
+                                                                    {
+                                                                        case 4339:
+                                                                            itemURL = Umbraco.GetDictionaryValue("weshopforyouHref");
+                                                                            break;
+                                                                        case 4333:
+                                                                            itemURL = Umbraco.GetDictionaryValue("MyParkServiceHref");
+                                                                            break;
+                                                                        case 3656:
+                                                                            itemURL = Umbraco.GetDictionaryValue("SunflowerInitiative");
+                                                                            break;
+                                                                    }
+                                                                    <li><a href="@itemURL" class="gtm-track-header-nav-option-click" name="@sTtem.Value("servicesContentTitle", "en-US")">@sTtem.Value("servicesContentTitle")</a></li>
+                                                                }
+                                                            }
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <div class="buttons">
+                                                    <a href="@Umbraco.GetDictionaryValue("ServicesHref")" class="btn btn-primary gtm-track-viewall-event" name="menus-services-viewallcategories">@Umbraco.GetDictionaryValue("ViewAllCategories")</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="top-main-link">
+                                        @{
+                                            var planDocType = Model.AncestorOrSelf(1).DescendantsOfType("planYourVisitDocType").FirstOrDefault();
+                                            IEnumerable<IPublishedContent> planInHeader = planDocType.Children().Where(x => x.IsVisible()).OrderBy(x => x.Name);
+                                        }
+                                        <a href="@planDocType.Url()" class="dropdown-toggle gtm-track-header-nav-click" name="PlanVisit">@planDocType.Value("planTitle")</a>
+                                        <div class="category-dropdown">
+                                            <h2 class="sub-heading">@planDocType.Value("planTitle")</h2>
+                                            <div class="category-cont">
+                                                <div class="category-row">
+                                                    <div class="left-col">
+                                                        <ul class="list-unstyled">
+                                                            @{
+                                                                foreach (var item in planInHeader)
+                                                                {
+                                                                    <li><a href="@item.Url()" class="gtm-track-header-nav-option-click">@item.Value("planContentTitle")</a></li>
+                                                                }
+                                                            }
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <div class="buttons">
+                                                    <a href="@planDocType.Url()" class="btn btn-primary gtm-track-viewall-event" name="menus-planvisit-viewallcategories">@Umbraco.GetDictionaryValue("ViewAllCategories")</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                @*    <li class="top-main-link"><a href="@Umbraco.GetDictionaryValue("MallRedevelopmentHRef")" target="_blank" class="gtm-track-header-nav-click" name="@Umbraco.GetDictionaryValue("MallRedevelopment")">@Umbraco.GetDictionaryValue("MallRedevelopment")</a></li>*@
+                                </ul>
+                            </nav>
+                            <!--End Main Links-->
+                            <!--Start Search Box-->
+                            <div class="search-field">
+                                <input type="text" name="topSearchMain" id="topSearchMain" placeholder="@Umbraco.GetDictionaryValue("Search")" class="form-control" autocomplete="off" />
+                                <i class="fa fa-search" aria-hidden="true"></i>
+                            </div>
+                            <div id="SearchMainDiv" class="search-popup">
+                                <h4>@Umbraco.GetDictionaryValue("QuickLinks")</h4>
+                                <ul id="topSearchMainUL"></ul>
+                            </div>
+                            <!--End Search Box-->
+                        </section>
+                        <!--End Bottom Links-->
+                    </section>
+                    <!--End Link Section-->
+                </div>
+            </div>
+        </header>
+        <!--End Header-->
+        @Html.RenderJsHere()
+        <script type="text/javascript">
+        function gtmGetDlBase() {
+            var l_lang = ('@currLang' == "en" ? "EN" : "AR");
+            //debugger;
+            return {
+                'p_language': l_lang,
+                'p_pageurl': '@Request.Url.ToString()',
+                'p_category': '@gtmCategory',
+                'p_subcategory': '@gtmSubCategory',
+                'p_loginstatus': 'no',
+                'p_userid': ''
+            };
+        }
+
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push(gtmGetDlBase());
+        console.log("Page Load", window.dataLayer);
+
+        $(document).ready(function () {
+            $(".gtm-track").click(function (e) {
+                gtmTrackClick($(this).attr("href"));
+            });
+
+			 $(".gtm-track-more-event").click(function (e) {
+                gtmTrackEvent_MoreClick($(this));
+            });
+
+			 $(".gtm-track-viewall-event").click(function (e) {
+                gtmTrackEvent_MoreClick($(this));
+            });
+
+			 $(".gtm-track-more-outbound-event").click(function (e) {
+                gtmTrackEvent_MoreOutboundClick($(this));
+            });
+
+			 $(".gtm-track-header-nav-click").click(function (e) {
+                gtmTrackEvent_HeaderNavClick($(this));
+            });
+
+			 $(".gtm-track-header-nav-option-click").click(function (e) {
+                gtmTrackEvent_HeaderNavOptionClick($(this));
+            });
+
+			 $(".gtm-track-language-toggle").click(function (e) {
+                gtmTrackEvent_LanguageToggleClick($(this));
+            });
+
+			 $(".gtm-track-header-social-icons").click(function (e) {
+                gtmTrackEvent_HeaderSocialIconsClick($(this));
+            });
+
+			 $(".gtm-track-footer-social-icons").click(function (e) {
+                gtmTrackEvent_FooterSocialIconsClick($(this));
+            });
+
+			 $(".gtm-track-button-event").click(function (e) {
+                gtmTrackEvent_ButtonClick($(this));
+            });
+
+			 $(".gtm-track-tile-event").click(function (e) {
+                gtmTrackEvent_TileClick($(this));
+            });
+            //When Any Video Play
+            //$('video').parent().find(".play-bt").click(function () {
+            //    var objVideo = $(this).parent().find('video');
+            //    if (objVideo.length > 0) {//Manual Click
+            //        gtmTrackEvent_VideoPlayClick($(objVideo[0]));
+            //    }
+            //});
+            //$('video').click(function () {
+            //    if (this.paused) {
+            //        gtmTrackEvent_VideoPlayClick($(this));
+            //    }
+            //});
+            var isVPlayByAuto = true; //On Page Load If Video Play Event Fire Means Video Is Playing Auto
+            $("video").on("play", function (e) {
+                if (!isVPlayByAuto) {
+                    gtmTrackEvent_VideoPlayClick($(this));
+                } else {
+                    isVPlayByAuto = false;
+                }
+            });
+            //Paging GTM Moved To Custom.js
+			//$(".gtm-track-paging-event").click(function (e) {
+   //             gtmTrackEvent_PagingClick($(this));
+   //         });
+
+			$(".gtm-track-searchbrand-event").click(function (e) {
+                gtmTrackEvent_SearchBrandClick($(this));
+            });
+
+			$(".gtm-track-app-event").click(function (e) {
+                gtmTrackEvent_AppClick($(this));
+            });
+
+			$(".gtm-track-button-aldar-buyOnline-event").click(function (e) {
+                gtmTrackEvent_AldarBuyOnlineClick($(this));
+            });
+
+			$("#submitbtnNewsletter").click(function (e) {
+                gtmTrackEvent_SubscribeNewsLetterClick($(this));
+            });
+
+			$(".gtm-track-footer-nav-click").click(function (e) {
+                gtmTrackEvent_FooterNavClick($(this));
+            });
+
+			$(".gtm-track-contactus-click").click(function (e) {
+                gtmTrackEvent_ContactUsClick($(this));
+            });
+
+			$(".slick-next").click(function (e) {
+                gtmTrackEvent_SwipeClick($(this));
+            });
+
+			$(".slick-prev").click(function (e) {
+                gtmTrackEvent_SwipeClick($(this));
+            });
+
+            $(".slick-dots button").click(function (e) {
+                gtmTrackEvent_SwipeClick($(this));
+            });
+        });
+
+        function gtmTrackClick(href) {
+            console.log("[GTM-DL]", "Track Outbound Click", href);
+            var data = gtmGetDlBase();
+            data.p_event = 'outboundClicks';
+            data.p_clickURL = href;
+            window.dataLayer.push(data);
+        }
+        function gtmNewsletterSignup() {
+            console.log("[GTM-DL]", "Track Newsletter Signup");
+            var data = gtmGetDlBase();
+            data.p_event = 'signUp';
+            window.dataLayer.push(data);
+        }
+        function gtmContactUs(nationality) {
+            console.log("[GTM-DL]", "Track Contact Us");
+            var data = gtmGetDlBase();
+            data.p_event = 'contactUs';
+            data.nationality = nationality;
+            window.dataLayer.push(data);
+        }
+        function gtmLeasingEnquiry(currency, companyType) {
+            console.log("[GTM-DL]", "Track Leasing Enquiry");
+            var data = gtmGetDlBase();
+            data.p_event = 'leasingEnquiry';
+            data.p_currency = currency;
+            data.p_companytype = companyType;
+            window.dataLayer.push(data);
+        }
+		function gtmTrackEvent_MoreClick(objbtn) {
+            console.log("[GTM-DL]", "Track event more Click", objbtn.attr("href"));
+            var data = gtmGetDlBase();
+            data.p_event = 'e_moreclicks';
+            data.p_buttonname = objbtn.attr("name");
+            data.p_inboundurl = window.location.origin + objbtn.attr("href");
+            if (objbtn.attr("outboundURL")) {
+                data.p_outboundurl = objbtn.attr("outboundURL");
+            }
+            window.dataLayer.push(data);
+			debugger;
+        }
+		function gtmTrackEvent_MoreOutboundClick(objbtn) {
+            console.log("[GTM-DL]", "Track event more (Outbound) Click", objbtn.attr("href"));
+            var data = gtmGetDlBase();
+            data.p_event = 'e_moreclicks';
+            data.p_buttonname = objbtn.attr("name");
+            data.p_inboundurl = "";
+            data.p_outboundurl = objbtn.attr("href");
+            window.dataLayer.push(data);
+			debugger;
+        }
+		function gtmTrackEvent_HeaderNavClick(objbtn) {
+            console.log("[GTM-DL]", "Track event Header Nav Click", objbtn.attr("href"));
+            var data = gtmGetDlBase();
+            data.p_event = 'e_headernavclicks';
+            data.p_buttonname = objbtn.attr("name");
+            data.p_inboundurl =window.location.origin+objbtn.attr("href");
+            data.p_outboundurl="";
+            window.dataLayer.push(data);
+			debugger;
+        }
+		function gtmTrackEvent_FooterNavClick(objbtn) {
+            console.log("[GTM-DL]", "Track event Footer Nav Click", objbtn.attr("href"));
+            var data = gtmGetDlBase();
+            data.p_event = 'e_footernavclicks';
+            data.p_buttonname = objbtn.attr("name");
+
+            if (objbtn.attr("href").startsWith("http://") ||
+                objbtn.attr("href").startsWith("https://")) {//For External Links
+                data.p_outboundurl = objbtn.attr("href");
+            } else {
+                data.p_inboundurl = window.location.origin + objbtn.attr("href");
+            }
+            window.dataLayer.push(data);
+			debugger;
+        }
+		function gtmTrackEvent_HeaderNavOptionClick(objbtn) {
+            console.log("[GTM-DL]", "Track event Header Nav Option Click", objbtn.attr("href"));
+            var data = gtmGetDlBase();
+            data.p_event = 'e_headernavoptionclicks';
+            data.p_buttonname = objbtn.attr("name");
+            data.p_inboundurl =window.location.origin+objbtn.attr("href");
+            data.p_outboundurl="";
+            window.dataLayer.push(data);
+			debugger;
+        }
+		function gtmTrackEvent_HeaderDeskSearchClick(objbtn) {
+            console.log("[GTM-DL]", "Track event Header Desktop Search Click", objbtn.attr("name"));
+            var data = gtmGetDlBase();
+            data.p_event = 'e_headersearchclicks';
+            data.p_buttonname = objbtn.attr("name");
+            data.p_searchquery = $("#topSearchMain").val();
+            window.dataLayer.push(data);
+			debugger;
+        }
+        function gtmTrackEvent_HeaderMobSearchClick(objbtn) {
+            console.log("[GTM-DL]", "Track event Header Mobile Search Click", objbtn.attr("name"));
+            var data = gtmGetDlBase();
+            data.p_event = 'e_headersearchclicks';
+            data.p_buttonname = objbtn.attr("name");
+            data.p_searchquery = $("#topSearchMainMob").val();
+            window.dataLayer.push(data);
+            debugger;
+        }
+        function gtmTrackEvent_LanguageToggleClick(objbtn) {
+            console.log("[GTM-DL]", "Track event Language Toggle Click", objbtn.attr("href"));
+            var data = gtmGetDlBase();
+            data.p_language = ('@currLang' == "en" ? "EN|AR" : "AR|EN");
+            data.p_event = 'e_languagetoggle';
+            data.p_buttonname = objbtn.attr("name");
+            window.dataLayer.push(data);
+			debugger;
+        }
+		function gtmTrackEvent_HeaderSocialIconsClick(objbtn) {
+            console.log("[GTM-DL]", "Track event Header Social Icons Click", objbtn.attr("href"));
+            var data = gtmGetDlBase();
+            data.p_event = 'e_headersocialicons';
+            data.p_buttonname = objbtn.attr("name");
+            data.p_outboundurl = objbtn.attr("href");
+            window.dataLayer.push(data);
+			debugger;
+        }
+		function gtmTrackEvent_FooterSocialIconsClick(objbtn) {
+            console.log("[GTM-DL]", "Track event Footer Social Icons Click", objbtn.attr("href"));
+            var data = gtmGetDlBase();
+            data.p_event = 'e_footersocialiconsclicks';
+            data.p_buttonname = objbtn.attr("name");
+            data.p_outboundurl = objbtn.attr("href");
+            window.dataLayer.push(data);
+			debugger;
+        }
+		function gtmTrackEvent_ButtonClick(objbtn) {
+            console.log("[GTM-DL]", "Track event Button Click", objbtn.attr("href"));
+            var data = gtmGetDlBase();
+            data.p_event = 'e_buttonclicks';
+            data.p_buttonname = objbtn.attr("name");
+            if (objbtn.attr("href")) {
+                data.p_inboundurl = window.location.origin + objbtn.attr("href");
+            }
+            window.dataLayer.push(data);
+			debugger;
+        }
+		function gtmTrackEvent_TileClick(objbtn) {
+            console.log("[GTM-DL]", "Track event Tile Click", objbtn.attr("href"));
+            var data = gtmGetDlBase();
+            data.p_event = 'e_tileclicks';
+            data.p_tilename = objbtn.attr("name");
+            if (objbtn.attr("href")) {
+                data.p_inboundurl = window.location.origin + objbtn.attr("href");
+            }
+            var dataAttr = $(objbtn).closest('div.gtm-mainsec').attr('data-section');
+            if (dataAttr) {
+                if (dataAttr.length > 0) {
+                    data.p_sectionname = dataAttr;
+                }
+            }
+            window.dataLayer.push(data);
+			debugger;
+        }
+		function gtmTrackEvent_VideoPlayClick(objbtn) {
+            console.log("[GTM-DL]", "Track event Video Play Click", objbtn.attr("name"));
+            var data = gtmGetDlBase();
+            data.p_event = 'e_videoplays';
+            data.p_videoname = objbtn.attr("name");
+            var dataAttr = $(objbtn).closest('div.gtm-mainsec').attr('data-section');
+            if (dataAttr) {
+                if (dataAttr.length > 0) {
+                    data.p_sectionname = dataAttr;
+                }
+            }
+            console.log("gtmTrackEvent_VideoPlayClick", data);
+            window.dataLayer.push(data);
+			debugger;
+        }
+		function gtmTrackEvent_PagingClick(objbtn) {
+            console.log("[GTM-DL]", "Track event Paging Number Toggler Click", objbtn.attr("href"));
+            var data = gtmGetDlBase();
+            data.p_event = 'e_pagenumber';
+            data.p_buttonname = objbtn.attr("name");
+            if (objbtn.attr("href")) {
+                data.p_inboundurl = window.location.origin + objbtn.attr("href");
+            } else {
+                var btnA = $(objbtn).find('a:first');
+                data.p_inboundurl = window.location.href.split('?')[0] + btnA.attr("href");
+            }
+            window.dataLayer.push(data);
+			debugger;
+        }
+		function gtmTrackEvent_SearchBrandClick(objbtn) {
+            console.log("[GTM-DL]", "Track event search brand Click", objbtn.attr("href"));
+            var data = gtmGetDlBase();
+            data.p_event = 'e_searchbrandclicks';
+            data.p_buttonname = objbtn.attr("name");
+            data.p_outboundurl= '';
+            window.dataLayer.push(data);
+			debugger;
+        }
+		function gtmTrackEvent_AppClick(objbtn) {
+            console.log("[GTM-DL]", "Track event App Store Click", objbtn.attr("href"));
+            var data = gtmGetDlBase();
+            data.p_event = 'e_buttonappclicks';
+            data.p_buttonname = objbtn.attr("name");
+            data.p_outboundurl= objbtn.attr("href");
+            window.dataLayer.push(data);
+			debugger;
+        }
+        function gtmTrackEvent_SubscribeNewsLetterClick(objbtn) {
+            var invalidFields = 0;
+            var secNL = $("section.newsletter-box .umbraco-forms-fieldset");
+            $(secNL).find("input[type='text']").each(function () {
+                if ($(this).val() == "") {
+                    invalidFields += 1;
+                }
+            });
+            $(secNL).find("input[type='checkbox']").each(function () {
+                if (!$(this).is(":checked")) {
+                    invalidFields += 1;
+                }
+            });
+            if (invalidFields == 0) {
+                console.log("[GTM-DL]", "Track event Subscribe Newsletter Click", objbtn.attr("href"));
+                var data = gtmGetDlBase();
+                data.p_event = 'e_subscribeclicks';
+                data.p_buttonname = objbtn.attr("name");
+                window.dataLayer.push(data);
+                debugger;
+            }
+        }
+		function gtmTrackEvent_AldarBuyOnlineClick(objbtn) {
+            console.log("[GTM-DL]", "Track event Aldar (Buy Online) Click", objbtn.attr("href"));
+            var data = gtmGetDlBase();
+            data.p_event = 'e_buttonaldarclicks';
+            data.p_buttonname = objbtn.attr("name");
+            data.p_outboundurl= objbtn.attr("href");
+            window.dataLayer.push(data);
+			debugger;
+        }
+		function gtmTrackEvent_SwipeClick(objbtn) {
+            console.log("[GTM-DL]", "Track event Swipe Click", objbtn.attr("value"));
+            var data = gtmGetDlBase();
+            data.p_event = 'e_swipeclicks';
+            var dataAttr = $(objbtn).closest('div.gtm-mainsec').attr('data-section');
+            if (dataAttr) {
+                if (dataAttr.length > 0) {
+                    data.p_sectionname = dataAttr;
+                }
+            }
+            window.dataLayer.push(data);
+			debugger;
+        }
+		function gtmTrackEvent_ContactUsClick(objbtn) {
+            console.log("[GTM-DL]", "Track event Button Click", objbtn.attr("href"));
+            var data = gtmGetDlBase();
+            data.p_event = 'e_buttoncontactclicks';
+            data.p_buttonname = objbtn.attr("name");
+            window.dataLayer.push(data);
+			debugger;
+        }
+		function gtmTrackEvent_LeasingFormClick(objbtn,companyType,currency) {
+            console.log("[GTM-DL]", "Track event LeasingForm Button Click", objbtn.attr("href"));
+            var data = gtmGetDlBase();
+            data.p_event = 'e_leasingEnquiryclicks';
+            data.p_buttonname = objbtn.attr("name");
+            data.p_currency = currency;
+			data.p_companytype = companyType;
+            window.dataLayer.push(data);
+			debugger;
+        }
+        </script>
+        <!--Start Quick Links-->
+        <div class="quick-links">
+            <ul>
+                <li>
+                    <a href="@Umbraco.GetDictionaryValue("ContactUsHref")" class="gtm-track-header-nav-click" name="ContactUs-Click">
+                        @if (currLang.ToLower() == "ar")
+                        {
+                            <img src="/assets/images/ql-contact-ar.png" alt="Contact Us" />
+                        }
+                        else
+                        {
+                            <img src="/assets/images/ql-contact.png" alt="Contact Us" />
+                        }
+                    </a>
+                </li>
+                <li>
+                    <a href="@Umbraco.GetDictionaryValue("ContactUsHref")#map-location" class="gtm-track-header-nav-click" name="LocateUs-Click">
+                        @if (currLang.ToLower() == "ar")
+                        {
+                            <img src="/assets/images/ql-locate-ar.png" alt="Locate Us" />
+                        }
+                        else
+                        {
+                            <img src="/assets/images/ql-locate.png" alt="Locate Us" />
+                        }
+                    </a>
+                </li>
+                <li>
+                    <a href="@Umbraco.GetDictionaryValue("TakeSurveyHref")" class="gtm-track-header-nav-click" name="Survey-Click" target="_blank">
+                        @if (currLang.ToLower() == "ar")
+                        {
+                            <img src="/assets/images/ql-survey-ar.png" alt="Survey Form" />
+                        }
+                        else
+                        {
+                            <img src="/assets/images/ql-survey.png" alt="Survey Form" />
+                        }
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <!--End Start Quick Links-->
+        <!--Start Main Content-->
+        <main>
+            @RenderBody()
+        </main>
+        <!--End Main Content-->
+        <!--Start Newsletter Section-->
+        @if (!HttpContext.Current.Request.Url.AbsolutePath.EndsWith("contact") && !HttpContext.Current.Request.Url.AbsolutePath.EndsWith("leasing-enquiry"))
+        {
+            <section class="newsletter-box">
+                <div class="container-fluid custom-container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="clearfix newsletter-text">
+                                <strong>@Umbraco.GetDictionaryValue("SignUp")</strong>
+                                <a id="signup" href="javascript:void(0)" class="btn btn-default gtm-track-button-event" name="NewsLetter">
+                                    <img src="/assets/images/envelope.png" style="margin-right:10px;" />
+                                    @*<i class="fas fa-envelope"></i>*@
+                                    <span>@Umbraco.GetDictionaryValue("Subscribe")</span>
+                                </a>
+                            </div>
+                            <div class="clearfix newsletter-choices">
+                                <div class="row">
+                                    <div class="col-md-3"></div>
+                                    <div class="col-md-6">
+                                        @Umbraco.RenderMacro("renderUmbracoForm", new { FormGuid = "1599801d-0c29-4b7d-9d72-8871cb7a7076", FormTheme = "newsletter-formtheme", ExcludeScripts = "0" })
+                                    </div>
+                                    <div class="col-md-3"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        }
+        <!--End Newsletter Section-->
+        <!--Start Footer-->
+        <footer class="footer">
+            <div class="footer-top">
+                <div class="container-fluid custom-container-fluid">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <figure class="logo-holder">
+                                <a href="@Umbraco.GetDictionaryValue("LogoHref")" class="gtm-track-footer-nav-click" name="YAS MAll Logo-Click">
+                                    @{
+                                        if (siteLogo != null)
+                                        {
+                                            <img src="/assets/images/yasmall-logo.svg" class="img-fluid" alt="YAS Mall Logo" />
+                                        }
+                                    }
+                                </a>
+                            </figure>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="row">
+                                <div class="col-md-4 col-lg-2 main-holder">
+                                    <ul class="list-unstyled main-links">
+                                        <li><a href="@Umbraco.GetDictionaryValue("ShopHref")" class="gtm-track-footer-nav-click" name="Shop">@Umbraco.GetDictionaryValue("Shop")</a></li>
+                                        <li><a href="@Umbraco.GetDictionaryValue("DineHref")" class="gtm-track-footer-nav-click" name="Dine">@Umbraco.GetDictionaryValue("Dine")</a></li>
+                                        <li><a href="@Umbraco.GetDictionaryValue("EntertainmentHref")" class="gtm-track-footer-nav-click" name="Entertainment">@Umbraco.GetDictionaryValue("Entertainment")</a></li>
+                                        <li><a href="@Umbraco.GetDictionaryValue("EventsHref")"class="gtm-track-footer-nav-click" name="Event">@Umbraco.GetDictionaryValue("Events")</a></li>
+                                        <li><a href="@Umbraco.GetDictionaryValue("OffersHref")" class="gtm-track-footer-nav-click" name="Offers">@Umbraco.GetDictionaryValue("Offers")</a></li>
+                                        <li><a href="@Umbraco.GetDictionaryValue("AboutusHref")" class="gtm-track-footer-nav-click" name="AboutUs">@Umbraco.GetDictionaryValue("AboutUs")</a></li>
+                                        <li><a href="@Umbraco.GetDictionaryValue("ServicesHref")" class="gtm-track-footer-nav-click" name="Services">@Umbraco.GetDictionaryValue("Services")</a></li>
+                                        <li><a href="@Umbraco.GetDictionaryValue("PlanHref")" class="gtm-track-footer-nav-click" name="PlanVisit">@Umbraco.GetDictionaryValue("PlanYourVisit")</a></li>
+                                        <li><a href="@Umbraco.GetDictionaryValue("AboutusHref")" class="gtm-track-footer-nav-click" name="AboutUs">@Umbraco.GetDictionaryValue("AboutUs")</a></li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-4 col-lg-2 other-holder">
+                                    <ul class="list-unstyled other-links">
+                                        <li class="title">
+                                            <a href="javascript:void(0)">@Umbraco.GetDictionaryValue("Rewards")</a>
+                                        </li>
+                                        <li><a href="@Umbraco.GetDictionaryValue("DarnadHref")" class="gtm-track-footer-nav-click" name="Darna">@Umbraco.GetDictionaryValue("Darna")</a></li>
+                                        <li><a href="@Umbraco.GetDictionaryValue("EtihadHref")" class="gtm-track-footer-nav-click" name="Etihad">@Umbraco.GetDictionaryValue("Etihad")</a></li>
+                                        @*<li><a href="@Umbraco.GetDictionaryValue("GiftCardHref")" class="gtm-track-footer-nav-click" name="GiftCard">@Umbraco.GetDictionaryValue("GiftCard")</a></li>*@
+                                    </ul>
+                                </div>
+                                <div class="col-md-4 col-lg-2 other-holder">
+                                    <ul class="list-unstyled other-links">
+                                        <li class="title"><a href="https://tenant.yasmall.ae/" target="_blank" class="gtm-track-footer-nav-click" name="Tenants">@Umbraco.GetDictionaryValue("Tenants")</a></li>
+                                        <li><a href="@Umbraco.GetDictionaryValue("TenantPortalHref")" target="_blank" class="gtm-track-footer-nav-click" name="TenantPortal">@Umbraco.GetDictionaryValue("TenantPortal")</a></li>
+                                        <li><a href="@Umbraco.GetDictionaryValue("LeasingEnquiryHref")" class="gtm-track-footer-nav-click" name="LeasingEnquiry">@Umbraco.GetDictionaryValue("LeasingEnquiry")</a></li>
+                                    </ul>
+                                </div>
+                                @*<div class="col-md-4 col-lg-2 other-holder">
+                                    <ul class="list-unstyled other-links">
+                                        <li class="title"><a href="@Umbraco.GetDictionaryValue("MediaCenterHref")"class="gtm-track-footer-nav-click" name="MediaCentre">@Umbraco.GetDictionaryValue("MediaCentre")</a></li>
+                                        <li><a href="@Umbraco.GetDictionaryValue("NewsHref")" class="gtm-track-footer-nav-click" name="News">@Umbraco.GetDictionaryValue("News")</a></li>
+                                        <li><a href="@Umbraco.GetDictionaryValue("BlogsHref")" class="gtm-track-footer-nav-click" name="Blog">@Umbraco.GetDictionaryValue("Blogs")</a></li>
+                                    </ul>
+                                </div>*@
+                                <div class="col-md-4 col-lg-2 other-holder">
+                                    <ul class="list-unstyled other-links">
+                                        <li class="title"><a href="@Umbraco.GetDictionaryValue("YASIslandHref")" class="gtm-track-footer-nav-click" name="YASIsland">@Umbraco.GetDictionaryValue("YASIsland")</a></li>
+                                        <li><a href="@Umbraco.GetDictionaryValue("YASIslandEntertainmentHref")" class="gtm-track-footer-nav-click" name="YASIslandEntertainment">@Umbraco.GetDictionaryValue("YASIslandEntertainment")</a></li>
+                                        <li><a href="@Umbraco.GetDictionaryValue("YASIslandHotelsHref")" class="gtm-track-footer-nav-click" name="YASIslandHotels">@Umbraco.GetDictionaryValue("YASIslandHotels")</a></li>
+                                        <li><a href="@Umbraco.GetDictionaryValue("YASIslandLifestyleHref")" class="gtm-track-footer-nav-click" name="YASIslandLifestyle">@Umbraco.GetDictionaryValue("YASIslandLifestyle")</a></li>
+                                        <li><a href="@Umbraco.GetDictionaryValue("YASIslandShoppingHref")" class="gtm-track-footer-nav-click" name="YASIslandShopping">@Umbraco.GetDictionaryValue("YASIslandShopping")</a></li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-4 col-lg-2 contact-holder">
+                                    <ul class="list-unstyled contact-links">
+                                        <li><a href="@Umbraco.GetDictionaryValue("contactusHref")" class="gtm-track-footer-nav-click" name="Address">@Umbraco.GetDictionaryValue("YasIslandAbuDhabiUAE")</a></li>
+                                        <li><a href="tel:@Umbraco.GetDictionaryValue("PhoneNumber")" class="gtm-track-footer-nav-click" name="Phone">@Umbraco.GetDictionaryValue("PhoneAlpha")</a> | <a href="tel:@Umbraco.GetDictionaryValue("PhoneNumber")">@Umbraco.GetDictionaryValue("PhoneNumber")</a></li>
+                                        <li><a href="mailto:info@yasmall.ae" class="gtm-track-footer-nav-click" name="EmailAddress">info@yasmall.ae</a></li>
+                                        <li><a href="@Umbraco.GetDictionaryValue("contactusHref")" class="gtm-track-footer-nav-click" name="OpenHours">@Umbraco.GetDictionaryValue("OpeningHours")</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <section class="clearfix top-links">
+                                <!--Start Left Links-->
+                                <ul class="list-unstyled left-links">
+                                    <li class="title">@Umbraco.GetDictionaryValue("FollowUs")</li>
+                                    <li>
+                                        <a href="@Umbraco.GetDictionaryValue("FacebookLink")" class="gtm-track-footer-social-icons" name="Facebook" title="Facebook">
+                                            <i class="fab fa-facebook-f" aria-hidden="true"></i>
+                                        </a>
+                                    </li>
+                                    @*<li>
+                                        <a href="@Umbraco.GetDictionaryValue("TwitterLink")" class="gtm-track-footer-social-icons" name="Twitter" title="Twitter">
+                                            <i class="fab fa-twitter" aria-hidden="true"></i>
+                                        </a>
+                                    </li>*@
+                                    <li>
+                                        <a href="@Umbraco.GetDictionaryValue("InstagramLink")" class="gtm-track-footer-social-icons" name="Instagram" title="Instagram">
+                                            <i class="fab fa-instagram" aria-hidden="true"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="@Umbraco.GetDictionaryValue("youtubelink")" title="Youtube">
+                                            <i class="fab fa-youtube"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="@Umbraco.GetDictionaryValue("TripAdvisor")" class="gtm-track-footer-social-icons" name="Tripadvisor" title="Tripadvisor">
+                                            <i class="fab fa-tripadvisor"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                                <!--End Left Links-->
+                                <!--Start Right Links-->
+                                <ul class="list-unstyled right-links">
+                                    <li class="lang"><a href="@newLink" hreflang="@newLang" class="gtm-track-language-toggle" name="LanguageToggle">@Umbraco.GetDictionaryValue("Navigation")</a></li>
+                                    @*<li>
+                                        <a href="@Umbraco.GetDictionaryValue("ContactUsHref")" class="gtm-track-footer-nav-click" name="OpenClose-Click">
+                                            <img src="/assets/images/icon-calendar.png" />
+                                            <span>@Umbraco.GetDictionaryValue("OpenNow")</span>
+                                        </a>
+                                    </li>*@
+                                    <li>
+                                        <a href="@Umbraco.GetDictionaryValue("ContactUsHref")#map-location" class="gtm-track-footer-nav-click" name="LocateUs-Click">
+                                            <img src="/assets/images/icon-location.png" />
+                                            <span>@Umbraco.GetDictionaryValue("LocateUs")</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="@Umbraco.GetDictionaryValue("ContactUsHref")" class="gtm-track-footer-nav-click" name="ContactUs-Click">
+                                            <img src="/assets/images/icon-contact.png" />
+                                            <span>@Umbraco.GetDictionaryValue("ContactUs")</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                                <!--End Right Links-->
+                            </section>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="container-fluid custom-container-fluid">
+                    <div class="row">
+                        <div class="col-md-8 align-center">
+                            <ul class="list-unstyled other-links">
+                                <li class="text">&copy; @System.DateTime.Now.Year @Umbraco.GetDictionaryValue("AllRightsReserved")</li>
+                                <li><a href="@Umbraco.GetDictionaryValue("PrivacyHref")" class="gtm-track-footer-nav-click" name="PrivacyPolicy-Click">@Umbraco.GetDictionaryValue("PrivacyPolicy")</a></li>
+                                <li><a href="@Umbraco.GetDictionaryValue("TermsConditionsHref")" class="gtm-track-footer-nav-click" name="TermsConditions-Click">@Umbraco.GetDictionaryValue("TermsConditions")</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-md-4 align-center">
+                            <a href="@Umbraco.GetDictionaryValue("aldarHref")"  class="aldar gtm-track-footer-nav-click" name="AldarLogo-Click" target="_blank">
+                                An ALDAR Property <img src="/assets/images/logo-aldar-footer.png" alt="Aldar" width="40" />
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!--End Footer-->
+    </div>
+    <!--End Wrapper-->
+    <!--Start GDPR Notice Section-->
+    <div id="gdpr-popup" class="hidden-gdpr">
+        <div class="gdpr-wrapper">
+            <div class="gdpr-content">
+                @Umbraco.GetDictionaryValue("GDPRConsentCookies") <a href="@Umbraco.GetDictionaryValue("PrivacyHref")">@Umbraco.GetDictionaryValue("PrivacyPolicy")</a>
+                @if (currLang.ToLower() == "ar")
+                {
+                    <br /><br />
+                }
+            </div>
+            <div class="gdpr-buttons">
+                <a href="javascript:void(0);" class="btn filled btn-default" id="btn-gdpr-accept">@Umbraco.GetDictionaryValue("AcceptCookies")</a>
+                <a href="@Umbraco.GetDictionaryValue("PrivacyHref")" class="bordered" id="btn-gdpr-decline">@Umbraco.GetDictionaryValue("Close")</a>
+            </div>
+        </div>
+    </div>
+    <!--End GDPR Notice Section-->
+    @{
+        var topSearchList = shopList.Select(shop => new
+        {
+            id = shop.Id.ToString(),
+            name = shop.Value("shopTitle"),
+            url = shop.Url,
+            tags = shop.HasValue("outletTags") ? shop.Value<string[]>("outletTags") : null,
+            cat = "Shop"
+        }).Concat(dineList.Select(dine => new
+        {
+            id = dine.Id.ToString(),
+            name = dine.Value("shopTitle"),
+            url = dine.Url,
+            tags = dine.HasValue("outletTags") ? dine.Value<string[]>("outletTags") : null,
+            cat = "Dine"
+        }));
+        topSearchList = topSearchList.OrderBy(x => x.name);
+    }
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.navbar-toggler').click(function () {
+                $('.navbar-collapse').toggle('fast')
+            });
+        });
+
+        var topSearchListData = @Html.Raw(Json.Encode(topSearchList));
+        //var searchGoHref = '(umbraco.library.NiceUrl(2057))';
+
+        //Animation Script
+        $(window).scroll(function () {
+            AOS.init({
+                easing: 'ease-out-back',
+                duration: 1000
+            });
+        });
+
+        $(window).on("load", function() {
+            $("#loading-div").fadeOut(500);
+        });
+    </script>
+
+    @RenderSection("ViewScripts", required: false)
+</body>
+</html>

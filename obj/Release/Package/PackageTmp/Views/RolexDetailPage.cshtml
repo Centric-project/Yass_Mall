@@ -1,0 +1,289 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage
+@using ContentModels = Umbraco.Web.PublishedModels;
+@using Umbraco.Web.Mvc;
+@{
+    Layout = "master.cshtml";
+}
+
+<!-- Start Main Banner -->
+<style>
+    @@media only screen and (max-width: 620.99px) {
+        .mbl-head {
+            margin-top: 25px;
+        }
+
+        .social-icon-img {
+            justify-content: flex-start;
+        }
+    }
+</style>
+<!--Start Main Banner-->
+@{
+    var rolexBannerImg = Model.Value<IPublishedContent>("detailsPageBanner");
+    if (rolexBannerImg != null)
+    {
+        <section class="main-banner">
+            <div class="container-fluid custom-container-fluid">
+                <div class="main-slide">
+                    <div class="slide">
+                        <img src="@rolexBannerImg.Url()" alt="@Model.Value("shopTitle")" class="img-fluid" />
+                    </div>
+                </div>
+            </div>
+        </section>
+    }
+}
+
+<!--End Main Banner-->
+<!-- Start Product Details -->
+<section class="product-details">
+    <div class="container-fluid custom-container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Start Breadcrumbs -->
+                <nav aria-label="breadcrumb" class="breadcrumb-holder">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="@Umbraco.GetDictionaryValue("logoHref")">@Umbraco.GetDictionaryValue("home")</a></li>
+                        <li class="breadcrumb-seprator"><i class="fas fa-angle-right"></i></li>
+                        <li class="breadcrumb-item">
+                            <a href="@Umbraco.GetDictionaryValue("shopHref")">
+                                @Umbraco.GetDictionaryValue("shop")
+                            </a>
+                        </li>
+                        <li class="breadcrumb-seprator"><i class="fas fa-angle-right"></i></li>
+                        <li class="breadcrumb-item active" aria-current="page">@Model.Value("shopTitle")</li>
+                    </ol>
+                </nav>
+                <!-- End Breadcrumbs -->
+                <div class="product-box">
+                    <div class="row">
+                        <div class="col-lg-3 col-md-4">
+                            <div class="brand-holder">
+                                @{
+                                    var shopDetailLogo = Model.Value<IPublishedContent>("shopLogo");
+                                    if (shopDetailLogo != null)
+                                    {
+                                        <img src="@shopDetailLogo.Url()" class="img-fluid" />
+                                    }
+                                }
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-5">
+                            <div class="prod-details">
+                                <h2 class="prod-title">@Model.Value("shopTitle")</h2>
+                                <p class="description">
+                                    @Model.Value("smallDetails")
+                                </p>
+                                <p class="contact">
+                                    <div class="contact-dir">
+                                        @*<h5>Phone Number:</h5><strong>02 6120870</strong>*@
+                                        <p>@Html.Raw(@Model.Value("contactUs"))</p>
+                                    </div>
+                                </p>
+                                <p class="timing">
+                                    @{
+                                        string openingtime = Model.Value<string>("openingTimes");
+                                        var shopLandingDocTypes = Model.AncestorOrSelf(1).DescendantsOfType("shop").FirstOrDefault();
+                                        if (!string.IsNullOrWhiteSpace(openingtime))
+                                        {
+                                            @Html.Raw(Model.Value("openingTimes"))
+                                        }
+                                        else
+                                        {
+                                            @Html.Raw(shopLandingDocTypes.Value("defaultShopTimings"))
+                                        }
+                                    }
+                                </p>
+                                <p class="Location:">
+                                    @{
+                                        string floorLoc = Model.Value<string>("floorName");
+                                        if (!string.IsNullOrWhiteSpace(floorLoc))
+                                        {
+                                            <h5>@Umbraco.GetDictionaryValue("Location"):</h5>
+                                            @floorLoc;
+                                        }
+                                    }
+                                </p>
+                                <p class="Location:">
+                                    @{
+                                        string nearParking = Model.Value<string>("nearestParking");
+                                        if (!string.IsNullOrWhiteSpace(nearParking))
+                                        {
+                                            <h5>@Umbraco.GetDictionaryValue("nearestParking"):</h5>
+                                            @nearParking;
+                                        }
+                                    }
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-lg-5 col-md-3">
+                            @{
+                                var shopDetailMap = Model.Value<IPublishedContent>("locationMap");
+                                if (shopDetailMap != null)
+                                {
+                                    <a class="map-img" data-toggle="modal" data-target="#zoomModal">
+                                        <img src="@shopDetailMap.Url()" alt="@(Model.Value("shopTitle")) - Map" />
+                                    </a>
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="zoomModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                                <div class="modal-body">
+                                                    <img src="@shopDetailMap.Url()" alt="@(Model.Value("shopTitle")) - Map" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                <ul class="list-unstyled left-links" style="display: flex; justify-content: center;">
+                                    <li style="margin-right: 10px;">
+                                        <a href="https://www.facebook.com/mrkhoory" title="Facebook" class="gtm-track-header-social-icons" name="Facebook" rel="noopener noreferrer" target="_blank" style="color: black;">
+                                            <i class="fab fa-facebook-square"></i>
+                                        </a>
+                                    </li>
+                                    <li style="margin-right: 10px;">
+                                        <a href="https://www.instagram.com/mrkhoory/" title="Instagram" class="gtm-track-header-social-icons" name="Facebook" rel="noopener noreferrer" target="_blank" style="color: black;">
+                                            <i class="fab fa-instagram" aria-hidden="true"></i>
+                                        </a>
+                                    </li>
+                                    <li style="margin-right: 10px;">
+                                        <a href="https://www.youtube.com/channel/UCsdvc0pvW5YMKE1yjAJ4Miw" title="Youtube" class="gtm-track-header-social-icons" name="youtube" rel="noopener noreferrer" target="_blank" style="color: black;">
+                                            <i class="fab fa-youtube"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--Start Gallery Slider-->
+@{
+    IEnumerable<IPublishedContent> galleryList = Model.Children().Where(x => x.IsVisible());
+    if (galleryList != null)
+    {
+        <section class="box-holder featured-holder lb-box">
+            <!--Start Heading-->
+            <div class="heading-holder">
+                @* <h2 class="sub-heading">@umbraco.library.GetDictionaryItem("OnGoingOffers")</h2>*@
+            </div>
+            <!--End Heading-->
+            <!--Start Ongoing Offers Slider-->
+            <div class="container-fluid custom-container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="custom-slider feature-slider gtm-mainsec" data-section="feature-slider">
+                            @foreach (var fItem in galleryList)
+                            {
+                                var fImage = fItem.Value<IPublishedContent>("thumbImage");
+                                if (fImage != null)
+                                {
+                                    var fPageLink = fItem.Value<IPublishedContent>("shopPageLink");
+                                    var fPageLinkURL = fPageLink == null ? fItem.Url : fPageLink.Url();
+                                    <div class="slide">
+                                        <div class="feature-box">
+                                            <figure>
+                                                <a href="@fPageLinkURL" class="gtm-track-tile-event" name="@fItem.Value("pageTitle", "en")-tile">
+                                                    <img src="@fImage.Url()" alt="@fItem.Value("pageTitle")" class="img-fluid" />
+                                                </a>
+                                            </figure>
+                                            <ul class="list-unstyled">
+                                                <li class="feature-cat">@fItem.Value("categoryName")</li>
+                                                <li class="feature-title">@fItem.Value("pageTitle")</li>
+                                                <li class="feature-location">@fItem.Value("shopLocation")</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--End Ongoing Offers Slider-->
+        </section>
+    }
+}
+<!--End Gallery Slider-->
+<!--Start Featured Box-->
+@{
+    var featured = Model.AncestorOrSelf(1).DescendantsOfType("featuredLandingDocType").FirstOrDefault();//Model.Content.Site().FirstChild("featuredLandingDocType");
+    if (featured != null)
+    {
+        <section class="box-holder featured-holder lg-box">
+            <!--Start Heading-->
+            <div class="heading-holder">
+                <h2 class="sub-heading">@featured.Value("featuredMainTitle")</h2>
+            </div>
+            <!--End Heading-->
+            <!--Start Feature Slider-->
+            <div class="container-fluid custom-container-fluid">
+                <div class="row">
+                    <div class="col-md-12" data-aos="fade-up">
+                        <div class="custom-slider feature-slider">
+                            @{
+                                IEnumerable<IPublishedContent> featItems = featured.Children().Where(x => x.IsVisible());
+                                foreach (var fItem in featItems)
+                                {
+                                    IEnumerable<IPublishedContent> shopCats = new List<IPublishedContent>();
+                                    var fShopCats = fItem.Value<IEnumerable<dynamic>>("shop_Category");
+                                    if (fShopCats != null)
+                                    {
+                                        shopCats = Model.AncestorOrSelf(1).DescendantsOfType("shopCategory").FirstOrDefault() /*Model.Content.Site().FirstChild("shopCategory")*/.Children()
+                                            .Where(x => x.IsVisible() && fShopCats.Any(sc => sc.Id == x.Id))
+                                            .OrderBy(x => x.Name);
+                                    }
+                                    IEnumerable<IPublishedContent> dineCats = new List<IPublishedContent>();
+                                    var fDineCats = fItem.Value<IEnumerable<dynamic>>("dine_Category");
+                                    if (fDineCats != null)
+                                    {
+                                        dineCats = Model.AncestorOrSelf(1).DescendantsOfType("dineCategory").FirstOrDefault()/* Model.Content.Site().FirstChild("dineCategory")*/.Children()
+                                            .Where(x => x.IsVisible() && fDineCats.Any(sc => sc.Id == x.Id))
+                                            .OrderBy(x => x.Name);
+                                    }
+
+                                    var thumbImage = fItem.Value<IPublishedContent>("thumbImage");
+                                    if (thumbImage != null)
+                                    {
+                                        var fPageLink = fItem.Value<IPublishedContent>("shopPageLink");
+                                        var fPageLinkURL = fPageLink == null ? fItem.Url() : fPageLink.Url();
+
+                                        <div class="slide">
+                                            <div class="feature-box">
+                                                <a href="@fPageLinkURL">
+                                                    <figure>
+                                                        <img src="@thumbImage.Url()" alt="@fItem.Value("shopTitle")" class="img-fluid" />
+                                                    </figure>
+                                                    <ul class="list-unstyled red-btn">
+                                                        @foreach (var dcItem in dineCats)
+                                                        {
+                                                            <li class="feature-cat">@dcItem.Value("categoryTitle")</li>
+                                                        }
+                                                        @foreach (var scItem in shopCats)
+                                                        {
+                                                            <li class="feature-cat">@scItem.Value("categoryTitle")</li>
+                                                        }
+                                                        <li class="feature-title">@fItem.Value("shopTitle")</li>
+                                                        <li class="feature-location">@fItem.Value("floorName")</li>
+                                                    </ul>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--End Feature Slider-->
+        </section>
+    }
+}
+<!--End Featured Box-->
