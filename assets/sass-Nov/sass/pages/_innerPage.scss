@@ -316,10 +316,10 @@
         }
         li.btn-arrow {
             a {
-                border: 2px solid $primaryPink;
+                // border: 2px solid $primaryPink;
                 &:hover {
-                    background: $primaryPink;
-                    color: #fff;
+                    background: transparent;
+                    color: $primaryPink;
                 }
             }
         }
@@ -340,7 +340,7 @@
     }
 
     .prod-name {
-        color: #7bcab3;
+        color: #b6a171;
         text-transform: uppercase;
     }
 
